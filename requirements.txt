@@ -1,4 +1,4 @@
-flask
+django
 python-dotenv
 requests
 langchain
