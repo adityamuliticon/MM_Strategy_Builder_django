@@ -1,0 +1,400 @@
+ISB Test Run: 2026-05-25T17:50:22.251589
+Results: 19/20 tests passed, 335/337 checks passed
+
+
+============================================================
+PROMPT 1 – BankNifty FUT Intraday MIS Fix Qty (Core Basics)  [PASS] [22/22]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: True
+  ✅ product_type: MIS
+  ✅ intraday_exit_time_min: 15
+  ✅ run_mon: True
+  ✅ run_tue: True
+  ✅ run_wed: True
+  ✅ run_thu: True
+  ✅ run_fri: True
+  ✅ run_sat: False
+  ✅ run_sun: False
+  ✅ sub1.exchange: NFO
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.contract: NEAR
+  ✅ sub1.expiry: MONTHLY
+  ✅ sub1.atm: 0
+  ✅ sub1.option_type: 
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub1.is_trail_sl: False
+
+============================================================
+PROMPT 2 – Positional NRML with Leg Target and Leg SL (No Trail)  [PASS] [14/14]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ intraday_exit_time_min: 15
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 25
+  ✅ sub1.target: 5000
+  ✅ sub1.target_by: Money
+  ✅ sub1.sl: 3000
+  ✅ sub1.sl_by: Money
+  ✅ sub1.is_trail_sl: False
+
+============================================================
+PROMPT 3 – Capital(%) Qty Distribution with Required Margin  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ required_margin: 500000
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Capital(%)
+  ✅ sub1.qty: 3
+  ✅ sub1.lot: 1
+
+============================================================
+PROMPT 4 – Capital Risk(%) Qty Distribution with SL Required  [PASS] [11/11]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ required_margin: 1000000
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Capital Risk(%)
+  ✅ sub1.qty: 2
+  ✅ sub1.lot: 1
+  ✅ sub1.sl: 1500
+  ✅ sub1.sl_by: Money
+
+============================================================
+PROMPT 5 – Allocation Method 1 Qty Distribution  [PASS] [11/11]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sub1.segment: OPT
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.option_type: CE
+  ✅ sub1.atm: 0
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.contract: NEAR
+  ✅ sub1.qty_distribution: Allocation Method 1
+  ✅ sub1.lot: 1
+
+============================================================
+PROMPT 6 – OPT CE+PE Legs, ATM Offsets, Weekly Expiry  [FAIL] [18/20]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: True
+  ✅ product_type: MIS
+  ✅ sub_count: 2
+  ✅ sub1.segment: OPT
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.option_type: CE
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.contract: NEAR
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub2.segment: OPT
+  ✅ sub2.symbol: NIFTY
+  ✅ sub2.option_type: PE
+  ✅ sub2.expiry: WEEKLY
+  ✅ sub2.contract: NEAR
+  ✅ sub2.qty_distribution: Fix
+  ✅ sub2.lot: 1
+  ❌ sub1.atm: expected=1, got=100
+  ❌ sub2.atm: expected=-1, got=-100
+
+============================================================
+PROMPT 7 – Stock Segment, NSE Exchange, CNC Product  [PASS] [11/11]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ product_type: CNC
+  ✅ is_intraday: False
+  ✅ sub1.exchange: NSE
+  ✅ sub1.segment: Stock
+  ✅ sub1.symbol: RELIANCE
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 5
+  ✅ sub1.qty: 5
+  ✅ sub1.option_type: 
+  ✅ sub1.atm: 0
+
+============================================================
+PROMPT 8 – Fixed Strike Price (Non-Zero strike_price)  [PASS] [12/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sub1.exchange: NFO
+  ✅ sub1.segment: OPT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.option_type: CE
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.contract: NEAR
+  ✅ sub1.strike_price: 52000
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+
+============================================================
+PROMPT 9 – Leg Trail SL with Max Times (no_of_time_trail_sl=3)  [PASS] [11/11]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 25
+  ✅ sub1.is_trail_sl: True
+  ✅ sub1.trail_sl_market_move: 1000
+  ✅ sub1.trail_sl_move: 500
+  ✅ sub1.no_of_time_trail_sl: 3
+
+============================================================
+PROMPT 10 – Leg Trail SL Unlimited (no_of_time_trail_sl=0)  [PASS] [12/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: True
+  ✅ product_type: MIS
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub1.is_trail_sl: True
+  ✅ sub1.trail_sl_market_move: 500
+  ✅ sub1.trail_sl_move: 250
+  ✅ sub1.no_of_time_trail_sl: 0
+
+============================================================
+PROMPT 11 – Master Target + Master SL with 2 Legs  [PASS] [18/18]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ intraday_target: 8000
+  ✅ target_by: Money
+  ✅ intraday_sl: 5000
+  ✅ sl_by: Money
+  ✅ sub_count: 2
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub2.segment: OPT
+  ✅ sub2.symbol: NIFTY
+  ✅ sub2.option_type: CE
+  ✅ sub2.atm: 0
+  ✅ sub2.expiry: WEEKLY
+
+============================================================
+PROMPT 12 – Working Days Mon-Wed-Fri Only  [PASS] [15/15]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: True
+  ✅ product_type: MIS
+  ✅ run_mon: True
+  ✅ run_tue: False
+  ✅ run_wed: True
+  ✅ run_thu: False
+  ✅ run_fri: True
+  ✅ run_sat: False
+  ✅ run_sun: False
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+
+============================================================
+PROMPT 13 – Saturday Enabled (MCX Exchange, GOLD Futures)  [PASS] [17/17]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: True
+  ✅ product_type: MIS
+  ✅ run_mon: True
+  ✅ run_tue: True
+  ✅ run_wed: True
+  ✅ run_thu: True
+  ✅ run_fri: True
+  ✅ run_sat: True
+  ✅ run_sun: False
+  ✅ sub1.exchange: MCX
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: GOLD
+  ✅ sub1.contract: NEAR
+  ✅ sub1.expiry: MONTHLY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+
+============================================================
+PROMPT 14 – Exit Minutes Non-Default (30 Minutes Before Close)  [PASS] [11/11]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: True
+  ✅ product_type: MIS
+  ✅ intraday_exit_time_min: 30
+  ✅ run_mon: True
+  ✅ run_fri: True
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+
+============================================================
+PROMPT 15 – Auto Sqroff on Contract Expiry Disabled  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ auto_sqroff_on_contract_exp: False
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.expiry: MONTHLY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 25
+
+============================================================
+PROMPT 16 – Sqroff All Legs + Sqroff on Rejection (Safety Features)  [PASS] [16/16]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sqroffAllLegs: True
+  ✅ pause_and_sqroff_trading_on_margin_exeed: True
+  ✅ sub_count: 2
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub2.segment: OPT
+  ✅ sub2.symbol: BANKNIFTY
+  ✅ sub2.option_type: CE
+  ✅ sub2.atm: 0
+  ✅ sub2.expiry: WEEKLY
+
+============================================================
+PROMPT 17 – Max Position + Max Capital Allocation Percent  [PASS] [21/21]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ required_margin: 2000000
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ max_position: 5
+  ✅ max_position_allocation_percent: 20
+  ✅ sub_count: 2
+  ✅ sub1.exchange: NSE
+  ✅ sub1.segment: Stock
+  ✅ sub1.symbol: RELIANCE
+  ✅ sub1.qty_distribution: Capital Risk(%)
+  ✅ sub1.qty: 5
+  ✅ sub1.lot: 1
+  ✅ sub1.sl: 2000
+  ✅ sub2.exchange: NSE
+  ✅ sub2.segment: Stock
+  ✅ sub2.symbol: INFY
+  ✅ sub2.qty_distribution: Capital Risk(%)
+  ✅ sub2.qty: 5
+  ✅ sub2.lot: 1
+  ✅ sub2.sl: 1500
+
+============================================================
+PROMPT 18 – 3-Leg Strategy: FUT + CE OPT + PE OPT Multi-Symbol  [PASS] [25/25]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sub_count: 3
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.expiry: MONTHLY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub1.option_type: 
+  ✅ sub2.segment: OPT
+  ✅ sub2.symbol: NIFTY
+  ✅ sub2.option_type: CE
+  ✅ sub2.atm: 0
+  ✅ sub2.expiry: WEEKLY
+  ✅ sub2.qty_distribution: Fix
+  ✅ sub2.lot: 1
+  ✅ sub3.segment: OPT
+  ✅ sub3.symbol: NIFTY
+  ✅ sub3.option_type: PE
+  ✅ sub3.atm: 0
+  ✅ sub3.expiry: WEEKLY
+  ✅ sub3.qty_distribution: Fix
+  ✅ sub3.lot: 1
+
+============================================================
+PROMPT 19 – NEXT Contract + BFO Exchange SENSEX + Required Margin + Descriptions  [PASS] [15/15]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ required_margin: 300000
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ sub1.exchange: BFO
+  ✅ sub1.segment: OPT
+  ✅ sub1.symbol: SENSEX
+  ✅ sub1.contract: NEXT
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.option_type: CE
+  ✅ sub1.atm: 0
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ short_description contains 'SENSEX'
+  ✅ long_description contains 'SENSEX'
+
+============================================================
+PROMPT 20 – Maximum Complexity (ALL Parameters)  [PASS] [56/56]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: NRML
+  ✅ required_margin: 1500000
+  ✅ intraday_target: 10000
+  ✅ target_by: Money
+  ✅ intraday_sl: 6000
+  ✅ sl_by: Money
+  ✅ max_position: 8
+  ✅ max_position_allocation_percent: 25
+  ✅ sqroffAllLegs: True
+  ✅ pause_and_sqroff_trading_on_margin_exeed: True
+  ✅ auto_sqroff_on_contract_exp: False
+  ✅ run_mon: True
+  ✅ run_tue: True
+  ✅ run_wed: True
+  ✅ run_thu: True
+  ✅ run_fri: False
+  ✅ run_sat: False
+  ✅ run_sun: False
+  ✅ intraday_exit_time_min: 20
+  ✅ margin_stock_intraday: 25
+  ✅ margin_stock_positional: 80
+  ✅ margin_futopt_positional: 20
+  ✅ sub_count: 3
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.qty_distribution: Fix
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub1.sl: 4000
+  ✅ sub1.is_trail_sl: True
+  ✅ sub1.trail_sl_market_move: 2000
+  ✅ sub1.trail_sl_move: 1000
+  ✅ sub1.no_of_time_trail_sl: 5
+  ✅ sub2.segment: OPT
+  ✅ sub2.symbol: NIFTY
+  ✅ sub2.option_type: CE
+  ✅ sub2.atm: 0
+  ✅ sub2.expiry: WEEKLY
+  ✅ sub2.qty_distribution: Capital Risk(%)
+  ✅ sub2.qty: 3
+  ✅ sub2.lot: 1
+  ✅ sub2.sl: 2500
+  ✅ sub3.segment: OPT
+  ✅ sub3.symbol: NIFTY
+  ✅ sub3.option_type: PE
+  ✅ sub3.atm: 0
+  ✅ sub3.expiry: WEEKLY
+  ✅ sub3.qty_distribution: Capital Risk(%)
+  ✅ sub3.qty: 3
+  ✅ sub3.lot: 1
+  ✅ sub3.sl: 2500
+  ✅ short_description contains 'ISB'
+  ✅ long_description contains 'BankNifty'
+  ✅ strategy_type_id: XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$

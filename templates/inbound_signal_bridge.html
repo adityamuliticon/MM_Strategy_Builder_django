@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | Inbound Signal Bridge</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Market Maya</h2>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;">AI Strategy Builder v1.0</p>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Switch Strategy</h3>
+            <a href="/" style="display: block; margin-top: 10px; color: #00f2ff; font-size: 0.85rem; text-decoration: none;">
+                → Unified Strategy Builder
+            </a>
+            <a href="/indicator/" style="display: block; margin-top: 8px; color: #00f2ff; font-size: 0.85rem; text-decoration: none;">
+                → Indicator Signal Engine
+            </a>
+        </div>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Status</h3>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--success);"></div>
+                <span>Connected</span>
+            </div>
+        </div>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Signal Source</h3>
+            <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 8px; line-height: 1.5;">
+                TradingView · Pine Script · Webhooks · Custom Alerts
+            </p>
+        </div>
+    </div>
+    <div class="main-chat">
+        <div class="header">
+            <h1>Inbound Signal Bridge</h1>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">Session: #ISB-4291</div>
+        </div>
+        <div class="chat-container" id="chat-container">
+            <div class="message ai-message">
+                Hello! I am your Inbound Signal Bridge assistant. I help you create strategies that execute automatically when external signals arrive — from TradingView, Pine Script, or any webhook source. Try: "Create a BankNifty futures strategy triggered by TradingView alerts, 1 lot, SL 3000" or "Multi-stock portfolio signal strategy with 2% capital risk per trade".
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Describe your signal-triggered strategy..." autocomplete="off">
+            <button id="send-btn">Send Prompt</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const sessionId = 'isb_user_1';
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function addMessage(content, isUser) {
+            const div = document.createElement('div');
+            div.className = 'message ' + (isUser ? 'user-message' : 'ai-message');
+            div.innerHTML = isUser ? content : marked.parse(content);
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'message ai-message typing-indicator';
+            div.id = 'typing';
+            div.textContent = 'Processing...';
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeTyping() {
+            const el = document.getElementById('typing');
+            if (el) el.remove();
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            addMessage(message, true);
+            userInput.value = '';
+            showTyping();
+            try {
+                const response = await fetch('/bridge/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message, session_id: sessionId})
+                });
+                const data = await response.json();
+                removeTyping();
+                addMessage(data.message, false);
+            } catch (err) {
+                removeTyping();
+                addMessage('Error: ' + err.message, false);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+    </script>
+</body>
+</html>
