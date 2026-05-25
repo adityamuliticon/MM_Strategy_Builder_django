@@ -13,6 +13,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chat',
+    'indicator_engine',
 ]
 
 MIDDLEWARE = [

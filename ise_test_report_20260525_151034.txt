@@ -1,0 +1,417 @@
+ISE Test Run: 2026-05-25T15:10:34.363518
+Results: 19/20 tests passed, 353/354 checks passed
+
+
+============================================================
+PROMPT 1 – Basic SuperTrend BankNifty FUT (Core Basics)  [PASS] [25/25]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ isIntraday: True
+  ✅ entryOrderProduct: MIS
+  ✅ exitOrderProduct: MIS
+  ✅ chartType: Candlestick
+  ✅ timeFrame: 5Min
+  ✅ signal: Both
+  ✅ entryTime: 09:15
+  ✅ sqroffTime: 15:15
+  ✅ sub1.exchange: NFO
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.contract: NEAR
+  ✅ sub1.expiry: MONTHLY
+  ✅ sub1.atm: 0
+  ✅ sub1.optionType: 
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub1.callType: BUY
+  ✅ sub1.isTrailSl: False
+  ✅ sub1.isReverseSignal: False
+  ✅ ind1.indicator_code: supertrend
+  ✅ ind1.index: 1
+  ✅ ind1.length: 10
+  ✅ ind1.factor: 3
+
+============================================================
+PROMPT 2 – MA CrossOver Custom Params + CE Normal + PE Reverse  [PASS] [20/20]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ timeFrame: 15Min
+  ✅ entryTime: 09:30
+  ✅ sqroffTime: 15:00
+  ✅ isIntraday: True
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.segment: OPT
+  ✅ sub1.optionType: CE
+  ✅ sub1.atm: 0
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.lot: 2
+  ✅ sub1.qty: 50
+  ✅ sub1.isReverseSignal: False
+  ✅ sub2.optionType: PE
+  ✅ sub2.lot: 2
+  ✅ sub2.isReverseSignal: True
+  ✅ ind1.indicator_code: ma-cross-over
+  ✅ ind1.short: 5
+  ✅ ind1.long: 20
+  ✅ ind1.type: EMA
+
+============================================================
+PROMPT 3 – RSI Custom Bands + Leg SL + Signal=BUY  [PASS] [17/17]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ signal: BUY
+  ✅ timeFrame: 5Min
+  ✅ entryTime: 09:20
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.lot: 1
+  ✅ sub1.qty: 30
+  ✅ sub1.sl: 3000
+  ✅ sub1.slBy: Money
+  ✅ sub1.target: 0
+  ✅ sub1.isTrailSl: False
+  ✅ ind1.indicator_code: rsi
+  ✅ ind1.length: 21
+  ✅ ind1.lower-band: 25
+  ✅ ind1.upper-band: 75
+
+============================================================
+PROMPT 4 – MACD All 6 Params + Leg Target+SL + Signal=SELL  [PASS] [21/21]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ signal: SELL
+  ✅ timeFrame: 10Min
+  ✅ entryTime: 09:20
+  ✅ sub1.optionType: CE
+  ✅ sub1.atm: 100
+  ✅ sub1.target: 2000
+  ✅ sub1.targetBy: Money
+  ✅ sub1.sl: 1500
+  ✅ sub1.slBy: Money
+  ✅ sub2.optionType: PE
+  ✅ sub2.atm: -100
+  ✅ sub2.target: 2000
+  ✅ sub2.sl: 1500
+  ✅ ind1.indicator_code: macd
+  ✅ ind1.fast-length: 8
+  ✅ ind1.slow-length: 21
+  ✅ ind1.source: High
+  ✅ ind1.signal-length: 5
+  ✅ ind1.oscillator-ma-type: SMA
+  ✅ ind1.signal-line-ma-type: SMA
+
+============================================================
+PROMPT 5 – Stochastic AND Bollinger Bands (Same Index=1)  [PASS] [17/17]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ timeFrame: 30Min
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: BANKNIFTY
+  ✅ sub1.expiry: MONTHLY
+  ✅ sub1.lot: 1
+  ✅ ind1.indicator_code: stochastic
+  ✅ ind1.index: 1
+  ✅ ind1.k-length: 9
+  ✅ ind1.d-length: 3
+  ✅ ind1.lower-band: 25
+  ✅ ind1.upper-band: 75
+  ✅ ind2.indicator_code: bollinger-bands
+  ✅ ind2.index: 1
+  ✅ ind2.length: 15
+  ✅ ind2.multiplier: 3
+  ✅ indicator_count: 2
+
+============================================================
+PROMPT 6 – SuperTrend OR RSI (Different Indexes) + Leg Trail SL  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ timeFrame: 1Hour
+  ✅ ind1.indicator_code: supertrend
+  ✅ ind1.index: 1
+  ✅ ind2.indicator_code: rsi
+  ✅ ind2.index: 2
+  ✅ sub1.isTrailSl: True
+  ✅ sub1.trailSlMarketMove: 500
+  ✅ sub1.trailSlMove: 200
+  ✅ sub1.noOfTimeTrailSl: 3
+
+============================================================
+PROMPT 7 – CE Normal + PE Reverse Signal Hedge + Master Target  [PASS] [13/13]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ sub1.optionType: CE
+  ✅ sub1.atm: 0
+  ✅ sub1.isReverseSignal: False
+  ✅ sub1.callType: BUY
+  ✅ sub2.optionType: PE
+  ✅ sub2.atm: 0
+  ✅ sub2.isReverseSignal: True
+  ✅ sub2.callType: BUY
+  ✅ masterTarget: 4000
+  ✅ masterSl: 0
+  ✅ signal: Both
+  ✅ ind1.indicator_code: supertrend
+
+============================================================
+PROMPT 8 – Master Target + Master SL + Master Trail SL  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ masterTarget: 5000
+  ✅ masterTargetType: Money
+  ✅ masterSl: 3000
+  ✅ masterSlType: Money
+  ✅ isTrailSl: True
+  ✅ profitMove: 2000
+  ✅ slMove: 1000
+  ✅ noOfTrailSl: 5
+  ✅ entryTime: 09:20
+
+============================================================
+PROMPT 9 – (SuperTrend AND MA CrossOver) OR RSI — 3 Indicator Mix  [PASS] [14/14]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ indicator_count: 3
+  ✅ ind1.code: supertrend
+  ✅ ind1.index: 1
+  ✅ ind1.length: 7
+  ✅ ind1.factor: 2
+  ✅ ind2.code: ma-cross-over
+  ✅ ind2.index: 1
+  ✅ ind2.short: 5
+  ✅ ind2.long: 13
+  ✅ ind2.type: EMA
+  ✅ ind3.code: rsi
+  ✅ ind3.index: 2
+  ✅ timeFrame: 5Min
+
+============================================================
+PROMPT 10 – Heikin-Ashi + 2Hour Chart + Restricted WeekDays  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ chartType: Heikin-Ashi
+  ✅ timeFrame: 2Hour
+  ✅ underlyingType: Future
+  ✅ weekDays has TUE: 'TUE' present
+  ✅ weekDays has THU: 'THU' present
+  ✅ weekDays has FRI: 'FRI' present
+  ✅ weekDays no MON: 'MON' correctly absent
+  ✅ weekDays no WED: 'WED' correctly absent
+  ✅ ind1.indicator_code: supertrend
+
+============================================================
+PROMPT 11 – Positional + NRML + Sqroff Before Expiry + 1Day Chart  [PASS] [13/13]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ isIntraday: False
+  ✅ entryOrderProduct: NRML
+  ✅ exitOrderProduct: NRML
+  ✅ timeFrame: 1Day
+  ✅ sqroffBeforeExDays: 2
+  ✅ sub1.segment: FUT
+  ✅ sub1.symbol: NIFTY
+  ✅ sub1.expiry: MONTHLY
+  ✅ ind1.indicator_code: ma-cross-over
+  ✅ ind1.short (default): 9
+  ✅ ind1.long (default): 26
+  ✅ ind1.type (default): SMA
+
+============================================================
+PROMPT 12 – BFO Exchange SENSEX + ATM Offsets + Reverse Signal + Master SL  [PASS] [15/15]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ sub1.exchange: BFO
+  ✅ sub1.symbol: SENSEX
+  ✅ sub1.segment: OPT
+  ✅ sub1.optionType: CE
+  ✅ sub1.atm: 200
+  ✅ sub1.isReverseSignal: False
+  ✅ sub2.exchange: BFO
+  ✅ sub2.symbol: SENSEX
+  ✅ sub2.segment: OPT
+  ✅ sub2.optionType: PE
+  ✅ sub2.atm: -200
+  ✅ sub2.isReverseSignal: True
+  ✅ masterSl: 5000
+  ✅ masterTarget: 0
+
+============================================================
+PROMPT 13 – 3 Legs Mixed OPT+FUT, NEAR vs NEXT Contract  [PASS] [17/17]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ sub_count: 3
+  ✅ sub1.segment: OPT
+  ✅ sub1.optionType: CE
+  ✅ sub1.contract: NEAR
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.lot: 1
+  ✅ sub1.isReverseSignal: False
+  ✅ sub2.optionType: PE
+  ✅ sub2.contract: NEAR
+  ✅ sub2.expiry: WEEKLY
+  ✅ sub2.isReverseSignal: True
+  ✅ sub3.segment: FUT
+  ✅ sub3.contract: NEXT
+  ✅ sub3.expiry: MONTHLY
+  ✅ sub3.lot: 2
+  ✅ ind1.indicator_code: rsi
+
+============================================================
+PROMPT 14 – Underlying Type=Spot/Index + Signal=SELL + Custom SuperTrend 15Min  [PASS] [8/8]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ underlyingType: Spot/Index
+  ✅ signal: SELL
+  ✅ timeFrame: 15Min
+  ✅ entryTime: 09:20
+  ✅ ind1.indicator_code: supertrend
+  ✅ ind1.length: 12
+  ✅ ind1.factor: 2
+
+============================================================
+PROMPT 15  [FAIL] [0/1]
+  ❌ No ISE payload logged — deployment did not trigger
+
+============================================================
+PROMPT 16 – Leg Trail SL Unlimited (noOfTimeTrailSl=0) + Master SL Only  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ masterTarget: 0
+  ✅ masterSl: 4000
+  ✅ isTrailSl (master): False
+  ✅ sub1.isTrailSl: True
+  ✅ sub1.trailSlMarketMove: 300
+  ✅ sub1.trailSlMove: 150
+  ✅ sub1.noOfTimeTrailSl: 0
+  ✅ ind1.indicator_code: macd
+
+============================================================
+PROMPT 17 – 4 Legs Different Lots + Trail SL Leg1 + WeekDays + Master Target  [PASS] [31/31]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ sub_count: 4
+  ✅ sub1.optionType: CE
+  ✅ sub1.atm: 0
+  ✅ sub1.lot: 2
+  ✅ sub1.qty: 60
+  ✅ sub1.sl: 2500
+  ✅ sub1.isTrailSl: True
+  ✅ sub1.trailSlMarketMove: 1000
+  ✅ sub1.trailSlMove: 500
+  ✅ sub1.noOfTimeTrailSl: 3
+  ✅ sub1.isReverseSignal: False
+  ✅ sub2.optionType: PE
+  ✅ sub2.lot: 2
+  ✅ sub2.sl: 2500
+  ✅ sub2.isReverseSignal: True
+  ✅ sub3.optionType: CE
+  ✅ sub3.atm: 300
+  ✅ sub3.lot: 1
+  ✅ sub4.optionType: PE
+  ✅ sub4.atm: -300
+  ✅ sub4.lot: 1
+  ✅ sub4.isReverseSignal: True
+  ✅ weekDays has MON: 'MON' present
+  ✅ weekDays has WED: 'WED' present
+  ✅ weekDays has FRI: 'FRI' present
+  ✅ weekDays no TUE: 'TUE' correctly absent
+  ✅ weekDays no THU: 'THU' correctly absent
+  ✅ masterTarget: 6000
+  ✅ entryTime: 09:20
+  ✅ sqroffTime: 15:10
+
+============================================================
+PROMPT 18 – NEXT Contract + 4Hour Chart + Positional + Stochastic Custom + SqroffBeforeEx  [PASS] [19/19]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ isIntraday: False
+  ✅ entryOrderProduct: NRML
+  ✅ exitOrderProduct: NRML
+  ✅ timeFrame: 4Hour
+  ✅ sqroffBeforeExDays: 1
+  ✅ sub1.contract: NEXT
+  ✅ sub1.expiry: WEEKLY
+  ✅ sub1.optionType: CE
+  ✅ sub1.isReverseSignal: False
+  ✅ sub2.contract: NEXT
+  ✅ sub2.expiry: WEEKLY
+  ✅ sub2.optionType: PE
+  ✅ sub2.isReverseSignal: True
+  ✅ ind1.indicator_code: stochastic
+  ✅ ind1.k-length: 12
+  ✅ ind1.d-length: 4
+  ✅ ind1.lower-band: 25
+  ✅ ind1.upper-band: 75
+
+============================================================
+PROMPT 19 – Candlestick Patterns AND+OR + Descriptions + Signal=BUY  [PASS] [15/15]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ indicator_count: 3
+  ✅ ind1.code: three-white-soldiers
+  ✅ ind1.index: 1
+  ✅ ind1.no_params: []
+  ✅ ind2.code: hammer
+  ✅ ind2.index: 1
+  ✅ ind2.no_params: []
+  ✅ ind3.code: morning-star
+  ✅ ind3.index: 2
+  ✅ ind3.no_params: []
+  ✅ signal: BUY
+  ✅ entryTime: 09:30
+  ✅ shortDescription contains 'BNF'
+  ✅ longDescription contains 'Three White Soldiers'
+
+============================================================
+PROMPT 20 – Maximum Complexity (ALL Parameters)  [PASS] [69/69]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ isIntraday: False
+  ✅ entryOrderProduct: NRML
+  ✅ exitOrderProduct: NRML
+  ✅ chartType: Heikin-Ashi
+  ✅ timeFrame: 30Min
+  ✅ signal: Both
+  ✅ underlyingType: Spot/Index
+  ✅ entryTime: 09:20
+  ✅ sqroffTime: 15:15
+  ✅ weekDays has MON: 'MON' present
+  ✅ weekDays has TUE: 'TUE' present
+  ✅ weekDays has WED: 'WED' present
+  ✅ weekDays no THU: 'THU' correctly absent
+  ✅ weekDays no FRI: 'FRI' correctly absent
+  ✅ sqroffBeforeExDays: 2
+  ✅ masterTarget: 8000
+  ✅ masterTargetType: Money
+  ✅ masterSl: 5000
+  ✅ masterSlType: Money
+  ✅ isTrailSl (master): True
+  ✅ profitMove: 3000
+  ✅ slMove: 1500
+  ✅ noOfTrailSl: 4
+  ✅ sub_count: 4
+  ✅ sub1.segment: OPT
+  ✅ sub1.optionType: CE
+  ✅ sub1.atm: 0
+  ✅ sub1.lot: 2
+  ✅ sub1.qty: 60
+  ✅ sub1.sl: 3000
+  ✅ sub1.isReverseSignal: False
+  ✅ sub1.isTrailSl: True
+  ✅ sub1.trailSlMarketMove: 1500
+  ✅ sub1.trailSlMove: 600
+  ✅ sub1.noOfTimeTrailSl: 4
+  ✅ sub2.optionType: PE
+  ✅ sub2.atm: 0
+  ✅ sub2.lot: 2
+  ✅ sub2.sl: 3000
+  ✅ sub2.isReverseSignal: True
+  ✅ sub3.segment: OPT
+  ✅ sub3.optionType: CE
+  ✅ sub3.atm: 200
+  ✅ sub3.lot: 1
+  ✅ sub3.isReverseSignal: False
+  ✅ sub4.segment: FUT
+  ✅ sub4.optionType (empty): 
+  ✅ sub4.lot: 1
+  ✅ sub4.isReverseSignal: False
+  ✅ indicator_count: 4
+  ✅ ind1.code: supertrend
+  ✅ ind1.index: 1
+  ✅ ind1.length: 10
+  ✅ ind1.factor: 3
+  ✅ ind2.code: ma-cross-over
+  ✅ ind2.index: 1
+  ✅ ind2.short: 9
+  ✅ ind2.long: 26
+  ✅ ind2.type: SMA
+  ✅ ind3.code: rsi
+  ✅ ind3.index: 2
+  ✅ ind4.code: macd
+  ✅ ind4.index: 3
+  ✅ shortDescription contains 'ISE'
+  ✅ longDescription contains 'SuperTrend'
+  ✅ strategyTypeId: QFwz7gYjmmabUT8SBvZQGgaC0$aC0$
+  ✅ rebacktest: True
+  ✅ effectAllSubStrategies: False
