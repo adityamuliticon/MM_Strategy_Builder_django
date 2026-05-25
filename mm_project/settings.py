@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chat',
     'indicator_engine',
+    'inbound_signal_bridge',
 ]
 
 MIDDLEWARE = [

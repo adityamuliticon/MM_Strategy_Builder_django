@@ -1,0 +1,101 @@
+Request URL
+https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+9fd9cfec9bd53b4c-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Mon, 18 May 2026 09:25:01 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=0I87b7ZrCSwsIj4JkUWI7M8OSzmpdeiDDvcU3WxQBmb3YjQ0qrw7TGwhE%2F1gximP4hgt7dVEy2e3v9OGCKvWmM31JUKivOi5SGJ%2BraHzTwtwVHceyiMe54ewFPPAnXbmlv%2Fhjg%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/createCustomTradeStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzkxMjg5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMjE4LjEzNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiN2U2NjgyZjktYmFiOC00OTIyLTlkYjItOGM5OTlkNTYzYTI3IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc3OTA5MjQ2NSwibmJmIjoxNzc5MDkyNDY1fQ.f_SB9KEu52BZKa3StntqEmi7FX6QNGR3jhuIm4Emhl13J96YcMLksjc-f9NrF93rN4OlP4Juw0yNdLOn63XYMg
+content-length
+1045
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+
+
+
+{"id":"","strategy_name":"12345","short_description":"","long_description":"","strategy_type_id":"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$","product_type":"NRML","required_margin":67,"is_intraday":false,"target_by":"Money","intraday_target":678,"sl_by":"Money","intraday_sl":78,"allow_update_parameters":true,"max_position":1,"max_position_allocation_percent":100,"run_mon":true,"run_tue":true,"run_wed":true,"run_thu":true,"run_fri":true,"run_sat":false,"run_sun":false,"intraday_exit_time_min":15,"margin_stock_intraday":30,"margin_stock_positional":100,"margin_futopt_positional":30,"auto_sqroff_on_contract_exp":true,"pause_and_sqroff_trading_on_margin_exeed":true,"sqroffAllLegs":true,"sub":[{"exchange":"NFO","segment":"FUT","symbol":"BANKNIFTY","contract":"NEAR","expiry":"MONTHLY","atm":0,"option_type":"","qty_distribution":"Fix","qty":30,"lot":1,"strike_price":0,"target":1,"target_by":"Money","sl":1,"sl_by":"Money","trail_sl_market_move":0,"trail_sl_move":0,"no_of_time_trail_sl":0,"is_trail_sl":true}],"effect_all_sub_strategies":false}
+
+
+{success: true, message: ""}
+message
+: 
+""
+success
+: 
+true
+
+
