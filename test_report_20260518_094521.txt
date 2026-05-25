@@ -1,0 +1,387 @@
+Test Run: 2026-05-18T09:45:21.320351
+Results: 15/20 tests passed, 312/324 checks passed
+
+
+============================================================
+PROMPT 1 – Basic BankNifty Straddle  [PASS] [24/24]
+  ✅ mainExchange: NFO
+  ✅ mainSymbol: BANKNIFTY
+  ✅ isIntraday: True
+  ✅ productType: MIS
+  ✅ tradingStartTime: 09:20:00
+  ✅ tradingEndTime: 15:15:00
+  ✅ leg1.tradeSide: SELL
+  ✅ leg1.optionType: CE
+  ✅ leg1.atm: 0
+  ✅ leg1.expiry: Current Week
+  ✅ leg1.lot: 1
+  ✅ leg1.isIdle: False
+  ✅ leg2.tradeSide: SELL
+  ✅ leg2.optionType: PE
+  ✅ leg2.atm: 0
+  ✅ leg2.expiry: Current Week
+  ✅ leg2.lot: 1
+  ✅ leg2.isIdle: False
+  ✅ isEnableMasterTarget: True
+  ✅ intradayTarget: 2500
+  ✅ targetBy: Combined Profit
+  ✅ isEnableMasterSl: True
+  ✅ intradaySl: 1500
+  ✅ slBy: Combined Loss
+
+============================================================
+PROMPT 2 – Nifty Strangle ATM Offset + Leg TP/SL  [FAIL] [19/20]
+  ✅ mainSymbol: NIFTY
+  ✅ tradingStartTime: 09:16:00
+  ✅ leg1.tradeSide: SELL
+  ✅ leg1.optionType: CE
+  ✅ leg1.atmType: Strike By ATM Value
+  ✅ leg1.atm: 200
+  ✅ leg1.lot: 2
+  ✅ leg1.targetBy: Target by Point
+  ✅ leg1.target: 30
+  ✅ leg1.slBy: SL by Point
+  ✅ leg1.sl: 50
+  ✅ leg2.tradeSide: SELL
+  ✅ leg2.optionType: PE
+  ✅ leg2.atm: -200
+  ✅ leg2.lot: 2
+  ✅ leg2.target: 30
+  ✅ leg2.sl: 50
+  ✅ isEnableMasterTarget: False
+  ✅ isEnableMasterSl: False
+  ❌ tradingEndTime: expected='15:10:00', got='15:15:00'
+
+============================================================
+PROMPT 3 – BankNifty Iron Condor 4 Legs  [PASS] [17/17]
+  ✅ mainSymbol: BANKNIFTY
+  ✅ leg_count: 4
+  ✅ leg1 SELL CE ATM+300: ('SELL', 'CE', 300)
+  ✅ leg2 SELL PE ATM-300: ('SELL', 'PE', -300)
+  ✅ leg3 BUY CE ATM+500: ('BUY', 'CE', 500)
+  ✅ leg4 BUY PE ATM-500: ('BUY', 'PE', -500)
+  ✅ leg1.lot: 1
+  ✅ leg1.expiry: Current Week
+  ✅ leg2.lot: 1
+  ✅ leg2.expiry: Current Week
+  ✅ leg3.lot: 1
+  ✅ leg3.expiry: Current Week
+  ✅ leg4.lot: 1
+  ✅ leg4.expiry: Current Week
+  ✅ intradayTarget: 3000
+  ✅ isEnableMasterSl: False
+  ✅ tradingStartTime: 09:20:00
+
+============================================================
+PROMPT 4 – Premium Range Strike + Combined Premium Entry  [PASS] [13/13]
+  ✅ leg1.atmType: Strike By Premium Range
+  ✅ leg1.premiumStartRange: 100
+  ✅ leg1.premiumEndRange: 150
+  ✅ leg1.strikeDirection: OTM
+  ✅ leg1.optionType: CE
+  ✅ leg2.atmType: Strike By Premium Range
+  ✅ leg2.premiumStartRange: 100
+  ✅ leg2.premiumEndRange: 150
+  ✅ leg2.strikeDirection: OTM
+  ✅ leg2.optionType: PE
+  ✅ isCombinedPremEntry: True
+  ✅ totalCombinedPremium: 220
+  ✅ intradayTarget: 2000
+
+============================================================
+PROMPT 5 – Delta-Based Strike + Condition + Direction  [PASS] [12/12]
+  ✅ leg1.tradeSide: SELL
+  ✅ leg1.optionType: PE
+  ✅ leg1.atmType: Strike By Nearest Delta
+  ✅ leg1.atm: 0.3
+  ✅ leg1.strikeCondition: AboveEqual (>=)
+  ✅ leg1.strikeDirection: OTM
+  ✅ leg2.tradeSide: BUY
+  ✅ leg2.optionType: PE
+  ✅ leg2.atmType: Strike By ATM Value
+  ✅ leg2.atm: -500
+  ✅ intradaySl: 2000
+  ✅ isEnableMasterTarget: False
+
+============================================================
+PROMPT 6 – Master Profit Locking + Master SL Trailing  [PASS] [12/12]
+  ✅ intradayTarget: 5000
+  ✅ intradaySl: 2000
+  ✅ isEnableProfitLockingTrailing: True
+  ✅ ifProfitReaches: 3000
+  ✅ lockMinimumProfit: 1500
+  ✅ increseInProfitBy: 500
+  ✅ trailProfitBy: 300
+  ✅ noOfTimeTrailTp: 5
+  ✅ isEnableStoplossTrailing: True
+  ✅ profitMove: 1000
+  ✅ slMove: 500
+  ✅ noOfTrailSl: 3
+
+============================================================
+PROMPT 7 – Leg-Level Profit Locking + SL Trailing  [PASS] [17/17]
+  ✅ leg1.isProfitLockingAndTrailing: True
+  ✅ leg1.ifProfitReaches: 2000
+  ✅ leg1.lockMinimumProfit: 1000
+  ✅ leg1.increseInProfitBy: 400
+  ✅ leg1.trailProfitBy: 200
+  ✅ leg1.noOfTimeTrailTp: 4
+  ✅ leg1.isEnableStoplossTrailing: True
+  ✅ leg1.trailSlMarketMove: 800
+  ✅ leg1.trailSlMove: 300
+  ✅ leg1.noOfTimeTrailSl: 9999
+  ✅ leg2.isProfitLockingAndTrailing: True
+  ✅ leg2.ifProfitReaches: 1500
+  ✅ leg2.lockMinimumProfit: 800
+  ✅ leg2.increseInProfitBy: 300
+  ✅ leg2.trailProfitBy: 150
+  ✅ leg2.noOfTimeTrailTp: 3
+  ✅ leg2.isEnableStoplossTrailing: False
+
+============================================================
+PROMPT 8 – Idle Legs + Action on Target/SL Chaining  [PASS] [15/15]
+  ✅ leg1.isIdle: False
+  ✅ leg1.targetBy: Target by Point
+  ✅ leg1.target: 40
+  ✅ leg1.slBy: SL by Point
+  ✅ leg1.sl: 60
+  ✅ leg1.isEnableActionOnTarget: True
+  ✅ leg1.actionOnTarget: Execute Leg
+  ✅ leg1.actionOnTargetLegNo: 2
+  ✅ leg1.actionOnTargetDelay: 5
+  ✅ leg1.isEnableActionOnSl: True
+  ✅ leg1.actionOnSl: Execute Leg
+  ✅ leg1.actionOnSlLegNo: 3
+  ✅ leg1.actionOnSlDelay: 3
+  ✅ leg2.isIdle: True
+  ✅ leg3.isIdle: True
+
+============================================================
+PROMPT 9 – Reenter Leg + Sqroff Leg actions  [PASS] [9/9]
+  ✅ leg1.actionOnTarget: Reenter Leg
+  ✅ leg1.actionOnTargetLegNo: 1
+  ✅ leg1.actionOnTargetDelay: 10
+  ✅ leg2.actionOnSl: Sqroff Leg
+  ✅ leg2.actionOnSlLegNo: 1
+  ✅ leg2.actionOnSlDelay: 2
+  ✅ leg2.actionOnTarget: Execute Leg
+  ✅ leg2.actionOnTargetLegNo: 3
+  ✅ leg3.isIdle: True
+
+============================================================
+PROMPT 10 – Range Breakout + Wait & Trade  [FAIL] [9/10]
+  ✅ isRangeBreakOut: True
+  ✅ rangeEndTime: 09:30:00
+  ✅ intradayTarget: 2000
+  ✅ intradaySl: 1500
+  ✅ leg1.isExecuteOnRangeBreakout: True
+  ✅ leg1.isWaitAndTrade: False
+  ✅ leg2.isWaitAndTrade: True
+  ✅ leg2.waitFor: Down %
+  ✅ leg2.isExecuteOnRangeBreakout: False
+  ❌ leg2.waitValue: expected=0.5, got=0.0
+
+============================================================
+PROMPT 11 – Positional + BTST + Pre-Expiry Sqroff  [PASS] [11/11]
+  ✅ isIntraday: False
+  ✅ productType: NRML
+  ✅ isBtstStbt: True
+  ✅ btstGapDays: 2
+  ✅ leg1.expiry: Current Month
+  ✅ leg2.expiry: Current Month
+  ✅ isEnableSqroffBeforeExpiryDays: True
+  ✅ sqroffBeforeExpiryDays: 1
+  ✅ sqroffTime: 15:10:00
+  ✅ intradayTarget: 8000
+  ✅ intradaySl: 5000
+
+============================================================
+PROMPT 12 – VIX Filter + Working Days  [PASS] [12/12]
+  ✅ enableVixFilter: True
+  ✅ vixStartValue: 12
+  ✅ vixEndValue: 20
+  ✅ runMon: True
+  ✅ runTue: False
+  ✅ runWed: True
+  ✅ runThu: False
+  ✅ runFri: True
+  ✅ runSat: False
+  ✅ intradayTarget: 1500
+  ✅ isEnableMasterSl: False
+  ✅ tradingStartTime: 09:20:00
+
+============================================================
+PROMPT 13 – Master Reexecution Target + SL  [PASS] [7/7]
+  ✅ intradayTarget: 2000
+  ✅ noOfIntradayCycle: 3
+  ✅ intradayCycleDelay: 15
+  ✅ intradaySl: 1200
+  ✅ noOfReexecuteOnSl: 2
+  ✅ reexecuteDelayOnSl: 20
+  ✅ tradingStartTime: 09:20:00
+
+============================================================
+PROMPT 14 – Safety Switches + Required Margin  [PASS] [6/6]
+  ✅ sqroffAllLegs: True
+  ✅ pauseAndSqroffTradingOnMarginExeed: True
+  ✅ enableTpSlOnPauseStrategy: True
+  ✅ requiredMargin: 125000
+  ✅ intradayTarget: 2500
+  ✅ leg_count: 4
+
+============================================================
+PROMPT 15 – Theta-Based Strike + Target/SL by Point%  [PASS] [15/15]
+  ✅ leg1.atmType: Strike By Theta Range
+  ✅ leg1.premiumStartRange: 5
+  ✅ leg1.premiumEndRange: 15
+  ✅ leg1.strikeDirection: OTM
+  ✅ leg1.optionType: CE
+  ✅ leg2.atmType: Strike By Nearest Theta
+  ✅ leg2.atm: 10.0
+  ✅ leg2.strikeCondition: BelowEqual (<=)
+  ✅ leg2.strikeDirection: OTM
+  ✅ leg1.targetBy: Target by Point%
+  ✅ leg1.target: 40
+  ✅ leg1.slBy: SL by Point%
+  ✅ leg1.sl: 60
+  ✅ leg2.targetBy: Target by Point%
+  ✅ leg2.slBy: SL by Point%
+
+============================================================
+PROMPT 16 – ATM% Strike + Delta/Theta TP/SL + FUT Leg  [FAIL] [9/10]
+  ✅ leg1.atmType: Strike By ATM %
+  ✅ leg1.atm: 0.5
+  ✅ leg1.targetBy: Target by Delta
+  ✅ leg1.slBy: SL by Theta
+  ✅ leg1.sl: 8.0
+  ✅ leg2.segment: FUT
+  ✅ leg2.tradeSide: BUY
+  ✅ leg2.expiry: Current Month
+  ✅ intradayTarget: 3000
+  ❌ leg1.target: expected=0.2, got=0.0
+
+============================================================
+PROMPT 17 – Ratio Spread + Master SL Trailing  [FAIL] [12/18]
+  ✅ leg1.tradeSide SELL CE: ('SELL', 'CE')
+  ✅ leg1.lot: 2
+  ✅ leg1.atm: 0
+  ✅ leg4.tradeSide BUY PE: ('BUY', 'PE')
+  ✅ leg4.lot: 1
+  ✅ leg4.atm: -300
+  ✅ intradayTarget: 4000
+  ✅ intradaySl: 2500
+  ✅ isEnableStoplossTrailing: True
+  ✅ profitMove: 1500
+  ✅ slMove: 700
+  ✅ noOfTrailSl: 4
+  ❌ leg2.tradeSide BUY CE: expected=('BUY', 'CE'), got=('SELL', 'PE')
+  ❌ leg2.lot: expected=1, got=2
+  ❌ leg2.atm: expected=300, got=0
+  ❌ leg3.tradeSide SELL PE: expected=('SELL', 'PE'), got=('BUY', 'CE')
+  ❌ leg3.lot: expected=2, got=1
+  ❌ leg3.atm: expected=0, got=300
+
+============================================================
+PROMPT 18 – Calendar Spread Multi-Expiry + Nearest Premium  [PASS] [14/14]
+  ✅ leg1.atmType: Strike By Nearest Premium
+  ✅ leg1.atm: 200
+  ✅ leg1.strikeDirection: BOTH
+  ✅ leg1.strikeCondition: Any
+  ✅ leg1.expiry: Current Week
+  ✅ leg1.tradeSide: SELL
+  ✅ leg2.atmType: Strike By Nearest Premium
+  ✅ leg2.atm: 200
+  ✅ leg2.strikeDirection: BOTH
+  ✅ leg2.strikeCondition: Any
+  ✅ leg2.expiry: Month 1
+  ✅ leg2.tradeSide: BUY
+  ✅ isEnableMasterTarget: False
+  ✅ isEnableMasterSl: False
+
+============================================================
+PROMPT 19 – BFO Exchange + Master Target by Combined Premium + Wait & Trade pts  [PASS] [11/11]
+  ✅ mainExchange: BFO
+  ✅ mainSymbol: SENSEX
+  ✅ tradingStartTime: 09:20:00
+  ✅ tradingEndTime: 15:00:00
+  ✅ leg1.isWaitAndTrade: True
+  ✅ leg1.waitFor: Up pts
+  ✅ leg1.waitValue: 100
+  ✅ targetBy (Combined Premium): Combined Premium
+  ✅ intradayTarget: 150
+  ✅ slBy: Combined Loss
+  ✅ intradaySl: 3000
+
+============================================================
+PROMPT 20 – Maximum Complexity (ALL Parameters)  [FAIL] [68/71]
+  ✅ mainSymbol: BANKNIFTY
+  ✅ isIntraday: False
+  ✅ productType: NRML
+  ✅ tradingStartTime: 09:20:00
+  ✅ isRangeBreakOut: True
+  ✅ rangeEndTime: 09:25:00
+  ✅ isBtstStbt: True
+  ✅ btstGapDays: 3
+  ✅ isCombinedPremEntry: True
+  ✅ totalCombinedPremium: 280
+  ✅ leg_count: 4
+  ✅ leg1.atmType: Strike By Premium Range
+  ✅ leg1.premiumStartRange: 120
+  ✅ leg1.premiumEndRange: 180
+  ✅ leg1.strikeDirection: OTM
+  ✅ leg1.lot: 2
+  ✅ leg1.isIdle: False
+  ✅ leg1.isProfitLockingAndTrailing: True
+  ✅ leg1.ifProfitReaches: 3000
+  ✅ leg1.lockMinimumProfit: 1500
+  ✅ leg1.isEnableStoplossTrailing: True
+  ✅ leg1.trailSlMarketMove: 1000
+  ✅ leg1.trailSlMove: 400
+  ✅ leg1.noOfTimeTrailSl: 3
+  ✅ leg1.actionOnTarget: Execute Leg
+  ✅ leg1.actionOnTargetLegNo: 3
+  ✅ leg1.actionOnTargetDelay: 5
+  ✅ leg1.actionOnSl: Sqroff Leg
+  ✅ leg1.actionOnSlLegNo: 2
+  ✅ leg1.actionOnSlDelay: 2
+  ✅ leg2.atmType: Strike By Nearest Delta
+  ✅ leg2.atm: 0.25
+  ✅ leg2.strikeCondition: AboveEqual (>=)
+  ✅ leg2.strikeDirection: OTM
+  ✅ leg2.lot: 2
+  ✅ leg3.isIdle: True
+  ✅ leg3.tradeSide: BUY
+  ✅ leg4.isIdle: True
+  ✅ leg4.tradeSide: BUY
+  ✅ intradayTarget: 6000
+  ✅ targetBy: Combined Profit
+  ✅ noOfIntradayCycle: 2
+  ✅ intradayCycleDelay: 10
+  ✅ intradaySl: 4000
+  ✅ noOfReexecuteOnSl: 1
+  ✅ reexecuteDelayOnSl: 15
+  ✅ ifProfitReaches: 4000
+  ✅ lockMinimumProfit: 2000
+  ✅ increseInProfitBy: 600
+  ✅ trailProfitBy: 300
+  ✅ noOfTimeTrailTp: 5
+  ✅ isEnableSqroffBeforeExpiryDays: True
+  ✅ sqroffBeforeExpiryDays: 2
+  ✅ sqroffTime: 15:00:00
+  ✅ runMon: True
+  ✅ runTue: True
+  ✅ runWed: True
+  ✅ runThu: True
+  ✅ runFri: False
+  ✅ enableVixFilter: True
+  ✅ vixStartValue: 11
+  ✅ vixEndValue: 19
+  ✅ sqroffAllLegs: True
+  ✅ pauseAndSqroffTradingOnMarginExeed: True
+  ✅ enableTpSlOnPauseStrategy: True
+  ✅ requiredMargin: 200000
+  ✅ shortDescription contains 'Full hedge'
+  ✅ detailedDescription contains 'positional'
+  ❌ profitMove: expected=2000, got=0
+  ❌ slMove: expected=800, got=0
+  ❌ noOfTrailSl: expected=3, got=0

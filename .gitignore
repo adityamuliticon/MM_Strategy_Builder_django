@@ -1,0 +1,25 @@
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv/
+
+# Environment Variables
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# FAISS Vector Store
+rag/store/faiss_index/
+
+# IDE Settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+venv

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | AI Strategy Builder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Market Maya</h2>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;">AI Strategy Builder v1.0</p>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Status</h3>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--success);"></div>
+                <span>Connected</span>
+            </div>
+        </div>
+    </div>
+    <div class="main-chat">
+        <div class="header">
+            <h1>Unified Strategy Builder</h1>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">Session: #MM-7829</div>
+        </div>
+        <div class="chat-container" id="chat-container">
+            <div class="message ai-message">
+                Hello! I am your AI Strategy Builder. How can I help you create your trading strategy today? You can say things like "Create a Nifty ATM straddle" or "Setup a bearish hedge for BankNifty".
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Explain your strategy logic..." autocomplete="off">
+            <button id="send-btn">Send Prompt</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
