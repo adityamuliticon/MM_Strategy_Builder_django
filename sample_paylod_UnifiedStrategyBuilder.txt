@@ -1,0 +1,415 @@
+Request URL
+https://webapi.marketmaya.com/api/mainStrategy/CreateUnifiedStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+9fa6916cab184230-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Tue, 12 May 2026 04:09:28 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=fS7U2FoJz2I9z6CA1dEFhCwCXcsnaHQqrDJ93V0iOXhv%2Fe1etb5zvzryZk2hTb4uKk3EtRaBi9ZtE4RSxPoxggwPMQ6BYhu3YAwXi2HQAHYAjRcRGV45f1OyEP9TaLZ3Fzrzyi4P8Q%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/CreateUnifiedStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzg2MTA1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzEuMTk4LjEyOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiY2I0OWZiYzQtYzkzZS00NmRhLTlkMjAtMjhjODJhMjFkZGI2IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc3ODU1Nzg4MiwibmJmIjoxNzc4NTU3ODgyfQ._rDSIemeHD12K6gnQ63L1RMeWT0MEXrWlEPT6yWTWRf9qGa-h7Eajxq8plRQKcUcWZ6Ot2EX-0XOpaIPAmwVIQ
+content-length
+2409
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+
+
+
+
+
+{"id":"","strategyName":"aditya","underlying":"BANKNIFTY FUT NFO","mainExchange":"NFO","mainSegment":"FUT","mainSymbol":"BANKNIFTY","isIntraday":true,"productType":"MIS","tradingStartTime":"09:15:00","tradingEndTime":"15:15:00","isRangeBreakOut":false,"rangeEndTime":"09:20:00","isBtstStbt":false,"btstGapDays":1,"isCombinedPremEntry":false,"totalCombinedPremium":0,"isEnableMasterTarget":false,"targetBy":"Combined Profit","intradayTarget":0,"isEnableProfitLockingTrailing":false,"ifProfitReaches":0,"lockMinimumProfit":0,"increseInProfitBy":0,"trailProfitBy":0,"noOfTimeTrailTp":0,"isEnableActionOnTarget":false,"actionOnTarget":"Reexecute","noOfIntradayCycle":0,"intradayCycleDelay":0,"isEnableMasterSl":false,"slBy":"Combined Loss","intradaySl":0,"isEnableStoplossTrailing":false,"profitMove":0,"slMove":0,"noOfTrailSl":0,"isEnableActionOnMasterSl":false,"actionOnSl":"Reexecute","noOfReexecuteOnSl":0,"reexecuteDelayOnSl":0,"isEnableSqroffBeforeExpiryDays":false,"sqroffBeforeExpiryDays":0,"sqroffTime":"15:15:00","isEnableWorkingDays":false,"runMon":true,"runTue":true,"runWed":true,"runThu":true,"runFri":true,"runSat":false,"runSun":false,"enableVixFilter":false,"vixStartValue":1,"vixEndValue":5,"enableTpSlOnPauseStrategy":false,"sqroffAllLegs":false,"pauseAndSqroffTradingOnMarginExeed":false,"requiredMargin":1,"shortDescription":"","detailedDescription":"","legs":[{"id":"","isIdle":false,"tradeSide":"BUY","lot":1,"segment":"OPT","expiry":"Current Month","optionType":"CE","atmType":"Strike By ATM Value","premiumStartRange":10,"premiumEndRange":20,"strikeDirection":"BOTH","atm":0,"strikeCondition":"Any","isEnableLegTarget":false,"targetBy":"Target by Money","target":0,"isProfitLockingAndTrailing":false,"ifProfitReaches":0,"lockMinimumProfit":0,"increseInProfitBy":0,"trailProfitBy":0,"noOfTimeTrailTp":0,"isEnableActionOnTarget":false,"actionOnTarget":"Execute Leg","actionOnTargetLegNo":0,"actionOnTargetDelay":0,"isEnableStoplossTrailing":false,"trailSlMarketMove":0,"trailSlMove":0,"noOfTimeTrailSl":0,"isEnableLegStoploss":false,"slBy":"SL by Delta","sl":0,"isEnableActionOnSl":false,"actionOnSl":"Execute Leg","actionOnSlLegNo":0,"actionOnSlDelay":0,"isWaitAndTrade":false,"waitFor":"Up %","waitValue":0,"isExecuteOnRangeBreakout":false,"executeOnRangeBreakout":"Range Low Break"}],"strategyTypeId":"7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$","rebacktest":false,"effectAllSubStrategies":false}
+
+
+
+{statusCode: 200, message: "Success",…}
+data
+: 
+[{clientId: 48519, isDeployed: false, id: 442706, executionLevel: "Level 1"}]
+0
+: 
+{clientId: 48519, isDeployed: false, id: 442706, executionLevel: "Level 1"}
+clientId
+: 
+48519
+executionLevel
+: 
+"Level 1"
+id
+: 
+442706
+isDeployed
+: 
+false
+message
+: 
+"Success"
+statusCode
+: 
+200
+
+
+
+{
+    "statusCode": 200,
+    "message": "Success",
+    "data": [
+        {
+            "clientId": 48519,
+            "isDeployed": false,
+            "id": 442706,
+            "executionLevel": "Level 1"
+        }
+    ]
+}
+
+
+
+
+======================================================================================
+======================================================================================
+
+
+
+
+
+Request URL
+https://api.marketmaya.com/api/V3/mainStrategy/getClientMyStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+9fa691752f29ff63-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Tue, 12 May 2026 04:09:29 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=3tn%2BRKBUkyhZ9tdSllU4AJbuwituDeJWBIG0FpItX200crhou%2BTZ0CViw%2Foe01nzOly80ZSmGoLRFE0ymm5fpLIbd3Bd3SSz1O6d3GfQ%2BjdJiKEZ2YuhZdbahikNmXVukejtCA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/V3/mainStrategy/getClientMyStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzg2MTA1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzEuMTk4LjEyOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiY2I0OWZiYzQtYzkzZS00NmRhLTlkMjAtMjhjODJhMjFkZGI2IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc3ODU1Nzg4MiwibmJmIjoxNzc4NTU3ODgyfQ._rDSIemeHD12K6gnQ63L1RMeWT0MEXrWlEPT6yWTWRf9qGa-h7Eajxq8plRQKcUcWZ6Ot2EX-0XOpaIPAmwVIQ
+content-length
+193
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+
+
+
+
+{skip: 0, take: 8, search: "", symbols: [], tradingType: "All", strategyMasterIds: [],…}
+AuthorIds
+: 
+[]
+search
+: 
+""
+skip
+: 
+0
+sortBy
+: 
+"newest"
+strategyMaster
+: 
+{id: "", strategy_name: "All Plugins", selected: true}
+id
+: 
+""
+selected
+: 
+true
+strategy_name
+: 
+"All Plugins"
+strategyMasterIds
+: 
+[]
+symbols
+: 
+[]
+take
+: 
+8
+tradingType
+: 
+"All"
+
+
+
+{total: 1, data: [{id: "f6E2gK4BDzw7FLigvJ6YRAaC0$aC0$", sid: 442706, strategy_name: "aditya",…}],…}
+data
+: 
+[{id: "f6E2gK4BDzw7FLigvJ6YRAaC0$aC0$", sid: 442706, strategy_name: "aditya",…}]
+0
+: 
+{id: "f6E2gK4BDzw7FLigvJ6YRAaC0$aC0$", sid: 442706, strategy_name: "aditya",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"1 second ago"
+entry_date_time
+: 
+"2026-05-12T09:39:28.037"
+id
+: 
+"f6E2gK4BDzw7FLigvJ6YRAaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+"BANKNIFTY"
+plugin_id
+: 
+"7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$"
+plugin_name
+: 
+"Unified Strategy Builder"
+rebacktest
+: 
+false
+required_margin
+: 
+1
+required_margin_format
+: 
+"1"
+sid
+: 
+442706
+statistics
+: 
+null
+strategy_name
+: 
+"aditya"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"INTRADAY"
+type
+: 
+"unified-strategy-builder"
+noStrategyFound
+: 
+false
+symbols
+: 
+["BANKNIFTY"]
+0
+: 
+"BANKNIFTY"
+total
+: 
+1
+
+
+
+
+{
+    "total": 1,
+    "data": [
+        {
+            "id": "f6E2gK4BDzw7FLigvJ6YRAaC0$aC0$",
+            "sid": 442706,
+            "strategy_name": "aditya",
+            "plugin_name": "Unified Strategy Builder",
+            "plugin_id": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
+            "created_on": "1 second ago",
+            "main_symbol": "BANKNIFTY",
+            "trading_type": "INTRADAY",
+            "required_margin": 1.0,
+            "required_margin_format": "1",
+            "type": "unified-strategy-builder",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-12T09:39:28.037",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        }
+    ],
+    "symbols": [
+        "BANKNIFTY"
+    ],
+    "noStrategyFound": false
+}
+
+
+
