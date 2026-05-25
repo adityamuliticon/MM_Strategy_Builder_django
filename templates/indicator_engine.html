@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | Indicator Signal Engine</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Market Maya</h2>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;">Indicator Signal Engine v1.0</p>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Status</h3>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--success);"></div>
+                <span>Connected</span>
+            </div>
+        </div>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Switch Strategy</h3>
+            <a href="/" style="display: block; margin-top: 10px; color: #00f2ff; font-size: 0.85rem; text-decoration: none;">
+                ← Unified Strategy Builder
+            </a>
+        </div>
+    </div>
+    <div class="main-chat">
+        <div class="header">
+            <h1>Indicator Signal Engine</h1>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">Session: #ISE-7829</div>
+        </div>
+        <div class="chat-container" id="chat-container">
+            <div class="message ai-message">
+                Hello! I am your Indicator Signal Engine builder. I can help you create indicator-driven trading strategies using SuperTrend, MA CrossOver, RSI, MACD, Stochastic, Bollinger Bands, and candlestick patterns. Try: "Create a BankNifty SuperTrend strategy on 5 min chart" or "Setup RSI + MACD combo strategy for Nifty Futures".
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Describe your indicator strategy..." autocomplete="off">
+            <button id="send-btn">Send Prompt</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function appendMessage(role, text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role}-message`;
+            if (role === 'ai') {
+                msgDiv.innerHTML = marked.parse(text);
+            } else {
+                msgDiv.textContent = text;
+            }
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function handleSend() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            userInput.value = '';
+
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai-message';
+            typingDiv.textContent = 'AI is thinking...';
+            chatContainer.appendChild(typingDiv);
+
+            try {
+                const response = await fetch('/indicator/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, session_id: 'ise_user_1' })
+                });
+                const data = await response.json();
+                chatContainer.removeChild(typingDiv);
+                appendMessage('ai', data.message);
+            } catch (error) {
+                chatContainer.removeChild(typingDiv);
+                appendMessage('ai', 'Error: Could not connect to the backend.');
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
+</body>
+</html>
