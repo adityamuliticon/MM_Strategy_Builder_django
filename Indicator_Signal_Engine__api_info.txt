@@ -1,0 +1,130 @@
+Request URL
+https://webapi.marketmaya.com/api/mainStrategy/createIndicatorStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+9fd9f4035d483f97-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Mon, 18 May 2026 09:49:39 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=MzKa9yb2bFg2HVQLJvCO5kPIOJgVkUh56pPGJlQFzAmg3j9uVsDUMK5UqPoCx3fTqlZjOotdMB1OsonbaBZIBDT8BSQjVMkl5d6NgqHohVCz7YvoDIeWZUcVyJ0QSj616XCiLkfqFA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/createIndicatorStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzkxMjg5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMjE4LjEzNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiN2U2NjgyZjktYmFiOC00OTIyLTlkYjItOGM5OTlkNTYzYTI3IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc3OTA5MjQ2NSwibmJmIjoxNzc5MDkyNDY1fQ.f_SB9KEu52BZKa3StntqEmi7FX6QNGR3jhuIm4Emhl13J96YcMLksjc-f9NrF93rN4OlP4Juw0yNdLOn63XYMg
+content-length
+4136
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+
+
+
+
+{"id":"","strategyName":"123456","requiredMargin":1,"isIntraday":true,"entryOrderProduct":"MIS","exitOrderProduct":"MIS","chartType":"Candlestick","timeFrame":"5Min","signal":"BUY","entryTime":"09:15","weekDays":["MON","TUE","WED","THU","FRI"],"sqroffTime":"15:15","sqroffBeforeExDays":0,"masterTarget":0,"masterTargetType":"Money","masterSl":1,"masterSlType":"Money","isTrailSl":true,"profitMove":0,"slMove":0,"noOfTrailSl":0,"shortDescription":"","longDescription":"","strategyTypeId":"QFwz7gYjmmabUT8SBvZQGgaC0$aC0$","underlyingType":"Future","sub":[{"callType":"BUY","exchange":"NFO","segment":"FUT","symbol":"BANKNIFTY","contract":"NEAR","expiry":"MONTHLY","atm":0,"optionType":"","qty":30,"lot":1,"target":1,"targetBy":"Money","sl":1,"slBy":"Money","trailSlMarketMove":1,"trailSlMove":1,"noOfTimeTrailSl":1,"isTrailSl":true,"isReverseSignal":true}],"rebacktest":false,"effectAllSubStrategies":false,"indicators":[{"id":"Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$","index":1,"indicator_name":"RSI","indicator_code":"rsi","parameter":[{"id":"pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$","param_name":"Length","param_code":"length","param_type":"int","is_required":true,"default_value":"14","enum_value":"","min_value":1,"max_value":200,"value":"14"},{"id":"Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$","param_name":"Smoothing Line","param_code":"smoothing-line","param_type":"enum","is_required":true,"default_value":"SMA","enum_value":"SMA|EMA|WMA","min_value":0,"max_value":0,"value":"SMA"},{"id":"CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$","param_name":"Smoothing Length","param_code":"smoothing-length","param_type":"int","is_required":true,"default_value":"14","enum_value":"","min_value":1,"max_value":200,"value":"14"},{"id":"R74aB0$bl3GCmLEzsfNZaxP0waC0$aC0$","param_name":"Lower Band","param_code":"lower-band","param_type":"int","is_required":true,"default_value":"30","enum_value":"","min_value":1,"max_value":50,"value":"30"},{"id":"Es7A7bfLFaB0$aA0$u7XcfTCqNfAaC0$aC0$","param_name":"Upper Band","param_code":"upper-band","param_type":"int","is_required":true,"default_value":"70","enum_value":"","min_value":50,"max_value":100,"value":"70"}]},{"id":"CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$","index":2,"indicator_name":"MACD","indicator_code":"macd","parameter":[{"id":"HGDvMula3mnAvJ9uO7OvEAaC0$aC0$","param_name":"Fast Length","param_code":"fast-length","param_type":"int","is_required":true,"default_value":"12","enum_value":"","min_value":1,"max_value":200,"value":"12"},{"id":"YioJhK5IqBULe8fPLMnXaAaC0$aC0$","param_name":"Slow Length","param_code":"slow-length","param_type":"int","is_required":true,"default_value":"26","enum_value":"","min_value":1,"max_value":200,"value":"26"},{"id":"9TILtPAIUOKuUSlcrcIBAAaC0$aC0$","param_name":"Source","param_code":"source","param_type":"enum","is_required":true,"default_value":"Close","enum_value":"Open|High|Low|Close","min_value":0,"max_value":0,"value":"Close"},{"id":"Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$","param_name":"Signal Length","param_code":"signal-length","param_type":"int","is_required":true,"default_value":"9","enum_value":"","min_value":1,"max_value":200,"value":"9"},{"id":"4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$","param_name":"Oscillator MA Type","param_code":"oscillator-ma-type","param_type":"enum","is_required":true,"default_value":"EMA","enum_value":"EMA|SMA|WMA","min_value":0,"max_value":0,"value":"EMA"},{"id":"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$","param_name":"Signal Line MA Type","param_code":"signal-line-ma-type","param_type":"enum","is_required":true,"default_value":"EMA","enum_value":"EMA|SMA|WMA","min_value":0,"max_value":0,"value":"EMA"}]},{"id":"RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$","index":3,"indicator_name":"Super Trend","indicator_code":"supertrend","parameter":[{"id":"uPDAaA0$hJjD36Jju5v3Tw6OQaC0$aC0$","param_name":"Length","param_code":"length","param_type":"int","is_required":true,"default_value":"10","enum_value":"","min_value":1,"max_value":200,"value":"10"},{"id":"LedxLFBhHoNwaB0$sCusrDbiQaC0$aC0$","param_name":"Factor","param_code":"factor","param_type":"int","is_required":true,"default_value":"3","enum_value":"","min_value":1,"max_value":200,"value":"3"}]}]}
+
+
+{statusCode: 200, message: "Success",…}
+data
+: 
+[{clientId: 48519, isDeployed: false, id: 444076, executionLevel: "Level 1"}]
+0
+: 
+{clientId: 48519, isDeployed: false, id: 444076, executionLevel: "Level 1"}
+clientId
+: 
+48519
+executionLevel
+: 
+"Level 1"
+id
+: 
+444076
+isDeployed
+: 
+false
+message
+: 
+"Success"
+statusCode
+: 
+200
+
+{
+    "statusCode": 200,
+    "message": "Success",
+    "data": [
+        {
+            "clientId": 48519,
+            "isDeployed": false,
+            "id": 444076,
+            "executionLevel": "Level 1"
+        }
+    ]
+}
+
