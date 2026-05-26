@@ -78,8 +78,8 @@
 **Expected Output Validation:**
 - is_intraday: True
 - product_type: "MIS"
-- Sub Leg 1: segment="OPT", symbol="NIFTY", option_type="CE", atm=1, expiry="WEEKLY", contract="NEAR", qty_distribution="Fix", lot=1
-- Sub Leg 2: segment="OPT", symbol="NIFTY", option_type="PE", atm=-1, expiry="WEEKLY", contract="NEAR", qty_distribution="Fix", lot=1
+- Sub Leg 1: segment="OPT", symbol="NIFTY", option_type="CE", atm=100, expiry="WEEKLY", contract="NEAR", qty_distribution="Fix", lot=1
+- Sub Leg 2: segment="OPT", symbol="NIFTY", option_type="PE", atm=-100, expiry="WEEKLY", contract="NEAR", qty_distribution="Fix", lot=1
 - sub_count: 2
 
 ---
