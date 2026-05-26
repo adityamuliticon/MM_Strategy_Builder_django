@@ -1,7 +1,7 @@
-from chat.services.validator import validator
-from chat.services.generator import generator
-from chat.services.market_maya import market_maya
-from chat.rag.retriever import retriever
+from Unified_Strategy_Builder.services.validator import validator
+from Unified_Strategy_Builder.services.generator import generator
+from Unified_Strategy_Builder.services.market_maya import market_maya
+from Unified_Strategy_Builder.rag.retriever import retriever
 
 def get_validation_rules(parameter_name):
     """

@@ -1,5 +1,5 @@
 import json
-from chat.mcp.tools import get_validation_rules, validate_strategy, generate_payload, deploy, create_and_deploy_strategy
+from Unified_Strategy_Builder.mcp.tools import get_validation_rules, validate_strategy, generate_payload, deploy, create_and_deploy_strategy
 
 class ToolHandler:
     def handle_tool_call(self, tool_name, arguments):

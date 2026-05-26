@@ -2,8 +2,8 @@ import json
 import re
 from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError
 from config import Config
-from chat.rag.retriever import retriever
-from chat.mcp.handlers import handler
+from Unified_Strategy_Builder.rag.retriever import retriever
+from Unified_Strategy_Builder.mcp.handlers import handler
 
 class Orchestrator:
     def __init__(self):

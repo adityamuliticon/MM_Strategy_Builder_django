@@ -18,7 +18,7 @@ class Config:
     
     # RAG Settings
     DOCS_PATH = "docs"
-    VECTOR_STORE_PATH = "chat/rag/store/faiss_index"
+    VECTOR_STORE_PATH = "Unified_Strategy_Builder/rag/store/faiss_index"
 
     # Django
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")

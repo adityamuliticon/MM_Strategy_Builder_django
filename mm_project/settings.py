@@ -12,7 +12,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
-    'chat',
+    'Unified_Strategy_Builder',
     'indicator_engine',
     'inbound_signal_bridge',
 ]
