@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from core.orchestrator import orchestrator
+from chat.core.orchestrator import orchestrator
 
 # Memory for session history (same as original app.py)
 memory = {}

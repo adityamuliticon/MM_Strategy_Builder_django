@@ -47,7 +47,7 @@ class ISBMarketMayaService:
             result = {"status": "error", "message": api_response}
 
         try:
-            with open("deployed_strategies.log", "a") as f:
+            with open("logs/deployed_strategies.log", "a") as f:
                 log_entry = {
                     "timestamp": datetime.now().isoformat(),
                     "strategy_type": "inbound_signal_bridge",

@@ -4,7 +4,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 
-ISE_DOC_PATH = "MM - Indicator Signal Engine.md"
+ISE_DOC_PATH = "docs/MM - Indicator Signal Engine.md"
 ISE_VECTOR_STORE_PATH = "indicator_engine/rag/store/faiss_index"
 
 

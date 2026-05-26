@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 
 BASE_URL = "http://localhost:8000/indicator/api/chat"
-LOG_FILE = "deployed_strategies.log"
+LOG_FILE = "logs/deployed_strategies.log"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper: send one chat turn to ISE endpoint
@@ -846,7 +846,7 @@ def run_all():
                 for f in r.failed:
                     print(f)
 
-    report_file = f"ise_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    report_file = f"tests/reports/ise_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     with open(report_file, "w") as f:
         f.write(f"ISE Test Run: {datetime.now().isoformat()}\n")
         f.write(f"Results: {overall_pass}/{len(TESTS)} tests passed, {total_checks_pass}/{total_checks} checks passed\n\n")

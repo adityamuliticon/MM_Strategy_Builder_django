@@ -17,9 +17,9 @@ class Config:
     CREATE_STRATEGY_URL = f"{MARKET_MAYA_BASE_URL}/mainStrategy/CreateUnifiedStrategy"
     
     # RAG Settings
-    DOCS_PATH = "."
-    VECTOR_STORE_PATH = "rag/store/faiss_index"
-    
-    # Flask Settings
+    DOCS_PATH = "docs"
+    VECTOR_STORE_PATH = "chat/rag/store/faiss_index"
+
+    # Django
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
     DEBUG = True
