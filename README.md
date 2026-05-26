@@ -38,7 +38,7 @@ MM_Strategy_Builder_django/
 │   ├── settings.py
 │   └── urls.py
 │
-├── chat/                          # Unified Strategy Builder (USB)
+├── Unified_Strategy_Builder/      # Unified Strategy Builder (USB)
 │   ├── views.py / urls.py
 │   ├── core/orchestrator.py       # AI loop + system prompt
 │   ├── mcp/handlers.py, tools.py  # Tool routing + deployment
@@ -46,10 +46,10 @@ MM_Strategy_Builder_django/
 │   └── services/generator.py, market_maya.py, validator.py
 │
 ├── indicator_engine/              # Indicator Signal Engine (ISE)
-│   └── (same structure as chat/)
+│   └── (same structure)
 │
 ├── inbound_signal_bridge/         # Inbound Signal Bridge (ISB)
-│   └── (same structure as chat/)
+│   └── (same structure)
 │
 ├── static/css/ + static/js/       # Shared UI assets
 ├── templates/                     # HTML templates per module
@@ -111,7 +111,7 @@ Run once per module to build the FAISS vector stores from the documentation:
 
 ```bash
 # Unified Strategy Builder
-python -c "from chat.rag.ingest import ingest_docs; ingest_docs()"
+python -c "from Unified_Strategy_Builder.rag.ingest import ingest_docs; ingest_docs()"
 
 # Indicator Signal Engine
 python -c "from indicator_engine.rag.ingest import ingest_docs; ingest_docs()"
