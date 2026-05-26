@@ -229,7 +229,9 @@ STRICT JSON SCHEMA:
         # Loop for multi-step tool calls
         max_turns = 10
         executed_tools = set()
-        
+        _in_tok = 0
+        _out_tok = 0
+
         for turn in range(max_turns):
             try:
                 response = self.client.chat.completions.create(
@@ -239,14 +241,18 @@ STRICT JSON SCHEMA:
             except BadRequestError as e:
                 msg = str(e)
                 if "Insufficient credits" in msg or "credits" in msg.lower():
-                    return "⚠️ **AI service unavailable**: The Runware AI account has insufficient credits. Please top up at app.runware.ai and try again."
-                return f"⚠️ **AI service error**: {msg}"
+                    return {"message": "⚠️ **AI service unavailable**: The Runware AI account has insufficient credits. Please top up at app.runware.ai and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
+                return {"message": f"⚠️ **AI service error**: {msg}", "input_tokens": _in_tok, "output_tokens": _out_tok}
             except AuthenticationError:
-                return "⚠️ **Authentication error**: Invalid Runware API key. Please check your RUNWARE_API_KEY in .env."
+                return {"message": "⚠️ **Authentication error**: Invalid Runware API key. Please check your RUNWARE_API_KEY in .env.", "input_tokens": _in_tok, "output_tokens": _out_tok}
             except RateLimitError:
-                return "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again."
+                return {"message": "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
             except APIConnectionError:
-                return "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection and try again."
+                return {"message": "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
+
+            if hasattr(response, 'usage') and response.usage:
+                _in_tok += response.usage.prompt_tokens
+                _out_tok += response.usage.completion_tokens
 
             content = response.choices[0].message.content
             
@@ -320,7 +326,7 @@ STRICT JSON SCHEMA:
                                 if tool_name == "create_and_deploy_strategy" and tool_result.get("status") == "success":
                                     clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
                                     if not clean_summary: clean_summary = content
-                                    return clean_summary + "\n\n**Strategy Deployed Successfully.**"
+                                    return {"message": clean_summary + "\n\n**Strategy Deployed Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
                                     
                                 break 
                         except Exception as e:
@@ -336,8 +342,8 @@ STRICT JSON SCHEMA:
             ui_content = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
             # If nothing left, use a default summary or the original content if no JSON was found
             if not ui_content: ui_content = content
-            
-            return ui_content
+
+            return {"message": ui_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
         
         # If we hit the limit, try to get a final summary from the AI
         messages.append({"role": "user", "content": "You have done enough research. Please provide the final strategy summary and ask for deployment confirmation now."})
@@ -346,9 +352,13 @@ STRICT JSON SCHEMA:
                 model=self.model,
                 messages=messages
             )
-            return final_attempt.choices[0].message.content
+            if hasattr(final_attempt, 'usage') and final_attempt.usage:
+                _in_tok += final_attempt.usage.prompt_tokens
+                _out_tok += final_attempt.usage.completion_tokens
+            final_content = final_attempt.choices[0].message.content
+            return {"message": final_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
         except (BadRequestError, AuthenticationError, RateLimitError, APIConnectionError) as e:
-            return f"⚠️ **AI service error**: {e}"
+            return {"message": f"⚠️ **AI service error**: {e}", "input_tokens": _in_tok, "output_tokens": _out_tok}
 
 # Singleton instance
 orchestrator = Orchestrator()

@@ -1,0 +1,417 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | Chat Logs</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ── layout ── */
+        .logs-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* ── top stat cards ── */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: 10px; padding: 16px 24px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; padding: 12px 14px;
+        }
+        .stat-card.highlight { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.07); }
+        .stat-card .label { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+        .stat-card .value { font-size: 1.25rem; font-weight: 700; color: #fff; margin-top: 4px; }
+        .stat-card .sub   { font-size: .7rem; color: var(--text-muted); margin-top: 2px; }
+        .value.green { color: var(--success); }
+        .value.cyan  { color: #00f2ff; }
+        .value.gold  { color: #f0c040; }
+
+        /* ── date filter bar ── */
+        .filter-bar {
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+            padding: 14px 24px 0;
+        }
+        .filter-section { display: flex; align-items: center; gap: 6px; }
+        .filter-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 6px; }
+
+        .quick-btn {
+            padding: 5px 12px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: transparent; color: var(--text-muted);
+            font-size: .75rem; cursor: pointer; transition: all .18s;
+        }
+        .quick-btn:hover, .quick-btn.active {
+            background: rgba(0,242,255,0.12); border-color: #00f2ff; color: #00f2ff;
+        }
+
+        .date-input {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px; padding: 5px 10px; color: #ccd; font-size: .78rem;
+            font-family: inherit; outline: none; cursor: pointer;
+        }
+        .date-input:focus { border-color: #00f2ff; }
+        .date-input::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+
+        .apply-btn {
+            padding: 5px 14px; border-radius: 6px;
+            background: rgba(0,242,255,0.15); border: 1px solid #00f2ff;
+            color: #00f2ff; font-size: .78rem; cursor: pointer; transition: all .18s;
+        }
+        .apply-btn:hover { background: rgba(0,242,255,0.25); }
+
+        .clear-btn {
+            padding: 5px 10px; border-radius: 6px;
+            background: rgba(255,80,80,0.1); border: 1px solid rgba(255,80,80,0.3);
+            color: #ff7070; font-size: .75rem; cursor: pointer; transition: all .18s;
+            text-decoration: none; display: inline-block;
+        }
+        .clear-btn:hover { background: rgba(255,80,80,0.2); }
+
+        .filter-label { font-size: .75rem; color: var(--text-muted); white-space: nowrap; }
+
+        /* ── active filter banner ── */
+        .filter-banner {
+            margin: 10px 24px 0;
+            background: rgba(240,192,64,0.1); border: 1px solid rgba(240,192,64,0.25);
+            border-radius: 8px; padding: 8px 14px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .filter-banner .fb-left { font-size: .8rem; color: #f0c040; }
+        .filter-banner .fb-cost { font-size: 1.1rem; font-weight: 700; color: #f0c040; }
+
+        /* ── module filter pills ── */
+        .module-filter-row {
+            display: flex; align-items: center; gap: 6px;
+            padding: 10px 24px 0;
+        }
+
+        /* ── daily chart ── */
+        .chart-wrap {
+            padding: 10px 24px 0;
+        }
+        .chart-title { font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+        .bar-chart {
+            display: flex; align-items: flex-end; gap: 4px;
+            height: 60px; overflow-x: auto;
+        }
+        .bar-group { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 28px; flex: 1; max-width: 40px; }
+        .bar {
+            width: 100%; border-radius: 3px 3px 0 0;
+            background: linear-gradient(180deg, #f0c040, rgba(240,192,64,0.3));
+            min-height: 2px; transition: opacity .2s;
+            cursor: pointer; position: relative;
+        }
+        .bar:hover { opacity: .8; }
+        .bar .bar-tip {
+            display: none; position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%);
+            background: #1a1d26; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 5px; padding: 4px 8px; white-space: nowrap;
+            font-size: .7rem; color: #eee; pointer-events: none; z-index: 10;
+        }
+        .bar:hover .bar-tip { display: block; }
+        .bar-day { font-size: .6rem; color: var(--text-muted); white-space: nowrap; }
+
+        /* ── per-module stats ── */
+        .module-stats-row {
+            display: flex; gap: 10px; padding: 10px 24px 0; flex-wrap: wrap;
+        }
+        .ms-card {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 8px 14px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .module-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: .68rem; font-weight: 700; letter-spacing: .04em; }
+        .badge-USB { background: rgba(0,242,255,.15); color: #00f2ff; }
+        .badge-ISE { background: rgba(120,80,255,.2);  color: #a080ff; }
+        .badge-ISB { background: rgba(0,200,120,.15);  color: #00e090; }
+        .ms-val { font-size: .78rem; color: #dde; }
+        .ms-val span { color: var(--text-muted); }
+
+        /* ── table ── */
+        .table-wrap { flex: 1; overflow-y: auto; padding: 10px 24px 24px; }
+        table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+        thead th {
+            position: sticky; top: 0; background: #0e1117; z-index: 2;
+            padding: 9px 10px; text-align: left;
+            color: var(--text-muted); font-weight: 600; font-size: .68rem;
+            text-transform: uppercase; letter-spacing: .05em;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background .15s; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        td { padding: 9px 10px; vertical-align: top; color: #cdd; }
+
+        .msg-cell { max-width: 230px; cursor: pointer; }
+        .msg-short { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; color: #aab; }
+        .msg-full  { display: none; white-space: pre-wrap; word-break: break-word; color: #ccd; }
+        .msg-cell.expanded .msg-short { display: none; }
+        .msg-cell.expanded .msg-full  { display: block; }
+
+        .tok-in  { color: #7cb8ff; }
+        .tok-out { color: #ff9f7c; }
+        .tok-tot { color: #fff; font-weight: 600; }
+        .cost-usd { color: var(--text-muted); font-size: .68rem; }
+        .cost-inr { color: #f0c040; font-weight: 600; }
+
+        .empty-state { text-align: center; padding: 50px; color: var(--text-muted); }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Market Maya</h2>
+    <p style="color:var(--text-muted);font-size:.8rem;margin-top:10px;">Chat Logs & Analytics</p>
+    <div style="margin-top:40px;">
+        <h3 style="font-size:.9rem;color:var(--text-muted);">Switch Module</h3>
+        <a href="/"           style="display:block;margin-top:10px;color:#00f2ff;font-size:.85rem;text-decoration:none;">→ Unified Strategy Builder</a>
+        <a href="/indicator/" style="display:block;margin-top:8px;color:#00f2ff;font-size:.85rem;text-decoration:none;">→ Indicator Signal Engine</a>
+        <a href="/bridge/"    style="display:block;margin-top:8px;color:#00f2ff;font-size:.85rem;text-decoration:none;">→ Inbound Signal Bridge</a>
+    </div>
+    <div style="margin-top:40px;">
+        <h3 style="font-size:.9rem;color:var(--text-muted);">Pricing</h3>
+        <p style="font-size:.73rem;color:var(--text-muted);margin-top:8px;line-height:1.6;">
+            Edit <code style="color:#00f2ff;">config.py</code><br>
+            <code style="color:#aab;">COST_PER_1M_INPUT_TOKENS_USD</code><br>
+            <code style="color:#aab;">COST_PER_1M_OUTPUT_TOKENS_USD</code><br>
+            <code style="color:#aab;">USD_TO_INR_RATE</code>
+        </p>
+    </div>
+    <div style="margin-top:30px;">
+        <h3 style="font-size:.9rem;color:var(--text-muted);">All-time Totals</h3>
+        <p style="font-size:.78rem;color:#ccd;margin-top:8px;line-height:1.8;">
+            Requests: <strong style="color:#fff;">{{ all_stats.total_requests|default:0 }}</strong><br>
+            Tokens: <strong style="color:#fff;">{{ all_stats.total_tokens|default:0 }}</strong><br>
+            Cost: <strong style="color:#f0c040;">₹{% if all_stats.total_cost_inr %}{{ all_stats.total_cost_inr|floatformat:2 }}{% else %}0.00{% endif %}</strong>
+        </p>
+    </div>
+</div>
+
+<div class="main-chat logs-main">
+    <div class="header">
+        <h1>Chat Logs</h1>
+        <div style="font-size:.85rem;color:var(--text-muted);">
+            {% if is_filtered %}Filtered · {% endif %}{{ stats.total_requests|default:0 }} request{{ stats.total_requests|default:0|pluralize }}
+        </div>
+    </div>
+
+    <!-- ── Date filter bar ── -->
+    <form method="get" class="filter-bar" id="filter-form">
+        {% if active_module %}<input type="hidden" name="module" value="{{ active_module }}">{% endif %}
+
+        <span class="filter-label">Period:</span>
+
+        <div class="filter-section">
+            <a href="?{% if active_module %}module={{ active_module }}&{% endif %}quick=today"
+               class="quick-btn {% if quick == 'today' %}active{% endif %}">Today</a>
+            <a href="?{% if active_module %}module={{ active_module }}&{% endif %}quick=yesterday"
+               class="quick-btn {% if quick == 'yesterday' %}active{% endif %}">Yesterday</a>
+            <a href="?{% if active_module %}module={{ active_module }}&{% endif %}quick=last7"
+               class="quick-btn {% if quick == 'last7' %}active{% endif %}">Last 7 Days</a>
+            <a href="?{% if active_module %}module={{ active_module }}&{% endif %}quick=thismonth"
+               class="quick-btn {% if quick == 'thismonth' %}active{% endif %}">This Month</a>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-section">
+            <span class="filter-label">From</span>
+            <input type="date" name="date_from" value="{{ date_from }}" class="date-input" id="date-from">
+            <span class="filter-label">To</span>
+            <input type="date" name="date_to"   value="{{ date_to }}"   class="date-input" id="date-to">
+            <button type="submit" class="apply-btn">Apply</button>
+        </div>
+
+        {% if is_filtered or quick %}
+        <a href="?{% if active_module %}module={{ active_module }}{% endif %}" class="clear-btn">✕ Clear</a>
+        {% endif %}
+    </form>
+
+    <!-- ── Active filter cost banner ── -->
+    {% if is_filtered or quick %}
+    <div class="filter-banner">
+        <div class="fb-left">
+            {% if date_from and date_to %}
+                📅 {{ date_from }} → {{ date_to }}
+            {% elif date_from %}
+                📅 From {{ date_from }}
+            {% elif date_to %}
+                📅 Up to {{ date_to }}
+            {% endif %}
+            &nbsp;·&nbsp; {{ stats.total_requests|default:0 }} request{{ stats.total_requests|default:0|pluralize }}
+            &nbsp;·&nbsp; {{ stats.total_tokens|default:0 }} tokens
+        </div>
+        <div class="fb-cost">
+            ₹{% if stats.total_cost_inr %}{{ stats.total_cost_inr|floatformat:4 }}{% else %}0.0000{% endif %}
+            <span style="font-size:.75rem;font-weight:400;color:#c0a030;">
+                &nbsp;(${% if stats.total_cost_usd %}{{ stats.total_cost_usd|floatformat:6 }}{% else %}0{% endif %})
+            </span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ── Summary stat cards ── -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="label">Requests</div>
+            <div class="value cyan">{{ stats.total_requests|default:0 }}</div>
+            <div class="sub">{% if is_filtered or quick %}filtered{% else %}all time{% endif %}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Input Tokens</div>
+            <div class="value">{{ stats.total_input_tokens|default:0 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Output Tokens</div>
+            <div class="value">{{ stats.total_output_tokens|default:0 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Tokens</div>
+            <div class="value">{{ stats.total_tokens|default:0 }}</div>
+        </div>
+        <div class="stat-card highlight">
+            <div class="label">Total Cost</div>
+            <div class="value gold">₹{% if stats.total_cost_inr %}{{ stats.total_cost_inr|floatformat:2 }}{% else %}0.00{% endif %}</div>
+            <div class="sub">${% if stats.total_cost_usd %}{{ stats.total_cost_usd|floatformat:5 }}{% else %}0{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- ── Daily cost bar chart ── -->
+    {% if daily_chart %}
+    <div class="chart-wrap">
+        <div class="chart-title">Daily Cost (₹)</div>
+        <div class="bar-chart" id="bar-chart"></div>
+    </div>
+    {% endif %}
+
+    <!-- ── Per-module breakdown ── -->
+    {% if module_stats %}
+    <div class="module-stats-row">
+        {% for ms in module_stats %}
+        <div class="ms-card">
+            <span class="module-badge badge-{{ ms.module }}">{{ ms.module }}</span>
+            <div class="ms-val">
+                {{ ms.requests }} req <span>·</span>
+                {{ ms.tokens|default:0 }} tok <span>·</span>
+                ₹{{ ms.cost_inr|default:0|floatformat:2 }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ── Module filter pills ── -->
+    <div class="module-filter-row">
+        <span class="filter-label">Module:</span>
+        <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}"
+           class="quick-btn {% if not active_module %}active{% endif %}">All</a>
+        <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}module=USB"
+           class="quick-btn {% if active_module == 'USB' %}active{% endif %}">USB</a>
+        <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}module=ISE"
+           class="quick-btn {% if active_module == 'ISE' %}active{% endif %}">ISE</a>
+        <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}module=ISB"
+           class="quick-btn {% if active_module == 'ISB' %}active{% endif %}">ISB</a>
+    </div>
+
+    <!-- ── Logs table ── -->
+    <div class="table-wrap">
+        {% if logs %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Time</th>
+                    <th>Module</th>
+                    <th>Session</th>
+                    <th>User Message</th>
+                    <th>AI Response</th>
+                    <th>In Tok</th>
+                    <th>Out Tok</th>
+                    <th>Total</th>
+                    <th>Cost (₹)</th>
+                    <th>Model</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td style="color:var(--text-muted);">{{ log.id }}</td>
+                    <td style="white-space:nowrap;color:var(--text-muted);font-size:.72rem;">{{ log.timestamp|date:"d M Y" }}<br>{{ log.timestamp|date:"H:i:s" }}</td>
+                    <td><span class="module-badge badge-{{ log.module }}">{{ log.module }}</span></td>
+                    <td style="color:var(--text-muted);font-size:.7rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ log.session_id }}</td>
+                    <td class="msg-cell" onclick="this.classList.toggle('expanded')">
+                        <div class="msg-short">{{ log.user_message }}</div>
+                        <div class="msg-full">{{ log.user_message }}</div>
+                    </td>
+                    <td class="msg-cell" onclick="this.classList.toggle('expanded')">
+                        <div class="msg-short">{{ log.ai_response }}</div>
+                        <div class="msg-full">{{ log.ai_response }}</div>
+                    </td>
+                    <td class="tok-in">{{ log.input_tokens }}</td>
+                    <td class="tok-out">{{ log.output_tokens }}</td>
+                    <td class="tok-tot">{{ log.total_tokens }}</td>
+                    <td>
+                        <div class="cost-inr">₹{{ log.cost_inr|floatformat:4 }}</div>
+                        <div class="cost-usd">${{ log.cost_usd|floatformat:6 }}</div>
+                    </td>
+                    <td style="color:var(--text-muted);font-size:.68rem;">{{ log.model_used }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p style="font-size:1rem;color:#556;">No logs for this period.</p>
+            {% if is_filtered or quick %}
+            <p style="margin-top:8px;font-size:.82rem;">Try a different date range or <a href="/logs/" style="color:#00f2ff;">clear the filter</a>.</p>
+            {% else %}
+            <p style="margin-top:8px;font-size:.82rem;">Logs will appear here after the first strategy request.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// ── Build bar chart from server data ──
+const chartData = {{ daily_chart|safe }};
+
+if (chartData.length) {
+    const container = document.getElementById('bar-chart');
+    const maxCost   = Math.max(...chartData.map(d => d.cost_inr), 0.0001);
+
+    chartData.forEach(d => {
+        const pct  = Math.max((d.cost_inr / maxCost) * 100, 2);
+        const day  = d.day ? d.day.slice(5) : '';  // MM-DD
+        const grp  = document.createElement('div');
+        grp.className = 'bar-group';
+        grp.innerHTML = `
+            <div class="bar" style="height:${pct}%">
+                <div class="bar-tip">
+                    ${d.day}<br>
+                    ₹${d.cost_inr.toFixed(4)}<br>
+                    ${d.requests} req · ${d.tokens} tok
+                </div>
+            </div>
+            <div class="bar-day">${day}</div>`;
+        container.appendChild(grp);
+    });
+}
+
+// ── Auto-refresh every 60s (only if no filter active) ──
+{% if not is_filtered and not quick %}
+setTimeout(() => location.reload(), 60000);
+{% endif %}
+
+// ── Ensure date_to >= date_from ──
+document.getElementById('date-from').addEventListener('change', function() {
+    const to = document.getElementById('date-to');
+    if (to.value && to.value < this.value) to.value = this.value;
+});
+</script>
+</body>
+</html>
