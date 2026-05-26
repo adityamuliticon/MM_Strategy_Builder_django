@@ -11,10 +11,12 @@ DEBUG = Config.DEBUG
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'Unified_Strategy_Builder',
     'indicator_engine',
     'inbound_signal_bridge',
+    'chat_logs',
 ]
 
 MIDDLEWARE = [
@@ -40,7 +42,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mm_project.wsgi.application'
 
-DATABASES = {}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'logs' / 'chat_history.db',
+    }
+}
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'

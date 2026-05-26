@@ -283,6 +283,8 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
 
         max_turns = 10
         executed_tools = set()
+        _in_tok = 0
+        _out_tok = 0
 
         for turn in range(max_turns):
             try:
@@ -293,14 +295,18 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
             except BadRequestError as e:
                 msg = str(e)
                 if "credits" in msg.lower():
-                    return "⚠️ **AI service unavailable**: Insufficient credits. Please top up at app.runware.ai."
-                return f"⚠️ **AI service error**: {msg}"
+                    return {"message": "⚠️ **AI service unavailable**: Insufficient credits. Please top up at app.runware.ai.", "input_tokens": _in_tok, "output_tokens": _out_tok}
+                return {"message": f"⚠️ **AI service error**: {msg}", "input_tokens": _in_tok, "output_tokens": _out_tok}
             except AuthenticationError:
-                return "⚠️ **Authentication error**: Invalid Runware API key. Check your RUNWARE_API_KEY in .env."
+                return {"message": "⚠️ **Authentication error**: Invalid Runware API key. Check your RUNWARE_API_KEY in .env.", "input_tokens": _in_tok, "output_tokens": _out_tok}
             except RateLimitError:
-                return "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again."
+                return {"message": "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
             except APIConnectionError:
-                return "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection."
+                return {"message": "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection.", "input_tokens": _in_tok, "output_tokens": _out_tok}
+
+            if hasattr(response, 'usage') and response.usage:
+                _in_tok += response.usage.prompt_tokens
+                _out_tok += response.usage.completion_tokens
 
             content = response.choices[0].message.content
 
@@ -371,7 +377,7 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
                                     clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
                                     if not clean_summary:
                                         clean_summary = content
-                                    return clean_summary + "\n\n**Strategy Deployed Successfully.**"
+                                    return {"message": clean_summary + "\n\n**Strategy Deployed Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
 
                                 break
                         except Exception as e:
@@ -387,7 +393,7 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
             if not ui_content:
                 ui_content = content
 
-            return ui_content
+            return {"message": ui_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
 
         messages.append({
             "role": "user",
@@ -395,9 +401,13 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
         })
         try:
             final = self.client.chat.completions.create(model=self.model, messages=messages)
-            return final.choices[0].message.content
+            if hasattr(final, 'usage') and final.usage:
+                _in_tok += final.usage.prompt_tokens
+                _out_tok += final.usage.completion_tokens
+            final_content = final.choices[0].message.content
+            return {"message": final_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
         except Exception as e:
-            return f"⚠️ **AI service error**: {e}"
+            return {"message": f"⚠️ **AI service error**: {e}", "input_tokens": _in_tok, "output_tokens": _out_tok}
 
 
 # Singleton instance
