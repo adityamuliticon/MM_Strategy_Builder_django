@@ -8,8 +8,8 @@ import time
 import os
 from datetime import datetime
 
-BASE_URL = "http://localhost:5000/api/chat"
-LOG_FILE = "deployed_strategies.log"
+BASE_URL = "http://localhost:8000/api/chat"
+LOG_FILE = "logs/deployed_strategies.log"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper: send one chat turn
@@ -772,7 +772,7 @@ def run_all():
                     print(f)
 
     # Save report
-    report_file = f"test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    report_file = f"tests/reports/test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     with open(report_file, "w") as f:
         f.write(f"Test Run: {datetime.now().isoformat()}\n")
         f.write(f"Results: {overall_pass}/{len(TESTS)} tests passed, {total_checks_pass}/{total_checks} checks passed\n\n")

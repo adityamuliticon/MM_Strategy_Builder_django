@@ -47,7 +47,7 @@ class ISEMarketMayaService:
             result = {"status": "error", "message": api_response}
 
         try:
-            with open("deployed_strategies.log", "a") as f:
+            with open("logs/deployed_strategies.log", "a") as f:
                 log_entry = {
                     "timestamp": datetime.now().isoformat(),
                     "strategy_type": "indicator_signal_engine",

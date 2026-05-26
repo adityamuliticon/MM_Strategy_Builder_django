@@ -50,7 +50,7 @@ class MarketMayaService:
 
         # Log payload + actual API result together AFTER the call
         try:
-            with open("deployed_strategies.log", "a") as f:
+            with open("logs/deployed_strategies.log", "a") as f:
                 log_entry = {
                     "timestamp": datetime.now().isoformat(),
                     "strategy_name": payload.get("strategyName", "Unknown"),

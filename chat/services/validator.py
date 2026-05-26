@@ -3,7 +3,7 @@ from config import Config
 
 class StrategyValidator:
     def __init__(self):
-        with open("swagger.json", "r") as f:
+        with open("docs/swagger.json", "r") as f:
             self.swagger = json.load(f)
             
     def validate_main_parameters(self, params):

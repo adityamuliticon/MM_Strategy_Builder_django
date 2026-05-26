@@ -16,7 +16,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 
-MD_FILE = os.path.join(BASE_DIR, "MM - Inbound Signal Bridge.md")
+MD_FILE = os.path.join(BASE_DIR, "docs", "MM - Inbound Signal Bridge.md")
 STORE_PATH = os.path.join(BASE_DIR, "inbound_signal_bridge", "rag", "store", "faiss_index")
 
 
