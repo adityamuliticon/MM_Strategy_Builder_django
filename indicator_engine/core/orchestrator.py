@@ -410,5 +410,148 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
             return {"message": f"⚠️ **AI service error**: {e}", "input_tokens": _in_tok, "output_tokens": _out_tok}
 
 
+    def stream_message(self, user_message, history=None):
+        """Streaming variant — yields dicts {t, v/in_tok/out_tok} for SSE."""
+        if history is None:
+            history = []
+
+        context = ise_retriever.get_context(user_message)
+        messages = [
+            {"role": "system", "content": self.system_prompt},
+            {"role": "system", "content": f"Relevant ISE Documentation:\n{context}"}
+        ] + history + [{"role": "user", "content": user_message}]
+
+        max_turns = 10
+        executed_tools = set()
+        _in_tok = 0
+        _out_tok = 0
+
+        for turn in range(max_turns):
+            try:
+                stream = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    stream=True,
+                    stream_options={"include_usage": True}
+                )
+            except BadRequestError as e:
+                msg = str(e)
+                err = "⚠️ **AI service unavailable**: Insufficient credits." if "credits" in msg.lower() else f"⚠️ **AI error**: {msg}"
+                yield {"t": "error", "v": err}
+                return
+            except AuthenticationError:
+                yield {"t": "error", "v": "⚠️ **Authentication error**: Invalid Runware API key."}
+                return
+            except RateLimitError:
+                yield {"t": "error", "v": "⚠️ **Rate limit reached**: Please wait a moment."}
+                return
+            except APIConnectionError:
+                yield {"t": "error", "v": "⚠️ **Connection error**: Could not reach the AI service."}
+                return
+
+            full_content = ""
+            brace_depth = 0
+
+            for chunk in stream:
+                if not chunk.choices:
+                    if hasattr(chunk, 'usage') and chunk.usage:
+                        _in_tok += getattr(chunk.usage, 'prompt_tokens', 0) or 0
+                        _out_tok += getattr(chunk.usage, 'completion_tokens', 0) or 0
+                    continue
+
+                delta = chunk.choices[0].delta.content or ""
+                full_content += delta
+
+                text_part = ""
+                for char in delta:
+                    if char == '{':
+                        if brace_depth == 0 and text_part:
+                            yield {"t": "chunk", "v": text_part}
+                            text_part = ""
+                        brace_depth += 1
+                    elif char == '}':
+                        brace_depth = max(0, brace_depth - 1)
+                    elif brace_depth == 0:
+                        text_part += char
+
+                if text_part and brace_depth == 0:
+                    yield {"t": "chunk", "v": text_part}
+
+            tool_called = False
+            try:
+                start_indices = [m.start() for m in re.finditer(r'\{', full_content)]
+                for start_idx in start_indices:
+                    brace_count = 0
+                    end_idx = -1
+                    for i in range(start_idx, len(full_content)):
+                        if full_content[i] == '{':
+                            brace_count += 1
+                        elif full_content[i] == '}':
+                            brace_count -= 1
+                            if brace_count == 0:
+                                end_idx = i + 1
+                                break
+
+                    if end_idx == -1:
+                        continue
+
+                    json_str = full_content[start_idx:end_idx]
+                    try:
+                        clean_json = json_str.strip('`').strip()
+                        if clean_json.startswith('json'):
+                            clean_json = clean_json[4:].strip()
+
+                        data = json.loads(clean_json)
+                        tool_name = None
+                        args = None
+
+                        if isinstance(data, dict):
+                            if "tool" in data and "arguments" in data:
+                                tool_name = data["tool"]
+                                args = data["arguments"]
+                            else:
+                                for key in ["create_and_deploy_ise_strategy", "ise_validate_strategy", "ise_generate_payload"]:
+                                    if key in data:
+                                        tool_name = key
+                                        val = data[key]
+                                        if "strategy_json" in val:
+                                            args = val
+                                        else:
+                                            args = {"strategy_json": val}
+                                        break
+
+                        if tool_name and args:
+                            args_str = json.dumps(args, sort_keys=True)
+                            tool_key = f"{tool_name}:{args_str}"
+                            if tool_key in executed_tools:
+                                continue
+                            executed_tools.add(tool_key)
+
+                            yield {"t": "status", "v": "Deploying strategy to Market Maya..."}
+                            tool_result = ise_handler.handle_tool_call(tool_name, args)
+
+                            messages.append({"role": "assistant", "content": full_content})
+                            messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
+                            tool_called = True
+
+                            if tool_name == "create_and_deploy_ise_strategy" and tool_result.get("status") == "success":
+                                yield {"t": "chunk", "v": "\n\n**Strategy Deployed Successfully.**"}
+                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                                return
+                            break
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+
+            if tool_called:
+                continue
+
+            yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+            return
+
+        yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+
+
 # Singleton instance
 ise_orchestrator = ISEOrchestrator()

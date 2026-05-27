@@ -55,51 +55,85 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        const sessionId = 'isb_user_1';
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
 
-        function addMessage(content, isUser) {
-            const div = document.createElement('div');
-            div.className = 'message ' + (isUser ? 'user-message' : 'ai-message');
-            div.innerHTML = isUser ? content : marked.parse(content);
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function showTyping() {
-            const div = document.createElement('div');
-            div.className = 'message ai-message typing-indicator';
-            div.id = 'typing';
-            div.textContent = 'Processing...';
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function removeTyping() {
-            const el = document.getElementById('typing');
-            if (el) el.remove();
+        function setInputLocked(locked) {
+            sendBtn.disabled = locked;
+            userInput.disabled = locked;
         }
 
         async function sendMessage() {
-            const message = userInput.value.trim();
-            if (!message) return;
-            addMessage(message, true);
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-message';
+            userDiv.textContent = text;
+            chatContainer.appendChild(userDiv);
             userInput.value = '';
-            showTyping();
+            setInputLocked(true);
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message ai-message';
+            msgDiv.innerHTML = '<em class="thinking-msg">Market Maya is thinking...</em> <span class="streaming-cursor">▌</span>';
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            let accumulated = '';
+
             try {
-                const response = await fetch('/bridge/api/chat', {
+                const response = await fetch('/bridge/api/chat/stream', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({message, session_id: sessionId})
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, session_id: 'isb_user_1' })
                 });
-                const data = await response.json();
-                removeTyping();
-                addMessage(data.message, false);
-            } catch (err) {
-                removeTyping();
-                addMessage('Error: ' + err.message, false);
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const parts = buffer.split('\n\n');
+                    buffer = parts.pop();
+
+                    for (const part of parts) {
+                        if (!part.startsWith('data: ')) continue;
+                        try {
+                            const event = JSON.parse(part.slice(6));
+                            if (event.t === 'chunk') {
+                                accumulated += event.v;
+                                msgDiv.innerHTML = marked.parse(accumulated) + '<span class="streaming-cursor">▌</span>';
+                                chatContainer.scrollTop = chatContainer.scrollHeight;
+                            } else if (event.t === 'status') {
+                                msgDiv.innerHTML = marked.parse(accumulated) +
+                                    `<p class="deploy-status"><em>${event.v}</em> <span class="streaming-cursor">▌</span></p>`;
+                            } else if (event.t === 'done') {
+                                msgDiv.innerHTML = marked.parse(accumulated);
+                                chatContainer.scrollTop = chatContainer.scrollHeight;
+                            } else if (event.t === 'error') {
+                                msgDiv.innerHTML = marked.parse(event.v || 'An error occurred.');
+                            }
+                        } catch (_) {}
+                    }
+                }
+
+                if (msgDiv.innerHTML.includes('streaming-cursor')) {
+                    msgDiv.innerHTML = marked.parse(accumulated) || 'No response.';
+                }
+
+            } catch (error) {
+                msgDiv.innerHTML = 'Error: Could not connect to the backend.';
+            } finally {
+                setInputLocked(false);
+                userInput.focus();
             }
         }
 

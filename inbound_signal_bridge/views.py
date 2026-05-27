@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from inbound_signal_bridge.core.orchestrator import isb_orchestrator
@@ -52,3 +52,54 @@ def chat(request):
     isb_memory[session_id].append({"role": "assistant", "content": response_text})
 
     return JsonResponse({"status": "success", "message": response_text})
+
+
+@csrf_exempt
+def chat_stream(request):
+    data = json.loads(request.body)
+    user_message = data.get('message')
+    session_id = data.get('session_id', 'default')
+
+    if session_id not in isb_memory:
+        isb_memory[session_id] = []
+
+    history = isb_memory[session_id][:]
+
+    def event_stream():
+        full_response = ""
+        in_tok = out_tok = 0
+
+        for event in isb_orchestrator.stream_message(user_message, history):
+            t = event.get('t')
+            if t == 'chunk':
+                full_response += event.get('v', '')
+            elif t == 'done':
+                in_tok = event.get('in_tok', 0)
+                out_tok = event.get('out_tok', 0)
+
+            yield f"data: {json.dumps(event)}\n\n"
+
+            if t in ('done', 'error'):
+                break
+
+        isb_memory[session_id].append({"role": "user", "content": user_message})
+        isb_memory[session_id].append({"role": "assistant", "content": full_response})
+
+        cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD + out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
+        cost_inr = cost_usd * Config.USD_TO_INR_RATE
+        try:
+            ChatLog.objects.create(
+                module='ISB', session_id=session_id,
+                user_message=user_message, ai_response=full_response,
+                input_tokens=in_tok, output_tokens=out_tok,
+                total_tokens=in_tok + out_tok,
+                cost_usd=round(cost_usd, 8), cost_inr=round(cost_inr, 4),
+                model_used=Config.RUNWARE_MODEL_ID or 'unknown',
+            )
+        except Exception:
+            pass
+
+    response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+    response['Cache-Control'] = 'no-cache'
+    response['X-Accel-Buffering'] = 'no'
+    return response

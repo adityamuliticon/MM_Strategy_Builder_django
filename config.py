@@ -22,10 +22,10 @@ class Config:
 
     # Token pricing (update these to match your Runware model's actual rates)
     # Cost per 1 million tokens in USD
-    COST_PER_1M_INPUT_TOKENS_USD  = float(os.getenv("COST_PER_1M_INPUT_USD",  "0.60"))
-    COST_PER_1M_OUTPUT_TOKENS_USD = float(os.getenv("COST_PER_1M_OUTPUT_USD", "1.20"))
+    COST_PER_1M_INPUT_TOKENS_USD  = float(os.getenv("COST_PER_1M_INPUT_USD",  "0.25"))
+    COST_PER_1M_OUTPUT_TOKENS_USD = float(os.getenv("COST_PER_1M_OUTPUT_USD", "1.50"))
     # USD → INR conversion rate
-    USD_TO_INR_RATE = float(os.getenv("USD_TO_INR_RATE", "85.0"))
+    USD_TO_INR_RATE = float(os.getenv("USD_TO_INR_RATE", "95.71"))
 
     # Django
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
