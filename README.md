@@ -22,6 +22,7 @@ Each module is fully isolated: separate Django app, FAISS vector store, session 
 - **AI**: Runware API (OpenAI-compatible)
 - **Vector DB**: FAISS + HuggingFace Embeddings (`all-MiniLM-L6-v2`)
 - **Protocol**: Model Context Protocol (MCP)
+- **Chat Logs**: SQLite via Django ORM (`chat_logs` app)
 - **Frontend**: HTML5, Vanilla CSS (Glassmorphism), JavaScript
 
 ---
@@ -32,15 +33,21 @@ Each module is fully isolated: separate Django app, FAISS vector store, session 
 MM_Strategy_Builder_django/
 ├── manage.py
 ├── requirements.txt
-├── config.py                      # API keys, paths, Django settings
+├── config.py                      # API keys, URLs, cost rates, Django settings
 │
 ├── mm_project/                    # Django project config
 │   ├── settings.py
 │   └── urls.py
 │
+├── services/                      # Shared backend services (all 3 modules)
+│   └── market_maya_shared.py      # get_strategies, delete, modify, rename, balance
+│
+├── chat_logs/                     # Chat log tracking
+│   └── models.py                  # ChatLog: tokens, cost (USD + INR), module, session
+│
 ├── Unified_Strategy_Builder/      # Unified Strategy Builder (USB)
 │   ├── views.py / urls.py
-│   ├── core/orchestrator.py       # AI loop + system prompt
+│   ├── core/orchestrator.py       # AI loop + system prompt + streaming
 │   ├── mcp/handlers.py, tools.py  # Tool routing + deployment
 │   ├── rag/ingest.py, retriever.py, store/
 │   └── services/generator.py, market_maya.py, validator.py
@@ -59,17 +66,17 @@ MM_Strategy_Builder_django/
 │   ├── MM - Indicator Signal Engine.md
 │   ├── MM - Inbound Signal Bridge.md
 │   ├── swagger.json
-│   └── api/                       # Sample payloads
+│   └── api/                       # Captured API payloads (modify, rename, balance, etc.)
 │
 ├── tests/                         # Test infrastructure
 │   ├── run_usb_tests.py
 │   ├── run_ise_tests.py
 │   ├── run_isb_tests.py
-│   ├── cases/                     # 20-prompt test specs per module
+│   ├── cases/                     # Test specs per module
 │   └── reports/                   # Saved test run outputs
 │
 └── logs/
-    └── deployed_strategies.log    # All deployments across modules
+    └── chat_history.db            # SQLite chat log database
 ```
 
 ---
@@ -103,9 +110,20 @@ RUNWARE_API_KEY=your_runware_key
 RUNWARE_MODEL_ID=your_model_id
 MARKET_MAYA_BEARER_TOKEN=your_market_maya_token
 SECRET_KEY=your_django_secret
+
+# Optional — override defaults
+COST_PER_1M_INPUT_USD=0.25
+COST_PER_1M_OUTPUT_USD=1.50
+USD_TO_INR_RATE=95.71
 ```
 
-### 4. Build RAG Indexes
+### 4. Run Migrations
+
+```bash
+python manage.py migrate
+```
+
+### 5. Build RAG Indexes
 
 Run once per module to build the FAISS vector stores from the documentation:
 
@@ -120,7 +138,7 @@ python -c "from indicator_engine.rag.ingest import ingest_docs; ingest_docs()"
 python -c "from inbound_signal_bridge.rag.ingest import ingest; ingest()"
 ```
 
-### 5. Run
+### 6. Run
 
 ```bash
 python manage.py runserver 0.0.0.0:8000
@@ -137,14 +155,68 @@ Open `http://localhost:8000` — navigate between modules from the sidebar.
 3. **Preview** — AI generates structured Markdown tables matching the Market Maya UI tabs
 4. **Confirmation** — User reviews and approves
 5. **Deployment** — `generator.py` builds the production payload, `market_maya.py` POSTs to the API
+6. **Logging** — Every interaction is saved to the SQLite chat log with token counts and INR cost
 
-All deployments are logged to `logs/deployed_strategies.log` with full payload and API response.
+---
+
+## Strategy Management Tools
+
+All three modules expose these conversational management commands — no UI navigation needed:
+
+| Command | What to say | Description |
+|---------|-------------|-------------|
+| **List strategies** | "show my strategies", "how many strategies do I have" | Fetches all strategies with search/filter support |
+| **Delete strategy** | "delete strategy X" | Resolves name → hash ID automatically, then deletes |
+| **Modify strategy** | "change SL of X to 3000" | Fetches current record → shows diff → saves on approval |
+| **Rename strategy** | "rename X to Y" | Confirms first, then calls rename API |
+| **Check balance** | "what is my balance" | Shows Balance, Hold Balance, Point Balance |
+
+The AI follows a **confirm-before-act** pattern for all destructive or modifying operations.
+
+---
+
+## Chat Log
+
+Every message across all modules is tracked in `logs/chat_history.db`:
+
+| Field | Description |
+|-------|-------------|
+| `module` | USB / ISE / ISB |
+| `session_id` | Browser session identifier |
+| `user_message` | Full user input |
+| `ai_response` | Complete AI response |
+| `input_tokens` | Prompt token count |
+| `output_tokens` | Completion token count |
+| `cost_inr` | Calculated cost in Indian Rupees |
+| `model_used` | Runware model ID |
+
+Accessible via Django Admin at `/admin/chat_logs/chatlog/`.
+
+---
+
+## ISB-Specific Rules
+
+The Inbound Signal Bridge has additional constraints enforced at the generator level:
+
+- **Trail SL requires SL > 0** — if `sl = 0`, trail SL is automatically disabled regardless of what the AI passes
+- **Capital Risk(%) qty** — the percentage value is stored in the `lot` field; the API computes actual qty at runtime
+- **Capital(%) qty** — same as above; `lot` holds the percentage, `qty = 1`
+
+---
+
+## Streaming Resilience
+
+All three modules handle Runware streaming failures gracefully:
+
+- **Empty stream** — if Runware returns zero chunks, the orchestrator automatically retries using a non-streaming request on the same turn
+- **Mid-stream connection drop** — wrapped in `try/except`; partial content is preserved
+- **Any unhandled exception** — views use `try/finally` to guarantee the chat log is always saved and session memory always updated, even on crash
 
 ---
 
 ## Running Tests
 
-Each module has 20 automated test prompts covering every parameter. Run against a live server:
+Each module has automated test prompts covering every parameter. Run against a live server:
 
 ```bash
 # Start server first

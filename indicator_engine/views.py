@@ -68,36 +68,38 @@ def chat_stream(request):
     def event_stream():
         full_response = ""
         in_tok = out_tok = 0
-
-        for event in ise_orchestrator.stream_message(user_message, history):
-            t = event.get('t')
-            if t == 'chunk':
-                full_response += event.get('v', '')
-            elif t == 'done':
-                in_tok = event.get('in_tok', 0)
-                out_tok = event.get('out_tok', 0)
-
-            yield f"data: {json.dumps(event)}\n\n"
-
-            if t in ('done', 'error'):
-                break
-
-        ise_memory[session_id].append({"role": "user", "content": user_message})
-        ise_memory[session_id].append({"role": "assistant", "content": full_response})
-
-        cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD + out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
-        cost_inr = cost_usd * Config.USD_TO_INR_RATE
         try:
-            ChatLog.objects.create(
-                module='ISE', session_id=session_id,
-                user_message=user_message, ai_response=full_response,
-                input_tokens=in_tok, output_tokens=out_tok,
-                total_tokens=in_tok + out_tok,
-                cost_usd=round(cost_usd, 8), cost_inr=round(cost_inr, 4),
-                model_used=Config.RUNWARE_MODEL_ID or 'unknown',
-            )
-        except Exception:
-            pass
+            for event in ise_orchestrator.stream_message(user_message, history):
+                t = event.get('t')
+                if t == 'chunk':
+                    full_response += event.get('v', '')
+                elif t == 'done':
+                    in_tok = event.get('in_tok', 0)
+                    out_tok = event.get('out_tok', 0)
+
+                yield f"data: {json.dumps(event)}\n\n"
+
+                if t in ('done', 'error'):
+                    break
+        except Exception as e:
+            err = {"t": "error", "v": f"⚠️ Connection error. Please try again. ({e})"}
+            yield f"data: {json.dumps(err)}\n\n"
+        finally:
+            ise_memory[session_id].append({"role": "user", "content": user_message})
+            ise_memory[session_id].append({"role": "assistant", "content": full_response})
+            cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD + out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
+            cost_inr = cost_usd * Config.USD_TO_INR_RATE
+            try:
+                ChatLog.objects.create(
+                    module='ISE', session_id=session_id,
+                    user_message=user_message, ai_response=full_response,
+                    input_tokens=in_tok, output_tokens=out_tok,
+                    total_tokens=in_tok + out_tok,
+                    cost_usd=round(cost_usd, 8), cost_inr=round(cost_inr, 4),
+                    model_used=Config.RUNWARE_MODEL_ID or 'unknown',
+                )
+            except Exception:
+                pass
 
     response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
