@@ -104,8 +104,8 @@ class ISBPayloadGenerator:
             lot = lot_val
         elif qty_dist in ("Capital(%)", "Capital Risk(%)"):
             # lot field holds the percentage value
-            qty = lot_val
-            lot = 1
+            lot = lot_val
+            qty = 1
         else:
             # Allocation Method 1 — computed at runtime
             qty = 1
@@ -115,7 +115,7 @@ class ISBPayloadGenerator:
         target = int(leg.get("target", 0))
         sl = int(leg.get("sl", 0))
 
-        # Trail SL
+        # Trail SL — requires sl > 0
         is_trail_sl = bool(leg.get("isTrailSl", False))
         trail_market_move = int(leg.get("trailMarketMove", 0))
         trail_sl_move = int(leg.get("trailSlMove", 0))
@@ -123,6 +123,13 @@ class ISBPayloadGenerator:
 
         if trail_market_move > 0 or trail_sl_move > 0:
             is_trail_sl = True
+
+        # Trail SL cannot be enabled when SL is 0
+        if sl == 0:
+            is_trail_sl = False
+            trail_market_move = 0
+            trail_sl_move = 0
+            no_of_trail = 0
 
         return {
             "id": "",

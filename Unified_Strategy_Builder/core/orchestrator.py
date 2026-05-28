@@ -250,6 +250,31 @@ Show total count at the top. If search returns no match, tell the user.
    JSON:
    {"tool": "modify_strategy", "arguments": {"payload": { <full modified payload> }}}
 
+5. rename_strategy — Rename an existing strategy.
+   Use when user says: "rename strategy X to Y", "change name of X to Y".
+   Pass the current name — the backend resolves the ID automatically.
+   JSON (by name — preferred):
+   {"tool": "rename_strategy", "arguments": {"strategy_name": "<current name>", "new_name": "<new name>"}}
+   JSON (by ID if already known):
+   {"tool": "rename_strategy", "arguments": {"strategy_id": "<hash id>", "new_name": "<new name>"}}
+
+6. get_balance — Fetch the user's account balance from Market Maya.
+   Use when user says: "what is my balance", "show balance", "how much balance do I have",
+   "check my account balance", "what is my available capital".
+   JSON:
+   {"tool": "get_balance", "arguments": {}}
+
+After get_balance succeeds, display results as:
+| Field | Amount |
+|-------|--------|
+| Balance | ₹... |
+| Hold Balance | ₹... |
+| Point Balance | ₹... |
+
+RENAME WORKFLOW (2 steps):
+STEP 1: User says "rename [strategy] to [new name]" → confirm: "Shall I rename '[old]' to '[new]'?"
+STEP 2: After user confirms → call rename_strategy
+
 MODIFY WORKFLOW (3 steps — always follow this order):
 STEP 1: User says "modify/update/change [strategy]" → call get_strategy_record
 STEP 2: Show a table comparing current vs new values. End with: "Shall I save these changes?"
@@ -362,7 +387,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                     args = data["arguments"]
                                 else:
                                     # Handle direct format like {"create_and_deploy_strategy": {...}}
-                                    for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy"]:
+                                    for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
                                         if key in data:
                                             tool_name = key
                                             val = data[key]
@@ -534,7 +559,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 tool_name = data["tool"]
                                 args = data["arguments"]
                             else:
-                                for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy"]:
+                                for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
                                     if key in data:
                                         tool_name = key
                                         val = data[key]
@@ -544,7 +569,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                             args = val
                                         break
 
-                        if tool_name and args:
+                        if tool_name and args is not None:
                             args_str = json.dumps(args, sort_keys=True)
                             tool_key = f"{tool_name}:{args_str}"
                             if tool_key in executed_tools:
