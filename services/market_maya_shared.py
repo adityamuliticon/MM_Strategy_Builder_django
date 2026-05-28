@@ -213,3 +213,67 @@ def modify_strategy(payload):
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+def get_balance():
+    """Fetch account balance: point_balance, hold_balance, balance."""
+    try:
+        resp = requests.post(
+            Config.GET_BALANCE_URL,
+            json={},
+            headers=_auth_headers(),
+            timeout=30,
+        )
+        print(f"[SharedAPI] GET_BALANCE HTTP {resp.status_code}: {resp.text[:200]}")
+        if resp.status_code == 200:
+            data = resp.json()
+            return {
+                "status": "success",
+                "balance": data.get("balance", 0.0),
+                "hold_balance": data.get("hold_balance", 0.0),
+                "point_balance": data.get("point_balance", 0.0),
+            }
+        return {"status": "error", "code": resp.status_code, "message": resp.text}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+def rename_strategy(strategy_id="", strategy_name="", new_name=""):
+    """Rename a strategy. Resolves name→ID automatically if only strategy_name is given."""
+    if not new_name:
+        return {"status": "error", "message": "new_name is required."}
+
+    sid = strategy_id
+    if not sid or ("$" not in sid and len(sid) < 20):
+        search_term = strategy_name or sid
+        if not search_term:
+            return {"status": "error", "message": "Provide strategy_id or strategy_name."}
+        search_result = get_strategies(search=search_term, take=10)
+        if search_result["status"] != "success":
+            return search_result
+        strategies = search_result.get("strategies", [])
+        if not strategies:
+            return {"status": "error", "message": f"No strategy found matching '{search_term}'."}
+        exact = [s for s in strategies if s["name"].lower() == search_term.lower()]
+        chosen = exact[0] if exact else strategies[0]
+        sid = chosen["id"]
+        print(f"[SharedAPI] Resolved '{search_term}' → id={sid}")
+
+    try:
+        resp = requests.post(
+            Config.RENAME_STRATEGY_URL,
+            json={"id": sid, "name": new_name},
+            headers=_auth_headers(),
+            timeout=30,
+        )
+        print(f"[SharedAPI] RENAME HTTP {resp.status_code}: {resp.text[:200]}")
+        if resp.status_code == 200:
+            data = resp.json()
+            return {
+                "status": "success",
+                "strategy_name": data.get("strategy_name"),
+                "message": f"Strategy renamed to '{new_name}' successfully.",
+            }
+        return {"status": "error", "code": resp.status_code, "message": resp.text}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

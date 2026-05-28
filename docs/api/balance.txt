@@ -1,0 +1,71 @@
+header="access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a02c284a7fc78a20-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Thu, 28 May 2026 09:15:53 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=QtUzvCKyi3xpnPp7VyGGc3SNosfOQZx1Mi1jgdvUcCnim2t5U1boTxRvVxIP1vAi%2BJoC7TANznjaFCkJRaNRQqU3EeADO9Di4w6W41c7gaFQcM%2FDbBPR8NDc2391Z0bYg4m4HQ%3D%3D"}]}
+server
+cloudflare
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+accept
+application/json, text/plain, */*
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5OTI5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjFlNmYyZDhmLWUwYzItNDdjOC04ZjFmLWI2ZmJiNDJmYzRiYSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk5NTU0NzEsIm5iZiI6MTc3OTk1NTQ3MX0.HBaiVT5BTy_WKhpXCWSB_pXvA6neQb4MxPo4BfvpaI8DYk_DdLHQfkFhYA0GDoCqvHGsv1S-5T8Yu5J9coPyhA
+content-type
+application/json
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+"
+
+
+
+paylod="{}"
+
+
+
+
+review="{point_balance: 0, hold_balance: 0, balance: 0}
+balance
+: 
+0
+hold_balance
+: 
+0
+point_balance
+: 
+0"
+
+
+Response"
+{"point_balance":0.0,"hold_balance":0.0,"balance":0.0}"

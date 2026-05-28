@@ -19,6 +19,8 @@ class Config:
     DELETE_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/delete"
     GET_STRATEGY_RECORD_URL = "https://webapi.marketmaya.com/api/mainStrategy/getCustomTradeRecord"
     MODIFY_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy"
+    RENAME_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/updateStrategyName"
+    GET_BALANCE_URL = "https://api.marketmaya.com/api/client/v2/getPointBalance"
     
     # RAG Settings
     DOCS_PATH = "docs"

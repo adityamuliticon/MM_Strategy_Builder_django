@@ -2,7 +2,7 @@ import json
 from Unified_Strategy_Builder.mcp.tools import (
     get_validation_rules, validate_strategy, generate_payload, deploy,
     create_and_deploy_strategy, get_my_strategies, delete_strategy,
-    get_strategy_record, modify_strategy,
+    get_strategy_record, modify_strategy, rename_strategy, get_balance,
 )
 
 class ToolHandler:
@@ -34,6 +34,14 @@ class ToolHandler:
             )
         elif tool_name == "modify_strategy":
             return modify_strategy(arguments.get("payload", arguments))
+        elif tool_name == "rename_strategy":
+            return rename_strategy(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+                new_name=arguments.get("new_name", ""),
+            )
+        elif tool_name == "get_balance":
+            return get_balance()
         return f"Error: Unknown tool '{tool_name}'."
 
 # Singleton instance

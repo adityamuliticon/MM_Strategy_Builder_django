@@ -7,6 +7,8 @@ from services.market_maya_shared import (
     delete_strategy as _delete_strategy,
     get_strategy_record as _get_strategy_record,
     modify_strategy as _modify_strategy,
+    rename_strategy as _rename_strategy,
+    get_balance as _get_balance,
 )
 
 def get_validation_rules(parameter_name):
@@ -67,3 +69,11 @@ def get_strategy_record(strategy_id="", strategy_name=""):
 
 def modify_strategy(payload):
     return _modify_strategy(payload)
+
+
+def rename_strategy(strategy_id="", strategy_name="", new_name=""):
+    return _rename_strategy(strategy_id=strategy_id, strategy_name=strategy_name, new_name=new_name)
+
+
+def get_balance():
+    return _get_balance()

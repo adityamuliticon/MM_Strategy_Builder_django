@@ -147,11 +147,14 @@ Each leg has its own qty distribution method. Four options:
 * "combined SL 10000" / "master SL" → masterSl = 10000
 
 ── LEG-LEVEL TRAIL SL ────────────────────────────────────
-* isTrailSl: true when trail SL is active for this leg
-* trailMarketMove: profit in points to trigger each trail step
-* trailSlMove: points the SL moves per trail step
-* noOfTrailSl: max trail steps (0 = unlimited)
-* All three fields required when isTrailSl is true.
+* Trail SL REQUIRES sl > 0 on the same leg. If sl = 0, NEVER enable trail SL.
+* If user asks for trail SL without specifying an SL value, ask for the SL first.
+* isTrailSl: true only when sl > 0
+* trailMarketMove: profit in points to trigger each trail step (set only when isTrailSl: true)
+* trailSlMove: points the SL moves per trail step (set only when isTrailSl: true)
+* noOfTrailSl: max trail steps, 0 = unlimited (set only when isTrailSl: true)
+* All three fields must be set together when isTrailSl: true.
+* If sl = 0 → isTrailSl: false, trailMarketMove: 0, trailSlMove: 0, noOfTrailSl: 0
 
 ── MASTER TARGET & MASTER SL ─────────────────────────────
 * masterTarget: combined profit at which all legs exit (0 = disabled)
@@ -297,6 +300,31 @@ Show total count at the top. If search returns no match, tell the user.
    JSON:
    {"tool": "modify_strategy", "arguments": {"payload": { <full modified payload> }}}
 
+5. rename_strategy — Rename an existing strategy.
+   Use when user says: "rename strategy X to Y", "change name of X to Y".
+   Pass the current name — the backend resolves the ID automatically.
+   JSON (by name — preferred):
+   {"tool": "rename_strategy", "arguments": {"strategy_name": "<current name>", "new_name": "<new name>"}}
+   JSON (by ID if already known):
+   {"tool": "rename_strategy", "arguments": {"strategy_id": "<hash id>", "new_name": "<new name>"}}
+
+6. get_balance — Fetch the user's account balance from Market Maya.
+   Use when user says: "what is my balance", "show balance", "how much balance do I have",
+   "check my account balance", "what is my available capital".
+   JSON:
+   {"tool": "get_balance", "arguments": {}}
+
+After get_balance succeeds, display results as:
+| Field | Amount |
+|-------|--------|
+| Balance | ₹... |
+| Hold Balance | ₹... |
+| Point Balance | ₹... |
+
+RENAME WORKFLOW (2 steps):
+STEP 1: User says "rename [strategy] to [new name]" → confirm: "Shall I rename '[old]' to '[new]'?"
+STEP 2: After user confirms → call rename_strategy
+
 MODIFY WORKFLOW (3 steps — always follow this order):
 STEP 1: User says "modify/update/change [strategy]" → call get_strategy_record
 STEP 2: Show a table comparing current vs new values. End with: "Shall I save these changes?"
@@ -411,7 +439,9 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                                 "get_my_strategies",
                                                 "delete_strategy",
                                                 "get_strategy_record",
-                                                "modify_strategy"]:
+                                                "modify_strategy",
+                                                "rename_strategy",
+                                                "get_balance"]:
                                         if key in data:
                                             tool_name = key
                                             val = data[key]
@@ -580,7 +610,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 tool_name = data["tool"]
                                 args = data["arguments"]
                             else:
-                                for key in ["create_and_deploy_isb_strategy", "isb_validate_strategy", "isb_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy"]:
+                                for key in ["create_and_deploy_isb_strategy", "isb_validate_strategy", "isb_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
                                     if key in data:
                                         tool_name = key
                                         val = data[key]

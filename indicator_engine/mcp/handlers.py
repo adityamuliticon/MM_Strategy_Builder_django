@@ -8,6 +8,8 @@ from indicator_engine.mcp.tools import (
     delete_strategy,
     get_strategy_record,
     modify_strategy,
+    rename_strategy,
+    get_balance,
 )
 
 
@@ -40,6 +42,14 @@ class ISEToolHandler:
             )
         elif tool_name == "modify_strategy":
             return modify_strategy(arguments.get("payload", arguments))
+        elif tool_name == "rename_strategy":
+            return rename_strategy(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+                new_name=arguments.get("new_name", ""),
+            )
+        elif tool_name == "get_balance":
+            return get_balance()
         return f"Error: Unknown tool '{tool_name}'."
 
 
