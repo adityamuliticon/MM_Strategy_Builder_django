@@ -1,4 +1,15 @@
-header="access-control-allow-origin
+header="
+Request URL
+https://api.marketmaya.com/api/client/v2/getPointBalance
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
 https://terminal.marketmaya.com
 alt-svc
 h3=":443"; ma=86400

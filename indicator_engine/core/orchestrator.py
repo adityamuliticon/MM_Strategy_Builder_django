@@ -558,30 +558,51 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
             full_content = ""
             brace_depth = 0
 
-            for chunk in stream:
-                if not chunk.choices:
-                    if hasattr(chunk, 'usage') and chunk.usage:
-                        _in_tok += getattr(chunk.usage, 'prompt_tokens', 0) or 0
-                        _out_tok += getattr(chunk.usage, 'completion_tokens', 0) or 0
-                    continue
+            try:
+                for chunk in stream:
+                    if not chunk.choices:
+                        if hasattr(chunk, 'usage') and chunk.usage:
+                            _in_tok += getattr(chunk.usage, 'prompt_tokens', 0) or 0
+                            _out_tok += getattr(chunk.usage, 'completion_tokens', 0) or 0
+                        continue
 
-                delta = chunk.choices[0].delta.content or ""
-                full_content += delta
+                    delta = chunk.choices[0].delta.content or ""
+                    full_content += delta
 
-                text_part = ""
-                for char in delta:
-                    if char == '{':
-                        if brace_depth == 0 and text_part:
-                            yield {"t": "chunk", "v": text_part}
-                            text_part = ""
-                        brace_depth += 1
-                    elif char == '}':
-                        brace_depth = max(0, brace_depth - 1)
-                    elif brace_depth == 0:
-                        text_part += char
+                    text_part = ""
+                    for char in delta:
+                        if char == '{':
+                            if brace_depth == 0 and text_part:
+                                yield {"t": "chunk", "v": text_part}
+                                text_part = ""
+                            brace_depth += 1
+                        elif char == '}':
+                            brace_depth = max(0, brace_depth - 1)
+                        elif brace_depth == 0:
+                            text_part += char
 
-                if text_part and brace_depth == 0:
-                    yield {"t": "chunk", "v": text_part}
+                    if text_part and brace_depth == 0:
+                        yield {"t": "chunk", "v": text_part}
+            except Exception as e:
+                print(f"[ISE] Stream error on turn {turn+1}: {e}")
+
+            # If stream returned empty content, fall back to non-streaming
+            if not full_content.strip():
+                try:
+                    fb = self.client.chat.completions.create(model=self.model, messages=messages)
+                    if hasattr(fb, 'usage') and fb.usage:
+                        _in_tok += fb.usage.prompt_tokens or 0
+                        _out_tok += fb.usage.completion_tokens or 0
+                    full_content = fb.choices[0].message.content or ""
+                    ui_text = re.sub(r'\{.*?\}', '', full_content, flags=re.DOTALL).strip()
+                    if ui_text:
+                        yield {"t": "chunk", "v": ui_text}
+                except Exception as e2:
+                    print(f"[ISE] Fallback error on turn {turn+1}: {e2}")
+                    if turn == 0:
+                        yield {"t": "error", "v": "⚠️ No response from AI service. Please try again."}
+                        yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                        return
 
             tool_called = False
             try:
@@ -636,7 +657,16 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 continue
                             executed_tools.add(tool_key)
 
-                            yield {"t": "status", "v": "Deploying strategy to Market Maya..."}
+                            _status_msgs = {
+                                "create_and_deploy_ise_strategy": "Deploying strategy to Market Maya...",
+                                "get_my_strategies": "Fetching your strategies...",
+                                "delete_strategy": "Deleting strategy...",
+                                "get_strategy_record": "Fetching strategy record...",
+                                "modify_strategy": "Saving changes...",
+                                "rename_strategy": "Renaming strategy...",
+                                "get_balance": "Fetching balance...",
+                            }
+                            yield {"t": "status", "v": _status_msgs.get(tool_name, "Processing...")}
                             tool_result = ise_handler.handle_tool_call(tool_name, args)
 
                             messages.append({"role": "assistant", "content": full_content})
