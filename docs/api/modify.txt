@@ -1,0 +1,1524 @@
+when we click on modify button for any strategy, then this APIs are called:
+
+api1="Request URL
+https://api.marketmaya.com/api/mainStrategy/canEdit
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0244ebe2b6fdb85-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 10:24:02 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=bmnq9GHf20KCddb2NsRzsCAvzcpGSqTWrZv13jFTpHIGBAya6Tcxl1S8OfqZYIYM29B%2FOkV5J4J2XnA2v0kob4QjvCcLDzOevgX7hxr%2FSIxTyN8Uv0MeXgnH1wl%2BlCaM%2FtHlJg%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/canEdit
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+content-length
+39
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+
+
+
+paylod="{"id":"RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$"}"
+
+preview="{canEdit: true, message: ""}
+canEdit
+: 
+true
+message
+: 
+""
+"
+
+response="{"canEdit":true,"message":""}""
+
+
+api2="Request URL
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/getCustomTradeRecord?strategyId=RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0244ed159ec8af9-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 10:24:05 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Wk2Ip0vJSya9o0fih3ZFcFiI%2FOYi34OLl0jOhjNKk79dkZOdPPNH8kHz%2FLR%2BOqw4zRJXbSDejOkhzABX2PkLJNKVspBH3jzOC1sRqbS6G8Ky1U7fXecoXQPGxP%2FZXISZKVH19P1FAA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+GET
+:path
+/api/mainStrategy/getCustomTradeRecord?strategyId=RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="strategyId
+RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$"
+preview="
+{statusCode: 200, message: "Success",…}
+data
+: 
+{id: "RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$", sid: 445918, clientId: "xqEUeEenl0pgG6iZBJh0xgaC0$aC0$",…}
+allowUpdateParameters
+: 
+true
+autoSqroffOnContractExp
+: 
+true
+clientId
+: 
+"xqEUeEenl0pgG6iZBJh0xgaC0$aC0$"
+clientName
+: 
+"Developer Bonton"
+id
+: 
+"RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$"
+intradayEntryTime
+: 
+null
+intradayExitTime
+: 
+null
+intradayExitTimeMin
+: 
+15
+intradaySl
+: 
+0
+intradayTarget
+: 
+0
+isDeployed
+: 
+false
+isIntraday
+: 
+false
+isMasterStrategy
+: 
+false
+isPaperTrading
+: 
+false
+isTrailSl
+: 
+false
+longDescription
+: 
+"Executes Nifty NEAR month Weekly ATM CE options on NFO using NRML product. Quantity distribution uses Allocation Method 1 to split available capital equally across active positions."
+mainExchange
+: 
+null
+mainSegment
+: 
+null
+mainSymbol
+: 
+null
+marginFutoptPositional
+: 
+30
+marginStockIntraday
+: 
+30
+marginStockPositional
+: 
+100
+masterSlMoney
+: 
+0
+masterTpMoney
+: 
+0
+maxPosition
+: 
+0
+maxPositionAllocationPercent
+: 
+100
+noOfLegs
+: 
+0
+noOfTrailSl
+: 
+0
+pauseAndSqroffTradingOnMarginExeed
+: 
+false
+productType
+: 
+"NRML"
+profitMove
+: 
+0
+requiredMargin
+: 
+0
+runFri
+: 
+true
+runMon
+: 
+true
+runSat
+: 
+false
+runSun
+: 
+false
+runThu
+: 
+true
+runTue
+: 
+true
+runWed
+: 
+true
+shortDescription
+: 
+"Positional Nifty Weekly ATM CE strategy with Equal Allocation."
+sid
+: 
+445918
+slBy
+: 
+"Money"
+slMove
+: 
+0
+sqroffAllLegs
+: 
+false
+strategyId
+: 
+null
+strategyMaster
+: 
+"Inbound Signal Bridge"
+strategyName
+: 
+"Nifty_Opt_Alloc_133"
+strategyTypeId
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+strategyTypeName
+: 
+"Inbound Signal Bridge"
+sub
+: 
+[,…]
+0
+: 
+{id: "KaA0$xeIYB7oLjaA0$bj0LCbwaA0$JAaC0$aC0$", sid: 1476276, mainStrategyParameterId: "", atm: 0,…}
+atm
+: 
+0
+atmType
+: 
+"Fix"
+callType
+: 
+""
+contract
+: 
+"NEAR"
+exchange
+: 
+"NFO"
+expiry
+: 
+"WEEKLY"
+id
+: 
+"KaA0$xeIYB7oLjaA0$bj0LCbwaA0$JAaC0$aC0$"
+isReverseSignal
+: 
+false
+isTrailSl
+: 
+false
+legTerminalBuyQty
+: 
+0
+legTerminalClosePrice
+: 
+0
+legTerminalMtm
+: 
+0
+legTerminalOpenPrice
+: 
+0
+legTerminalPoQty
+: 
+0
+legTerminalSellQty
+: 
+0
+lot
+: 
+1
+lotSize
+: 
+1
+mainStrategyParameterId
+: 
+""
+minQty
+: 
+1
+noOfTimeTrailSl
+: 
+0
+number
+: 
+1
+optionType
+: 
+"CE"
+premiumEndRange
+: 
+0
+premiumStartRange
+: 
+0
+qty
+: 
+65
+qtyDistribution
+: 
+"Allocation Method 1"
+segment
+: 
+"OPT"
+sid
+: 
+1476276
+sl
+: 
+0
+slBy
+: 
+"Money"
+strikePrice
+: 
+0
+symbol
+: 
+"NIFTY"
+symbolCode
+: 
+""
+target
+: 
+0
+targetBy
+: 
+"Money"
+tradeSide
+: 
+""
+tradingSymbol
+: 
+{symbol: "NIFTY OPT NEAR WEEKLY 0 CE", exchange: "NFO", segment: "OPT", segmentType: "OPT",…}
+trailSlMarketMove
+: 
+0
+trailSlMove
+: 
+0
+workingDay
+: 
+"All"
+symbolName
+: 
+null
+targetBy
+: 
+"Money"
+underlying
+: 
+null
+message
+: 
+"Success"
+statusCode
+: 
+200"
+
+response="{
+    "statusCode": 200,
+    "message": "Success",
+    "data": {
+        "id": "RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$",
+        "sid": 445918,
+        "clientId": "xqEUeEenl0pgG6iZBJh0xgaC0$aC0$",
+        "clientName": "Developer Bonton",
+        "strategyMaster": "Inbound Signal Bridge",
+        "shortDescription": "Positional Nifty Weekly ATM CE strategy with Equal Allocation.",
+        "longDescription": "Executes Nifty NEAR month Weekly ATM CE options on NFO using NRML product. Quantity distribution uses Allocation Method 1 to split available capital equally across active positions.",
+        "autoSqroffOnContractExp": true,
+        "isIntraday": false,
+        "allowUpdateParameters": true,
+        "productType": "NRML",
+        "requiredMargin": 0,
+        "intradaySl": 0,
+        "isDeployed": false,
+        "strategyTypeId": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+        "strategyName": "Nifty_Opt_Alloc_133",
+        "intradayTarget": 0,
+        "strategyTypeName": "Inbound Signal Bridge",
+        "targetBy": "Money",
+        "sqroffAllLegs": false,
+        "slBy": "Money",
+        "isMasterStrategy": false,
+        "maxPosition": 0,
+        "maxPositionAllocationPercent": 100,
+        "runMon": true,
+        "runTue": true,
+        "runWed": true,
+        "runThu": true,
+        "runFri": true,
+        "runSat": false,
+        "runSun": false,
+        "intradayExitTimeMin": 15,
+        "marginStockIntraday": 30,
+        "marginStockPositional": 100,
+        "marginFutoptPositional": 30,
+        "pauseAndSqroffTradingOnMarginExeed": false,
+        "sub": [
+            {
+                "id": "KaA0$xeIYB7oLjaA0$bj0LCbwaA0$JAaC0$aC0$",
+                "sid": 1476276,
+                "mainStrategyParameterId": "",
+                "atm": 0,
+                "contract": "NEAR",
+                "exchange": "NFO",
+                "expiry": "WEEKLY",
+                "number": 1,
+                "optionType": "CE",
+                "qty": 65,
+                "segment": "OPT",
+                "sl": 0,
+                "slBy": "Money",
+                "symbol": "NIFTY",
+                "symbolCode": "",
+                "target": 0,
+                "lot": 1,
+                "targetBy": "Money",
+                "isTrailSl": false,
+                "noOfTimeTrailSl": 0,
+                "trailSlMarketMove": 0,
+                "trailSlMove": 0,
+                "qtyDistribution": "Allocation Method 1",
+                "strikePrice": 0,
+                "minQty": 1,
+                "tradeSide": "",
+                "atmType": "Fix",
+                "callType": "",
+                "workingDay": "All",
+                "premiumStartRange": 0,
+                "premiumEndRange": 0,
+                "legTerminalOpenPrice": 0,
+                "legTerminalClosePrice": 0,
+                "legTerminalBuyQty": 0,
+                "legTerminalSellQty": 0,
+                "legTerminalPoQty": 0,
+                "legTerminalMtm": 0,
+                "lotSize": 1,
+                "isReverseSignal": false,
+                "tradingSymbol": {
+                    "symbol": "NIFTY OPT NEAR WEEKLY 0 CE",
+                    "exchange": "NFO",
+                    "segment": "OPT",
+                    "segmentType": "OPT",
+                    "shortName": "NIFTY",
+                    "companyName": "",
+                    "contract": "NEAR",
+                    "expiry": "WEEKLY",
+                    "optionType": "CE",
+                    "atm": 0,
+                    "minQty": 0,
+                    "strikePrice": 0
+                }
+            }
+        ],
+        "intradayEntryTime": null,
+        "mainExchange": null,
+        "symbolName": null,
+        "intradayExitTime": null,
+        "isTrailSl": false,
+        "isPaperTrading": false,
+        "mainSegment": null,
+        "masterSlMoney": 0,
+        "masterTpMoney": 0,
+        "strategyId": null,
+        "mainSymbol": null,
+        "noOfLegs": 0,
+        "profitMove": 0,
+        "slMove": 0,
+        "noOfTrailSl": 0,
+        "underlying": null
+    }
+}"
+"   
+
+
+api3="Request URL
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/getFAQ?faqFor=TerminalCustomTradeStrategy
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0244ed159ed8af9-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 10:24:05 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=ZYcNtQ5ecxbXmj5F6RrBesaJrx8%2BauYibJoWFQwKlB5e14jAmoLNzglQxOyU1NZcipnTIAERPQT2dPCxL2VCkqx8zmpQIQ8Hv%2FyJpa2Wo0DmlMnu8zVx1VaqGbk7IdP6Q1ghWCCBLA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+GET
+:path
+/api/mainStrategy/getFAQ?faqFor=TerminalCustomTradeStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="faqFor=TerminalCustomTradeStrategy"
+preview="{statusCode: 200, message: "Success",…}
+data
+: 
+[{faqGroup: "Main", faqTitle: "What is the meaning of BUY, BUY EXIT, SELL, SELL EXIT?",…},…]
+0
+: 
+{faqGroup: "Main", faqTitle: "What is the meaning of BUY, BUY EXIT, SELL, SELL EXIT?",…}
+faqDescription
+: 
+"BUY = Take a new Long position\nBUY EXIT = Close existing Long position\nSELL = Take a new Short position\nSELL EXIT = Close existing Short Position\n\nNote: If the BUY position does not exist and you call BUY EXIT then the system will reject the call"
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"What is the meaning of BUY, BUY EXIT, SELL, SELL EXIT?"
+1
+: 
+{faqGroup: "Main", faqTitle: "Can I take multiple BUY/SELL position in single symbol?",…}
+faqDescription
+: 
+"No, you can not pass the BUY signal if the symbol has a BUY/SELL position. In the same way you can not pass the SELL signal if the symbol has a SELL/BUY position"
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"Can I take multiple BUY/SELL position in single symbol?"
+2
+: 
+{faqGroup: "Main", faqTitle: "Can i modify strategy after live deploy?",…}
+faqDescription
+: 
+"Yes, you can modify the strategy even if the strategy is already running.\nNote: You can not modify symbols that have running positions."
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"Can i modify strategy after live deploy?"
+3
+: 
+{faqGroup: "Main", faqTitle: "System will calculate available capital?",…}
+faqDescription
+: 
+"Yes, the system will update capital as per trades profit loss."
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"System will calculate available capital?"
+4
+: 
+{faqGroup: "Main", faqTitle: "Can i use this plugin for intraday strategy?",…}
+faqDescription
+: 
+"Yes, you can set trading type as intraday and the system will close all open positions based on defined exit time."
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"Can i use this plugin for intraday strategy?"
+5
+: 
+{faqGroup: "Main", faqTitle: "Which market segments are supported in this plugin?",…}
+faqDescription
+: 
+"All market segments are support like NSE-EQ,NFO,MCX,CDS,CRYPTO etc"
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"Which market segments are supported in this plugin?"
+6
+: 
+{faqGroup: "Main", faqTitle: "Can i set Qty multiply on this strategy?",…}
+faqDescription
+: 
+"Yes, you can set the QtyX value at the time of strategy deployment."
+faqGroup
+: 
+"Main"
+faqTitle
+: 
+"Can i set Qty multiply on this strategy?"
+message
+: 
+"Success"
+statusCode
+: 
+200"
+
+response="{
+    "statusCode": 200,
+    "message": "Success",
+    "data": [
+        {
+            "faqGroup": "Main",
+            "faqTitle": "What is the meaning of BUY, BUY EXIT, SELL, SELL EXIT?",
+            "faqDescription": "BUY = Take a new Long position\nBUY EXIT = Close existing Long position\nSELL = Take a new Short position\nSELL EXIT = Close existing Short Position\n\nNote: If the BUY position does not exist and you call BUY EXIT then the system will reject the call"
+        },
+        {
+            "faqGroup": "Main",
+            "faqTitle": "Can I take multiple BUY/SELL position in single symbol?",
+            "faqDescription": "No, you can not pass the BUY signal if the symbol has a BUY/SELL position. In the same way you can not pass the SELL signal if the symbol has a SELL/BUY position"
+        },
+        {
+            "faqGroup": "Main",
+            "faqTitle": "Can i modify strategy after live deploy?",
+            "faqDescription": "Yes, you can modify the strategy even if the strategy is already running.\nNote: You can not modify symbols that have running positions."
+        },
+        {
+            "faqGroup": "Main",
+            "faqTitle": "System will calculate available capital?",
+            "faqDescription": "Yes, the system will update capital as per trades profit loss."
+        },
+        {
+            "faqGroup": "Main",
+            "faqTitle": "Can i use this plugin for intraday strategy?",
+            "faqDescription": "Yes, you can set trading type as intraday and the system will close all open positions based on defined exit time."
+        },
+        {
+            "faqGroup": "Main",
+            "faqTitle": "Which market segments are supported in this plugin?",
+            "faqDescription": "All market segments are support like NSE-EQ,NFO,MCX,CDS,CRYPTO etc"
+        },
+        {
+            "faqGroup": "Main",
+            "faqTitle": "Can i set Qty multiply on this strategy?",
+            "faqDescription": "Yes, you can set the QtyX value at the time of strategy deployment."
+        }
+    ]
+}"
+"   
+
+
+api4="Request URL
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/getStrategyTemplatesByPluginCode?pluginCode=custom_trade
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0244ed27a068af9-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 10:24:05 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=SHjsqIhTjJnw7f7aHpw9IG%2F5fJeN2eOK0dcp9FrixMDiHCxsWbRFdCxGJ7bNquLF2Zm2cU35FJM2b15i7DgxpkQt85COi7Ulndba3I8KFgdNWzWKMPj2whj38VvXPv9%2Fm2%2FbluYuMw%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+GET
+:path
+/api/mainStrategy/getStrategyTemplatesByPluginCode?pluginCode=custom_trade
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="pluginCode=custom_trade"
+
+preview="
+{statusCode: 200, message: "Success", data: []}
+data
+: 
+[]
+message
+: 
+"Success"
+statusCode
+: 
+200"
+
+response="{"statusCode":200,"message":"Success","data":[]}"
+"   
+
+
+api5="Request URL
+header="Request URL
+https://api.marketmaya.com/api/symbol/getSymbolProperty
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0244ed4c93adb85-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 10:24:06 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=PSJuaNRkctiPOtUuuEeYbVpV45MSF%2FSFRzhLeAwfpa05IC%2F%2FEOxG7yjnTxjowqf%2FODCjuzBBVYcsLY5fKuQ%2BfFRqnASoQPmqxocWJ9UazUIIB0U%2BEL%2B6uk8OFn1qJ2OefgODWg%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/symbol/getSymbolProperty
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+content-length
+87
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+
+paylod="{"exchange":"NFO","segment":"OPT","symbol":"NIFTY","contract":"NEAR","expiry":"WEEKLY"}"
+
+preview="{exist: true,…}
+exist
+: 
+true
+property
+: 
+{all_time_high: 0, all_time_low: 0, backtest_data_start_date: "2017-02-01T00:00:00", company_name: "",…}
+all_time_high
+: 
+0
+all_time_low
+: 
+0
+backtest_data_start_date
+: 
+"2017-02-01T00:00:00"
+company_name
+: 
+""
+contract
+: 
+"02JUN26"
+contract_type
+: 
+"NEAR"
+current_price
+: 
+0
+decimal_digits
+: 
+2
+entry_date_time
+: 
+"2026-05-23T08:16:34.163"
+exchange
+: 
+"NFO"
+exchange_code
+: 
+2
+expiry_date_time
+: 
+"2026-06-02T20:00:00"
+expiry_type
+: 
+"WEEKLY"
+high_price
+: 
+0
+id
+: 
+"puGHPZdaA0$2V9d3KEiuoAdHwaC0$aC0$"
+id_int
+: 
+24745215
+img_url
+: 
+""
+instrument_tocken
+: 
+"50209"
+intraday_sqroff_time
+: 
+"2023-01-01T15:20:00"
+is_contract_symbol
+: 
+true
+is_index_symbol
+: 
+false
+is_stock_symbol
+: 
+false
+is_tradable
+: 
+true
+is_weekly_contract
+: 
+true
+lot_size
+: 
+1
+low_price
+: 
+0
+market_capital
+: 
+0
+market_end_time
+: 
+"2023-01-01T15:30:00"
+market_start_time
+: 
+"2023-01-01T09:15:00"
+min_qty
+: 
+65
+multiplier
+: 
+1
+open_price
+: 
+0
+option_type
+: 
+"PE"
+previous_day_close
+: 
+0
+required_intraday_margin
+: 
+0
+required_positional_margin
+: 
+0
+segment
+: 
+"OPT"
+segment_type
+: 
+"OPT"
+strike_price
+: 
+18150
+strike_price_gap
+: 
+50
+symbol
+: 
+"NIFTY 02 JUN26 18150.0 PE"
+symbol_short_name
+: 
+"NIFTY"
+tick_size
+: 
+0.05
+trading_symbol
+: 
+"NIFTY2660218150PE"
+update_date_time
+: 
+"2026-05-23T08:16:34.163"
+week_52_high
+: 
+0
+week_52_low
+: 
+0"
+response="{
+    "exist": true,
+    "property": {
+        "all_time_high": 0.0,
+        "all_time_low": 0.0,
+        "backtest_data_start_date": "2017-02-01T00:00:00",
+        "company_name": "",
+        "contract": "02JUN26",
+        "contract_type": "NEAR",
+        "current_price": 0.0,
+        "decimal_digits": 2,
+        "entry_date_time": "2026-05-23T08:16:34.163",
+        "exchange": "NFO",
+        "exchange_code": 2,
+        "expiry_date_time": "2026-06-02T20:00:00",
+        "expiry_type": "WEEKLY",
+        "high_price": 0.0,
+        "id": "puGHPZdaA0$2V9d3KEiuoAdHwaC0$aC0$",
+        "id_int": 24745215,
+        "img_url": "",
+        "instrument_tocken": "50209",
+        "intraday_sqroff_time": "2023-01-01T15:20:00",
+        "is_contract_symbol": true,
+        "is_index_symbol": false,
+        "is_stock_symbol": false,
+        "is_tradable": true,
+        "is_weekly_contract": true,
+        "lot_size": 1.0,
+        "low_price": 0.0,
+        "market_capital": 0.0,
+        "market_end_time": "2023-01-01T15:30:00",
+        "market_start_time": "2023-01-01T09:15:00",
+        "min_qty": 65.0,
+        "multiplier": 1.0,
+        "open_price": 0.0,
+        "option_type": "PE",
+        "previous_day_close": 0.0,
+        "required_intraday_margin": 0.0,
+        "required_positional_margin": 0.0,
+        "segment": "OPT",
+        "segment_type": "OPT",
+        "strike_price": 18150.0,
+        "strike_price_gap": 50.0,
+        "symbol": "NIFTY 02 JUN26 18150.0 PE",
+        "symbol_short_name": "NIFTY",
+        "tick_size": 0.05,
+        "trading_symbol": "NIFTY2660218150PE",
+        "update_date_time": "2026-05-23T08:16:34.163",
+        "week_52_high": 0.0,
+        "week_52_low": 0.0
+    }
+}"
+" 
+
+api6="
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/getStrategyHelp?id=XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0244ed4ca2a8af9-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 10:24:06 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=sIXghmPlJpEZUYshs5J3lgZBgB78pWFLCs%2BpqP7rOQPpoFt2txk%2FKOGNj%2F4Ke1OG%2BwDAaSEB7bZkRKp8JFDjOoJjEH8MCoixw%2Bi6Yz9vXI3ZKOe4gGcZOzO4pny9LdKhKWMzkkN1%2BA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+GET
+:path
+/api/mainStrategy/getStrategyHelp?id=XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod=""
+response=""
+preview=""
+"   
+
+api7="
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/isMainStrategy?id=XHHjmMn5u5BF4JYRSQ084waC0$aC0$
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0248e298c0d1d31-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 11:07:20 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=ZS4bfXz7e2EJqoCrnn3oM9mkYc2Y4lXfrDRcvlywf%2BucawYTd0tSuzrm6PJPScI6uEyCuMxMyYwHoffDQq0lXlOUVopgtiQTLTZQLuVW5EW9zM5OzW92hfu36pJJ2hzNF1lybXiDaA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+GET
+:path
+/api/mainStrategy/isMainStrategy?id=XHHjmMn5u5BF4JYRSQ084waC0$aC0$
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="id=XHHjmMn5u5BF4JYRSQ084waC0$aC0$"
+response="
+{statusCode: 200, message: "", data: {status: false, id: null}}
+data
+: 
+{status: false, id: null}
+id
+: 
+null
+status
+: 
+false
+message
+: 
+""
+statusCode
+: 
+200"
+
+preview="{"statusCode":200,"message":"","data":{"status":false,"id":null}}"
+"   
+
+
+
+
+
+after then when we click on save then it pass this api
+
+
+api="
+header="Request URL
+https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a02492be8d3989e2-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 11:10:27 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=c5e%2BnRO0HTzSxYiKWMze1SjQ4aVECiw2zPP6UBNR5u%2F%2BGrKE4yOQjqPqv%2F9ZC%2FZAuX5CXuAnCtcpWsxEulLNrNcrsNcltUWJGpcHi8ZxAvwzCDhvYoKT4Auj9EmBZILwlC0qGQ%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/createCustomTradeStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+content-length
+1442
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="{"id":"RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$","strategy_name":"Nifty_Opt_Alloc_133","short_description":"Positional Nifty Weekly ATM CE strategy with Equal Allocation.","long_description":"Executes Nifty NEAR month Weekly ATM CE options on NFO using NRML product. Quantity distribution uses Allocation Method 1 to split available capital equally across active positions.","strategy_type_id":"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$","product_type":"NRML","required_margin":0,"is_intraday":false,"target_by":"Money","intraday_target":0,"sl_by":"Money","intraday_sl":0,"allow_update_parameters":true,"max_position":0,"max_position_allocation_percent":100,"run_mon":true,"run_tue":true,"run_wed":true,"run_thu":true,"run_fri":true,"run_sat":false,"run_sun":false,"intraday_exit_time_min":15,"margin_stock_intraday":30,"margin_stock_positional":100,"margin_futopt_positional":30,"auto_sqroff_on_contract_exp":true,"pause_and_sqroff_trading_on_margin_exeed":false,"sqroffAllLegs":false,"isEditCode":false,"sub":[{"id":"KaA0$xeIYB7oLjaA0$bj0LCbwaA0$JAaC0$aC0$","exchange":"NFO","segment":"OPT","main_strategy_parameter_id":"","symbol":"NIFTY","contract":"NEAR","expiry":"WEEKLY","atm":0,"option_type":"CE","qty_distribution":"Allocation Method 1","qty":65,"lot":1,"strike_price":0,"target":0,"target_by":"Money","sl":0,"sl_by":"Money","trail_sl_market_move":0,"trail_sl_move":0,"no_of_time_trail_sl":0,"is_trail_sl":false}],"effect_all_sub_strategies":false}"
+
+response="
+{success: true, message: ""}
+message
+: 
+""
+success
+: 
+true"
+preview="{"success":true,"message":""}"
+"  

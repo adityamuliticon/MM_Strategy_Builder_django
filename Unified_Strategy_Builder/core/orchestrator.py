@@ -212,6 +212,78 @@ STRICT JSON SCHEMA:
     }
   }
 }
+
+═══════════════════════════════════════════════════════════
+STRATEGY MANAGEMENT TOOLS
+═══════════════════════════════════════════════════════════
+
+You also have two management tools available:
+
+1. get_my_strategies — Fetch the user's existing strategies from Market Maya.
+   Use when user says: "how many strategies do I have", "list my strategies",
+   "show all strategies", "what strategies have I created", "find strategy X".
+   JSON:
+   {"tool": "get_my_strategies", "arguments": {"search": "<optional filter>", "take": 50}}
+
+2. delete_strategy — Delete a strategy by name or ID.
+   Use when user says: "delete strategy X", "remove strategy X", "delete X".
+   You can pass the strategy name directly — the backend will look up the ID automatically.
+   JSON (by name — preferred):
+   {"tool": "delete_strategy", "arguments": {"strategy_name": "<exact strategy name>"}}
+   JSON (by ID if you already have it):
+   {"tool": "delete_strategy", "arguments": {"strategy_id": "<hash id>"}}
+
+After get_my_strategies succeeds, display results as a Markdown table:
+| # | Name | Plugin | Type | Legs | Deployed | Created |
+|---|------|--------|------|------|----------|---------|
+Show total count at the top. If search returns no match, tell the user.
+
+3. get_strategy_record — Fetch full current strategy data in modify-ready format.
+   Use as the FIRST step of any modify workflow.
+   JSON:
+   {"tool": "get_strategy_record", "arguments": {"strategy_name": "<name>"}}
+
+4. modify_strategy — Save changes to an existing ISB/custom-trade strategy.
+   Use ONLY after user explicitly approves the preview of changes.
+   The payload must be the COMPLETE strategy object from get_strategy_record with changes applied.
+   CRITICAL: Keep the "id" and all leg "id" fields exactly as returned by get_strategy_record.
+   JSON:
+   {"tool": "modify_strategy", "arguments": {"payload": { <full modified payload> }}}
+
+MODIFY WORKFLOW (3 steps — always follow this order):
+STEP 1: User says "modify/update/change [strategy]" → call get_strategy_record
+STEP 2: Show a table comparing current vs new values. End with: "Shall I save these changes?"
+STEP 3: After user approval → call modify_strategy with full updated payload
+
+MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
+{
+  "id": "<REQUIRED — strategy hash from get_strategy_record>",
+  "strategy_name": "...", "short_description": "...", "long_description": "...",
+  "strategy_type_id": "...", "product_type": "MIS/NRML/CNC",
+  "required_margin": 0, "is_intraday": true/false,
+  "target_by": "Money", "intraday_target": 0,
+  "sl_by": "Money", "intraday_sl": 0,
+  "allow_update_parameters": true, "max_position": 0, "max_position_allocation_percent": 100,
+  "run_mon": true, "run_tue": true, "run_wed": true, "run_thu": true,
+  "run_fri": true, "run_sat": false, "run_sun": false,
+  "intraday_exit_time_min": 15,
+  "margin_stock_intraday": 30, "margin_stock_positional": 100, "margin_futopt_positional": 30,
+  "auto_sqroff_on_contract_exp": true, "pause_and_sqroff_trading_on_margin_exeed": false,
+  "sqroffAllLegs": false, "isEditCode": false, "effect_all_sub_strategies": false,
+  "sub": [
+    {
+      "id": "<REQUIRED — leg hash from get_strategy_record>",
+      "exchange": "NFO", "segment": "OPT/FUT/Stock",
+      "main_strategy_parameter_id": "",
+      "symbol": "NIFTY", "contract": "NEAR/NEXT/FAR", "expiry": "WEEKLY/MONTHLY",
+      "atm": 0, "option_type": "CE/PE/",
+      "qty_distribution": "Fix/Capital(%)/Capital Risk(%)/Allocation Method 1",
+      "qty": 65, "lot": 1, "strike_price": 0,
+      "target": 0, "target_by": "Money", "sl": 0, "sl_by": "Money",
+      "trail_sl_market_move": 0, "trail_sl_move": 0, "no_of_time_trail_sl": 0, "is_trail_sl": false
+    }
+  ]
+}
 """
 
     def process_message(self, user_message, history=None):
@@ -290,7 +362,7 @@ STRICT JSON SCHEMA:
                                     args = data["arguments"]
                                 else:
                                     # Handle direct format like {"create_and_deploy_strategy": {...}}
-                                    for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules"]:
+                                    for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy"]:
                                         if key in data:
                                             tool_name = key
                                             val = data[key]
@@ -302,7 +374,7 @@ STRICT JSON SCHEMA:
                                                 args = val
                                             break
                             
-                            if tool_name and args:
+                            if tool_name and args is not None:
                                 args_str = json.dumps(args, sort_keys=True)
                                 tool_key = f"{tool_name}:{args_str}"
                                 
@@ -462,7 +534,7 @@ STRICT JSON SCHEMA:
                                 tool_name = data["tool"]
                                 args = data["arguments"]
                             else:
-                                for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules"]:
+                                for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy"]:
                                     if key in data:
                                         tool_name = key
                                         val = data[key]

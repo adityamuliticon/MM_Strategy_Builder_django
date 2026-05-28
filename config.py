@@ -15,6 +15,10 @@ class Config:
     # Market Maya API Endpoints
     MARKET_MAYA_BASE_URL = "https://webapi.marketmaya.com/api"
     CREATE_STRATEGY_URL = f"{MARKET_MAYA_BASE_URL}/mainStrategy/CreateUnifiedStrategy"
+    GET_STRATEGIES_URL = "https://api.marketmaya.com/api/V3/mainStrategy/getClientMyStrategy"
+    DELETE_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/delete"
+    GET_STRATEGY_RECORD_URL = "https://webapi.marketmaya.com/api/mainStrategy/getCustomTradeRecord"
+    MODIFY_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy"
     
     # RAG Settings
     DOCS_PATH = "docs"

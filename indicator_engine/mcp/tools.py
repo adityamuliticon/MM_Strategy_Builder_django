@@ -2,6 +2,12 @@ from indicator_engine.services.validator import ise_validator
 from indicator_engine.services.generator import ise_generator
 from indicator_engine.services.market_maya import ise_market_maya
 from indicator_engine.rag.retriever import ise_retriever
+from services.market_maya_shared import (
+    get_strategies as _get_strategies,
+    delete_strategy as _delete_strategy,
+    get_strategy_record as _get_strategy_record,
+    modify_strategy as _modify_strategy,
+)
 
 
 def ise_get_validation_rules(parameter_name):
@@ -27,3 +33,19 @@ def ise_deploy(payload):
 def create_and_deploy_ise_strategy(strategy_json):
     payload = ise_generate_payload(strategy_json)
     return ise_deploy(payload)
+
+
+def get_my_strategies(search="", take=50):
+    return _get_strategies(search=search, take=take)
+
+
+def delete_strategy(strategy_id="", strategy_name=""):
+    return _delete_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def get_strategy_record(strategy_id="", strategy_name=""):
+    return _get_strategy_record(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def modify_strategy(payload):
+    return _modify_strategy(payload)
