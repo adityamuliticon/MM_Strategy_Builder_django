@@ -2,6 +2,12 @@ from Unified_Strategy_Builder.services.validator import validator
 from Unified_Strategy_Builder.services.generator import generator
 from Unified_Strategy_Builder.services.market_maya import market_maya
 from Unified_Strategy_Builder.rag.retriever import retriever
+from services.market_maya_shared import (
+    get_strategies as _get_strategies,
+    delete_strategy as _delete_strategy,
+    get_strategy_record as _get_strategy_record,
+    modify_strategy as _modify_strategy,
+)
 
 def get_validation_rules(parameter_name):
     """
@@ -45,3 +51,19 @@ def create_and_deploy_strategy(strategy_json):
     """
     payload = generate_payload(strategy_json)
     return deploy(payload)
+
+
+def get_my_strategies(search="", take=50):
+    return _get_strategies(search=search, take=take)
+
+
+def delete_strategy(strategy_id="", strategy_name=""):
+    return _delete_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def get_strategy_record(strategy_id="", strategy_name=""):
+    return _get_strategy_record(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def modify_strategy(payload):
+    return _modify_strategy(payload)

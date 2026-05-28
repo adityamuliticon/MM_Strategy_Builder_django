@@ -2,6 +2,12 @@ from inbound_signal_bridge.services.validator import isb_validator
 from inbound_signal_bridge.services.generator import isb_generator
 from inbound_signal_bridge.services.market_maya import isb_market_maya
 from inbound_signal_bridge.rag.retriever import isb_retriever
+from services.market_maya_shared import (
+    get_strategies as _get_strategies,
+    delete_strategy as _delete_strategy,
+    get_strategy_record as _get_strategy_record,
+    modify_strategy as _modify_strategy,
+)
 
 
 def isb_get_validation_rules(parameter_name):
@@ -27,3 +33,19 @@ def isb_deploy(payload):
 def create_and_deploy_isb_strategy(strategy_json):
     payload = isb_generate_payload(strategy_json)
     return isb_deploy(payload)
+
+
+def get_my_strategies(search="", take=50):
+    return _get_strategies(search=search, take=take)
+
+
+def delete_strategy(strategy_id="", strategy_name=""):
+    return _delete_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def get_strategy_record(strategy_id="", strategy_name=""):
+    return _get_strategy_record(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def modify_strategy(payload):
+    return _modify_strategy(payload)

@@ -1,0 +1,993 @@
+header="
+Request URL
+https://api.marketmaya.com/api/V3/mainStrategy/getClientMyStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0240f13b979fa1c-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Wed, 27 May 2026 09:40:34 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=S%2F1fmeKx4gNErjqimwFdspRyRoI4TXNR3knumCL5cDfSP2ShtA7CHc58yr5Jb6Zs9f20A0mIyAMepJmkLW0XtNRIBWs05ztq2loA5oaO86GBVs0Rul7Mgbiw1og2KGkOj0cQaA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/V3/mainStrategy/getClientMyStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5MDY1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6Ijc5MTZiNjZjLTFmZTAtNGY4Ny1hNzVmLTI5NmQ4YTQ2YzUzMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk4NzQxMTQsIm5iZiI6MTc3OTg3NDExNH0.T-WsUR-tq7TE379esiEZjVCxRDw2yEDxhq0Ai2Ex-n52tJlUJyEO4aueF6uVGZoSW1NO_oLI5I9gSiF8XMAWrA
+content-length
+193
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+"
+
+
+paylod="{"skip":0,"take":8,"search":"","symbols":[],"tradingType":"All","strategyMasterIds":[],"strategyMaster":{"id":"","strategy_name":"All Plugins","selected":true},"AuthorIds":[],"sortBy":"newest"}"
+
+
+
+preview="{total: 53, data: [,…], symbols: ["NIFTY"], noStrategyFound: false}
+data
+: 
+[,…]
+0
+: 
+{id: "aA0$yiyk61fkdU1MrLe2pajsAaC0$aC0$", sid: 445920, strategy_name: "RELIANCE_Delivery_Strategy_572",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:46:13.5"
+id
+: 
+"aA0$yiyk61fkdU1MrLe2pajsAaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+0
+required_margin_format
+: 
+"0"
+sid
+: 
+445920
+statistics
+: 
+null
+strategy_name
+: 
+"RELIANCE_Delivery_Strategy_572"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"POSITIONAL"
+type
+: 
+"custom-trade"
+1
+: 
+{id: "aB0$iNUBdOo2nytPlDhtck3IAaC0$aC0$", sid: 445919, strategy_name: "Nifty_Straddle_Intraday_240",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:40:41.887"
+id
+: 
+"aB0$iNUBdOo2nytPlDhtck3IAaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+0
+required_margin_format
+: 
+"0"
+sid
+: 
+445919
+statistics
+: 
+null
+strategy_name
+: 
+"Nifty_Straddle_Intraday_240"
+sub_count
+: 
+2
+symbol_s
+: 
+null
+trading_type
+: 
+"INTRADAY"
+type
+: 
+"custom-trade"
+2
+: 
+{id: "RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$", sid: 445918, strategy_name: "Nifty_Opt_Alloc_133",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:38:54.677"
+id
+: 
+"RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+0
+required_margin_format
+: 
+"0"
+sid
+: 
+445918
+statistics
+: 
+null
+strategy_name
+: 
+"Nifty_Opt_Alloc_133"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"POSITIONAL"
+type
+: 
+"custom-trade"
+3
+: 
+{id: "XHHjmMn5u5BF4JYRSQ084waC0$aC0$", sid: 445913, strategy_name: "BNF_CapitalRisk_2pct_27",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:37:08.13"
+id
+: 
+"XHHjmMn5u5BF4JYRSQ084waC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+1000000
+required_margin_format
+: 
+"1M"
+sid
+: 
+445913
+statistics
+: 
+null
+strategy_name
+: 
+"BNF_CapitalRisk_2pct_27"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"POSITIONAL"
+type
+: 
+"custom-trade"
+4
+: 
+{id: "xHr2VoM4aArdeVG7SQlc7QaC0$aC0$", sid: 445912, strategy_name: "BNF_Positional_CapitalPct_9944",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:35:45.24"
+id
+: 
+"xHr2VoM4aArdeVG7SQlc7QaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+500000
+required_margin_format
+: 
+"500K"
+sid
+: 
+445912
+statistics
+: 
+null
+strategy_name
+: 
+"BNF_Positional_CapitalPct_9944"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"POSITIONAL"
+type
+: 
+"custom-trade"
+5
+: 
+{id: "lnPtcUxcmvlkYXLKL7RQaB0$waC0$aC0$", sid: 445911, strategy_name: "Nifty_Positional_Strategy_9519",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:28:40.29"
+id
+: 
+"lnPtcUxcmvlkYXLKL7RQaB0$waC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+0
+required_margin_format
+: 
+"0"
+sid
+: 
+445911
+statistics
+: 
+null
+strategy_name
+: 
+"Nifty_Positional_Strategy_9519"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"POSITIONAL"
+type
+: 
+"custom-trade"
+6
+: 
+{id: "4cIJRdt3aB0$uYCTgPfQyh36AaC0$aC0$", sid: 445910, strategy_name: "BNF_TradingView_Signal_9373",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"23 hours ago"
+entry_date_time
+: 
+"2026-05-26T15:26:13.987"
+id
+: 
+"4cIJRdt3aB0$uYCTgPfQyh36AaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+0
+required_margin_format
+: 
+"0"
+sid
+: 
+445910
+statistics
+: 
+null
+strategy_name
+: 
+"BNF_TradingView_Signal_9373"
+sub_count
+: 
+1
+symbol_s
+: 
+null
+trading_type
+: 
+"INTRADAY"
+type
+: 
+"custom-trade"
+7
+: 
+{id: "aA0$jy3aQQWyeaA0$065X9doxLjwaC0$aC0$", sid: 445594, strategy_name: "aditya123321_7734",…}
+allow_update_parameters
+: 
+true
+author_id
+: 
+""
+author_name
+: 
+null
+author_per_paper_trade_charge
+: 
+0
+author_per_trade_charge
+: 
+0
+author_profit_sharing_percent
+: 
+0
+created_on
+: 
+"1 day ago"
+entry_date_time
+: 
+"2026-05-26T09:25:35.23"
+id
+: 
+"aA0$jy3aQQWyeaA0$065X9doxLjwaC0$aC0$"
+is_author_per_trade_per_lot_charge
+: 
+false
+is_deployed
+: 
+false
+is_locked
+: 
+false
+is_market_place_strategy
+: 
+false
+main_symbol
+: 
+null
+plugin_id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+plugin_name
+: 
+"Inbound Signal Bridge"
+rebacktest
+: 
+false
+required_margin
+: 
+0
+required_margin_format
+: 
+"0"
+sid
+: 
+445594
+statistics
+: 
+null
+strategy_name
+: 
+"aditya123321_7734"
+sub_count
+: 
+10
+symbol_s
+: 
+null
+trading_type
+: 
+"INTRADAY"
+type
+: 
+"custom-trade"
+noStrategyFound
+: 
+false
+symbols
+: 
+["NIFTY"]
+0
+: 
+"NIFTY"
+total
+: 
+53"
+
+
+response="{
+    "total": 53,
+    "data": [
+        {
+            "id": "aA0$yiyk61fkdU1MrLe2pajsAaC0$aC0$",
+            "sid": 445920,
+            "strategy_name": "RELIANCE_Delivery_Strategy_572",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "POSITIONAL",
+            "required_margin": 0.0,
+            "required_margin_format": "0",
+            "type": "custom-trade",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:46:13.5",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "aB0$iNUBdOo2nytPlDhtck3IAaC0$aC0$",
+            "sid": 445919,
+            "strategy_name": "Nifty_Straddle_Intraday_240",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "INTRADAY",
+            "required_margin": 0.0,
+            "required_margin_format": "0",
+            "type": "custom-trade",
+            "sub_count": 2,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:40:41.887",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "RRdkPI0uDFrbggXkrq7ZwgaC0$aC0$",
+            "sid": 445918,
+            "strategy_name": "Nifty_Opt_Alloc_133",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "POSITIONAL",
+            "required_margin": 0.0,
+            "required_margin_format": "0",
+            "type": "custom-trade",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:38:54.677",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "XHHjmMn5u5BF4JYRSQ084waC0$aC0$",
+            "sid": 445913,
+            "strategy_name": "BNF_CapitalRisk_2pct_27",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "POSITIONAL",
+            "required_margin": 1000000.0,
+            "required_margin_format": "1M",
+            "type": "custom-trade",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:37:08.13",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "xHr2VoM4aArdeVG7SQlc7QaC0$aC0$",
+            "sid": 445912,
+            "strategy_name": "BNF_Positional_CapitalPct_9944",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "POSITIONAL",
+            "required_margin": 500000.0,
+            "required_margin_format": "500K",
+            "type": "custom-trade",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:35:45.24",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "lnPtcUxcmvlkYXLKL7RQaB0$waC0$aC0$",
+            "sid": 445911,
+            "strategy_name": "Nifty_Positional_Strategy_9519",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "POSITIONAL",
+            "required_margin": 0.0,
+            "required_margin_format": "0",
+            "type": "custom-trade",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:28:40.29",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "4cIJRdt3aB0$uYCTgPfQyh36AaC0$aC0$",
+            "sid": 445910,
+            "strategy_name": "BNF_TradingView_Signal_9373",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "23 hours ago",
+            "main_symbol": null,
+            "trading_type": "INTRADAY",
+            "required_margin": 0.0,
+            "required_margin_format": "0",
+            "type": "custom-trade",
+            "sub_count": 1,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T15:26:13.987",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        },
+        {
+            "id": "aA0$jy3aQQWyeaA0$065X9doxLjwaC0$aC0$",
+            "sid": 445594,
+            "strategy_name": "aditya123321_7734",
+            "plugin_name": "Inbound Signal Bridge",
+            "plugin_id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "created_on": "1 day ago",
+            "main_symbol": null,
+            "trading_type": "INTRADAY",
+            "required_margin": 0.0,
+            "required_margin_format": "0",
+            "type": "custom-trade",
+            "sub_count": 10,
+            "symbol_s": null,
+            "entry_date_time": "2026-05-26T09:25:35.23",
+            "is_deployed": false,
+            "allow_update_parameters": true,
+            "rebacktest": false,
+            "is_locked": false,
+            "is_market_place_strategy": false,
+            "author_per_trade_charge": 0.0,
+            "author_per_paper_trade_charge": 0.0,
+            "author_profit_sharing_percent": 0.0,
+            "is_author_per_trade_per_lot_charge": false,
+            "author_id": "",
+            "author_name": null,
+            "statistics": null
+        }
+    ],
+    "symbols": [
+        "NIFTY"
+    ],
+    "noStrategyFound": false
+}"
