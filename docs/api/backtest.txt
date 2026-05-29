@@ -1,0 +1,876 @@
+when we click on backtest button then it call this api
+
+api1="
+header="Request URL
+https://api.marketmaya.com/api/client/v2/getPointBalance
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a02d1b9fac9c34ca-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Thu, 28 May 2026 12:02:00 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=AWuENrkcTrcUqoKhnaCKm2fsno16Q4AkvBBIYD%2FDU6b0WDGRuQlq8dzTiH9%2BxtzaUEtgCMPGu%2BvmIJwbcrqfoFG%2BOH3C4tDYLvRJ2YIalx2wRS4o%2BZwZ77K6IflT3tYD8vMnjg%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/client/v2/getPointBalance
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5OTI5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjFlNmYyZDhmLWUwYzItNDdjOC04ZjFmLWI2ZmJiNDJmYzRiYSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk5NTU0NzEsIm5iZiI6MTc3OTk1NTQ3MX0.HBaiVT5BTy_WKhpXCWSB_pXvA6neQb4MxPo4BfvpaI8DYk_DdLHQfkFhYA0GDoCqvHGsv1S-5T8Yu5J9coPyhA
+content-length
+2
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="{}"
+preview="{point_balance: 1000, hold_balance: 0, balance: 1000}
+balance
+: 
+1000
+hold_balance
+: 
+0
+point_balance
+: 
+1000"
+
+response="{"point_balance":1000.0,"hold_balance":0.0,"balance":1000.0}"
+"
+
+api2="
+header="Request URL
+https://api.marketmaya.com/api/subscription/getBacktestOptions
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a02d1b9f2c7734ca-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Thu, 28 May 2026 12:02:00 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=rFL9hrPd4Ep8dOj7bs%2F4EVJ1aAOdv6F7MrNotlfyYdDzdMt7EoO9ZHQgFuwAdAIqacKencjCGxYGdndvjpH7sxMJdGJq0K8WVOOaVAcT84DripRXIZrcrAXb8eESyi75HhXsHA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/subscription/getBacktestOptions
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5OTI5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjFlNmYyZDhmLWUwYzItNDdjOC04ZjFmLWI2ZmJiNDJmYzRiYSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk5NTU0NzEsIm5iZiI6MTc3OTk1NTQ3MX0.HBaiVT5BTy_WKhpXCWSB_pXvA6neQb4MxPo4BfvpaI8DYk_DdLHQfkFhYA0GDoCqvHGsv1S-5T8Yu5J9coPyhA
+content-length
+45
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="{"id":"aA0$OzUXHqVUdaA0$GnzUhpNSPmwaC0$aC0$"}"
+preview="
+{title: "Backtest Strategy - ISB Full Param Test 8392_9343",…}
+items
+: 
+[,…]
+0
+: 
+{start_date: "2026-04-29T00:00:00+05:30", end_date: "2026-05-28T00:00:00+05:30", title: "1 Month Data",…}
+end_date
+: 
+"2026-05-28T00:00:00+05:30"
+points
+: 
+0
+start_date
+: 
+"2026-04-29T00:00:00+05:30"
+title
+: 
+"1 Month Data"
+1
+: 
+{start_date: "2025-11-30T00:00:00+05:30", end_date: "2026-05-28T00:00:00+05:30",…}
+end_date
+: 
+"2026-05-28T00:00:00+05:30"
+points
+: 
+18
+start_date
+: 
+"2025-11-30T00:00:00+05:30"
+title
+: 
+"6 Months Data"
+2
+: 
+{start_date: "2025-05-28T00:00:00+05:30", end_date: "2026-05-28T00:00:00+05:30", title: "1 Year Data",…}
+end_date
+: 
+"2026-05-28T00:00:00+05:30"
+points
+: 
+36.5
+start_date
+: 
+"2025-05-28T00:00:00+05:30"
+title
+: 
+"1 Year Data"
+3
+: 
+{start_date: "2024-05-28T00:00:00+05:30", end_date: "2026-05-28T00:00:00+05:30", title: "2 Years Data",…}
+end_date
+: 
+"2026-05-28T00:00:00+05:30"
+points
+: 
+73
+start_date
+: 
+"2024-05-28T00:00:00+05:30"
+title
+: 
+"2 Years Data"
+4
+: 
+{start_date: "2023-05-29T00:00:00+05:30", end_date: "2026-05-28T00:00:00+05:30", title: "3 Years Data",…}
+end_date
+: 
+"2026-05-28T00:00:00+05:30"
+points
+: 
+109.5
+start_date
+: 
+"2023-05-29T00:00:00+05:30"
+title
+: 
+"3 Years Data"
+5
+: 
+{start_date: "2017-02-01T00:00:00", end_date: "2026-05-28T00:00:00+05:30", title: "All Data",…}
+end_date
+: 
+"2026-05-28T00:00:00+05:30"
+points
+: 
+340.4
+start_date
+: 
+"2017-02-01T00:00:00"
+title
+: 
+"All Data"
+min_date
+: 
+"2017-02-01T00:00:00"
+per_day_charge
+: 
+0.1
+subTitle
+: 
+"Available history data from 01-02-2017"
+title
+: 
+"Backtest Strategy - ISB Full Param Test 8392_9343"
+wl_backtest_free_days
+: 
+30"
+
+response="{
+    "title": "Backtest Strategy - ISB Full Param Test 8392_9343",
+    "subTitle": "Available history data from 01-02-2017",
+    "items": [
+        {
+            "start_date": "2026-04-29T00:00:00+05:30",
+            "end_date": "2026-05-28T00:00:00+05:30",
+            "title": "1 Month Data",
+            "points": 0
+        },
+        {
+            "start_date": "2025-11-30T00:00:00+05:30",
+            "end_date": "2026-05-28T00:00:00+05:30",
+            "title": "6 Months Data",
+            "points": 18.0
+        },
+        {
+            "start_date": "2025-05-28T00:00:00+05:30",
+            "end_date": "2026-05-28T00:00:00+05:30",
+            "title": "1 Year Data",
+            "points": 36.5
+        },
+        {
+            "start_date": "2024-05-28T00:00:00+05:30",
+            "end_date": "2026-05-28T00:00:00+05:30",
+            "title": "2 Years Data",
+            "points": 73.0
+        },
+        {
+            "start_date": "2023-05-29T00:00:00+05:30",
+            "end_date": "2026-05-28T00:00:00+05:30",
+            "title": "3 Years Data",
+            "points": 109.5
+        },
+        {
+            "start_date": "2017-02-01T00:00:00",
+            "end_date": "2026-05-28T00:00:00+05:30",
+            "title": "All Data",
+            "points": 340.4
+        }
+    ],
+    "per_day_charge": 0.1,
+    "min_date": "2017-02-01T00:00:00",
+    "wl_backtest_free_days": 30
+}"
+"
+
+
+
+after then selet which time peroid we have to do backtest in that case i click on 6 month and click on backtest button then it call this api
+
+api1="
+header="Request URL
+https://api.marketmaya.com/api/subscription/deductBacktestPoints
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a02d2a37c85a8b06-BOM
+date
+Thu, 28 May 2026 12:11:58 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=YGa6yaCzOPun96tLZ3RPY0O4IFDn%2B0QBzFuS2bDug21bK7UZi9FuE3Bbjd4mbSZzkbZxr1AKF5x%2BM4%2BwPRne29mX43%2FK9PijGUslgueftFQEKGvvCcM%2FXLkCI8rgVKbFbdQsMQ%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/subscription/deductBacktestPoints
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5OTI5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjFlNmYyZDhmLWUwYzItNDdjOC04ZjFmLWI2ZmJiNDJmYzRiYSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk5NTU0NzEsIm5iZiI6MTc3OTk1NTQ3MX0.HBaiVT5BTy_WKhpXCWSB_pXvA6neQb4MxPo4BfvpaI8DYk_DdLHQfkFhYA0GDoCqvHGsv1S-5T8Yu5J9coPyhA
+content-length
+120
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="{"id":"EcsUaB0$aA0$xNryYya1II6q3NRAaC0$aC0$","startDate":"2025-11-30","endDate":"2026-05-28","executionLevel":"Level 8"}"
+
+no priview=""
+no response=""
+"
+
+
+
+then it take some time and it show this
+
+
+api1="
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/getBackTestResult?id=EcsUaB0$aA0$xNryYya1II6q3NRAaC0$aC0$
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a02d2a746c3d8b09-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Thu, 28 May 2026 12:12:07 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=PFgLP6fAdJf2ikmxcNAzClDW%2BZFrEFOa6MqgrEZ07VL7O5M5emtdptLlptMj8IG3GJotZCUynvQQv7lHcX83uX8Ygd2QX1QNgIr2AXrdXgNN8s85hhj0ixtqh5GPmk81CImH%2B8jvdg%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+speculation-rules
+"/cdn-cgi/speculation"
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+GET
+:path
+/api/mainStrategy/getBackTestResult?id=EcsUaB0$aA0$xNryYya1II6q3NRAaC0$aC0$
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk5OTI5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNjIuMTU4LjE5MS4xNDUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjFlNmYyZDhmLWUwYzItNDdjOC04ZjFmLWI2ZmJiNDJmYzRiYSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3Nzk5NTU0NzEsIm5iZiI6MTc3OTk1NTQ3MX0.HBaiVT5BTy_WKhpXCWSB_pXvA6neQb4MxPo4BfvpaI8DYk_DdLHQfkFhYA0GDoCqvHGsv1S-5T8Yu5J9coPyhA
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylod="id=EcsUaB0$aA0$xNryYya1II6q3NRAaC0$aC0$"
+
+priview="
+{statusCode: 200, message: "Success", data: {,…}}
+data
+: 
+{,…}
+allDataAnalysis
+: 
+"{\"data_duration\":\"All Data\",\"start_date\":\"2025-12-04T13:00:00\",\"end_date\":\"2026-05-27T15:00:00\",\"capital\":67412.5,\"profit\":60138.0,\"roi\":187.13,\"draw_down\":67411.5,\"draw_down_percent\":100.0,\"total_trades\":240.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":240.0,\"buy_trades\":120.0,\"sell_trades\":120.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"Dec 25\",\"value\":69141.5},{\"label\":\"Mar 26\",\"value\":163612.5},{\"label\":\"May 26\",\"value\":127550.5}]}"
+allFriProfit
+: 
+51766
+allMonProfit
+: 
+20137
+allSatProfit
+: 
+0
+allSunProfit
+: 
+0
+allThuProfit
+: 
+7143
+allTueProfit
+: 
+29166
+allWedProfit
+: 
+-48074
+backtestDataEndDate
+: 
+"2026-05-27T15:00:00"
+backtestDataStartDate
+: 
+"2025-12-04T13:00:00"
+backtestDurationDays
+: 
+174
+backtestJobEndDate
+: 
+"2026-05-28T17:42:04.633"
+backtestJobStartDate
+: 
+"2026-05-28T17:41:59.223"
+buyTrades
+: 
+120
+capital
+: 
+67412.5
+capitalFormat
+: 
+"67.4K"
+consecutiveNegDays
+: 
+4
+consecutivePosDays
+: 
+4
+consecutiveSlTrades
+: 
+0
+consecutiveTargetTrades
+: 
+0
+coverTrades
+: 
+240
+dayAverageProfit
+: 
+801.84
+dayAverageTrades
+: 
+3
+dayMaxLoss
+: 
+-45799
+dayMaxProfit
+: 
+48067.5
+dayMinProfit
+: 
+0
+dayRoi
+: 
+1.19
+drawDown
+: 
+67411.5
+drawDownEndDate
+: 
+"2026-03-11T00:00:00"
+drawDownFormat
+: 
+"67.4K"
+drawDownHistory
+: 
+"[{\"DownStartDate\":\"2025-12-04T00:00:00\",\"ExitDate\":\"2025-12-08T00:00:00\",\"MaxDownDate\":\"2025-12-04T00:00:00\",\"MaxDown\":6668.9999999999982,\"RecoverDays\":4},{\"DownStartDate\":\"2025-12-10T00:00:00\",\"ExitDate\":\"2025-12-11T00:00:00\",\"MaxDownDate\":\"2025-12-10T00:00:00\",\"MaxDown\":3555.4999999999991,\"RecoverDays\":1},{\"DownStartDate\":\"2025-12-15T00:00:00\",\"ExitDate\":\"2026-01-12T00:00:00\",\"MaxDownDate\":\"2025-12-30T00:00:00\",\"MaxDown\":13312.000000000004,\"RecoverDays\":28},{\"DownStartDate\":\"2025-12-18T00:00:00\",\"ExitDate\":\"2026-01-05T00:00:00\",\"MaxDownDate\":\"2025-12-30T00:00:00\",\"MaxDown\":6161.9999999999991,\"RecoverDays\":18},{\"DownStartDate\":\"2025-12-19T00:00:00\",\"ExitDate\":\"2025-12-24T00:00:00\",\"MaxDownDate\":\"2025-12-19T00:00:00\",\"MaxDown\":130.0,\"RecoverDays\":5},{\"DownStartDate\":\"2025-12-30T00:00:00\",\"ExitDate\":\"2026-01-05T00:00:00\",\"MaxDownDate\":\"2025-12-30T00:00:00\",\"MaxDown\":1885.0,\"RecoverDays\":6},{\"DownStartDate\":\"2026-01-13T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":67411.5,\"RecoverDays\":57},{\"DownStartDate\":\"2026-01-14T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":62101.0,\"RecoverDays\":56},{\"DownStartDate\":\"2026-01-21T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":59676.500000000007,\"RecoverDays\":49},{\"DownStartDate\":\"2026-01-22T00:00:00\",\"ExitDate\":\"2026-02-24T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":41060.5,\"RecoverDays\":33},{\"DownStartDate\":\"2026-01-27T00:00:00\",\"ExitDate\":\"2026-02-02T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":21183.5,\"RecoverDays\":6},{\"DownStartDate\":\"2026-01-30T00:00:00\",\"ExitDate\":\"2026-02-02T00:00:00\",\"MaxDownDate\":\"2026-01-30T00:00:00\",\"MaxDown\":12395.500000000009,\"RecoverDays\":3},{\"DownStartDate\":\"2026-02-04T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":21183.499999999993,\"RecoverDays\":15},{\"DownStartDate\":\"2026-02-06T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":19259.499999999993,\"RecoverDays\":13},{\"DownStartDate\":\"2026-02-10T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":16951.999999999996,\"RecoverDays\":9},{\"DownStartDate\":\"2026-02-11T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":14078.999999999996,\"RecoverDays\":8},{\"DownStartDate\":\"2026-02-18T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-18T00:00:00\",\"MaxDown\":3958.4999999999986,\"RecoverDays\":1},{\"DownStartDate\":\"2026-02-23T00:00:00\",\"ExitDate\":\"2026-02-24T00:00:00\",\"MaxDownDate\":\"2026-02-23T00:00:00\",\"MaxDown\":5284.4999999999991,\"RecoverDays\":1},{\"DownStartDate\":\"2026-02-25T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":27494.999999999996,\"RecoverDays\":14},{\"DownStartDate\":\"2026-02-26T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":26344.499999999996,\"RecoverDays\":13},{\"DownStartDate\":\"2026-03-04T00:00:00\",\"ExitDate\":\"2026-03-06T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":15482.999999999996,\"RecoverDays\":2},{\"DownStartDate\":\"2026-03-05T00:00:00\",\"ExitDate\":\"2026-03-06T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":14871.999999999998,\"RecoverDays\":1},{\"DownStartDate\":\"2026-03-20T00:00:00\",\"ExitDate\":\"2026-03-27T00:00:00\",\"MaxDownDate\":\"2026-03-20T00:00:00\",\"MaxDown\":20065.5,\"RecoverDays\":7},{\"DownStartDate\":\"2026-04-01T00:00:00\",\"ExitDate\":\"2026-04-16T00:00:00\",\"MaxDownDate\":\"2026-04-16T00:00:00\",\"MaxDown\":64792.000000000015,\"RecoverDays\":15},{\"DownStartDate\":\"2026-04-09T00:00:00\",\"ExitDate\":\"2026-04-10T00:00:00\",\"MaxDownDate\":\"2026-04-09T00:00:00\",\"MaxDown\":3737.5000000000018,\"RecoverDays\":1},{\"DownStartDate\":\"2026-04-13T00:00:00\",\"ExitDate\":\"2026-04-30T00:00:00\",\"MaxDownDate\":\"2026-04-16T00:00:00\",\"MaxDown\":50349.0,\"RecoverDays\":17},{\"DownStartDate\":\"2026-04-16T00:00:00\",\"ExitDate\":\"2026-04-17T00:00:00\",\"MaxDownDate\":\"2026-04-16T00:00:00\",\"MaxDown\":4550.0000000000036,\"RecoverDays\":1},{\"DownStartDate\":\"2026-04-20T00:00:00\",\"ExitDate\":\"2026-04-21T00:00:00\",\"MaxDownDate\":\"2026-04-20T00:00:00\",\"MaxDown\":942.50000000000182,\"RecoverDays\":1},{\"DownStartDate\":\"2026-05-04T00:00:00\",\"ExitDate\":\"2026-05-06T00:00:00\",\"MaxDownDate\":\"2026-05-05T00:00:00\",\"MaxDown\":4907.5000000000018,\"RecoverDays\":2},{\"DownStartDate\":\"2026-05-05T00:00:00\",\"ExitDate\":\"2026-05-06T00:00:00\",\"MaxDownDate\":\"2026-05-05T00:00:00\",\"MaxDown\":4277.0000000000009,\"RecoverDays\":1},{\"DownStartDate\":\"2026-05-13T00:00:00\",\"ExitDate\":\"2026-05-22T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":44778.5,\"RecoverDays\":9},{\"DownStartDate\":\"2026-05-14T00:00:00\",\"ExitDate\":\"2026-05-22T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":37706.500000000015,\"RecoverDays\":8},{\"DownStartDate\":\"2026-05-15T00:00:00\",\"ExitDate\":\"2026-05-22T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":23094.5,\"RecoverDays\":7},{\"DownStartDate\":\"2026-05-18T00:00:00\",\"ExitDate\":\"2026-05-26T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":18336.499999999993,\"RecoverDays\":8},{\"DownStartDate\":\"2026-05-21T00:00:00\",\"ExitDate\":\"2026-05-26T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":11270.999999999996,\"RecoverDays\":5},{\"DownStartDate\":\"2026-05-22T00:00:00\",\"ExitDate\":\"2026-05-25T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":7292.9999999999964,\"RecoverDays\":3},{\"DownStartDate\":\"2026-05-27T00:00:00\",\"ExitDate\":\"2026-05-27T00:00:00\",\"MaxDownDate\":\"2026-05-27T00:00:00\",\"MaxDown\":9262.5,\"RecoverDays\":1}]"
+drawDownPercent
+: 
+100
+drawDownStartDate
+: 
+"2026-01-13T00:00:00"
+lastMonthAnalysis
+: 
+"{\"data_duration\":\"1 Month\",\"start_date\":\"2026-04-27T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":-4127.4999999999964,\"roi\":-74.49,\"draw_down\":44778.5,\"draw_down_percent\":66.42,\"total_trades\":56.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":56.0,\"buy_trades\":28.0,\"sell_trades\":28.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"27 Apr 26\",\"value\":75290.5},{\"label\":\"28 Apr 26\",\"value\":83994.0},{\"label\":\"30 Apr 26\",\"value\":87036.0},{\"label\":\"04 May 26\",\"value\":86405.5},{\"label\":\"05 May 26\",\"value\":82128.5},{\"label\":\"06 May 26\",\"value\":94231.5},{\"label\":\"08 May 26\",\"value\":96227.0},{\"label\":\"13 May 26\",\"value\":89155.0},{\"label\":\"14 May 26\",\"value\":74543.0},{\"label\":\"15 May 26\",\"value\":69785.0},{\"label\":\"18 May 26\",\"value\":61887.5},{\"label\":\"19 May 26\",\"value\":62719.5},{\"label\":\"20 May 26\",\"value\":62719.5},{\"label\":\"21 May 26\",\"value\":58741.5},{\"label\":\"22 May 26\",\"value\":51448.5},{\"label\":\"25 May 26\",\"value\":58761.0},{\"label\":\"26 May 26\",\"value\":72547.5},{\"label\":\"27 May 26\",\"value\":63285.0}]}"
+lastOneYearAnalysis
+: 
+"{\"data_duration\":\"1 Year\",\"start_date\":\"2025-05-27T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":60138.0,\"roi\":89.21,\"draw_down\":67411.5,\"draw_down_percent\":100.0,\"total_trades\":240.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":240.0,\"buy_trades\":120.0,\"sell_trades\":120.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"Dec 25\",\"value\":69141.5},{\"label\":\"Jan 26\",\"value\":27814.5},{\"label\":\"Feb 26\",\"value\":53775.500000000007},{\"label\":\"Mar 26\",\"value\":163612.5},{\"label\":\"Apr 26\",\"value\":151301.5},{\"label\":\"May 26\",\"value\":127550.5}]}"
+lastSixMonthsAnalysis
+: 
+"{\"data_duration\":\"6 Months\",\"start_date\":\"2025-11-26T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":60138.0,\"roi\":178.91,\"draw_down\":67411.5,\"draw_down_percent\":100.0,\"total_trades\":240.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":240.0,\"buy_trades\":120.0,\"sell_trades\":120.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"04 Dec 25\",\"value\":60743.5},{\"label\":\"18 Dec 25\",\"value\":69681.0},{\"label\":\"13 Jan 26\",\"value\":81270.5},{\"label\":\"23 Jan 26\",\"value\":40352.999999999993},{\"label\":\"04 Feb 26\",\"value\":33235.499999999985},{\"label\":\"18 Feb 26\",\"value\":27294.499999999985},{\"label\":\"26 Feb 26\",\"value\":47665.499999999985},{\"label\":\"16 Mar 26\",\"value\":100946.0},{\"label\":\"02 Apr 26\",\"value\":145809.0},{\"label\":\"20 Apr 26\",\"value\":115636.0},{\"label\":\"04 May 26\",\"value\":150671.0},{\"label\":\"15 May 26\",\"value\":134050.5},{\"label\":\"25 May 26\",\"value\":123026.5},{\"label\":\"27 May 26\",\"value\":127550.5}]}"
+lastThreeMonthsAnalysis
+: 
+"{\"data_duration\":\"3 Months\",\"start_date\":\"2026-02-26T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":62913.5,\"roi\":378.49,\"draw_down\":64792.0,\"draw_down_percent\":96.11,\"total_trades\":118.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":118.0,\"buy_trades\":59.0,\"sell_trades\":59.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"26 Feb 26\",\"value\":50441.0},{\"label\":\"05 Mar 26\",\"value\":41068.0},{\"label\":\"16 Mar 26\",\"value\":103721.5},{\"label\":\"24 Mar 26\",\"value\":136806.5},{\"label\":\"02 Apr 26\",\"value\":148584.5},{\"label\":\"13 Apr 26\",\"value\":106146.0},{\"label\":\"20 Apr 26\",\"value\":118411.5},{\"label\":\"27 Apr 26\",\"value\":142331.5},{\"label\":\"04 May 26\",\"value\":153446.5},{\"label\":\"08 May 26\",\"value\":163268.0},{\"label\":\"15 May 26\",\"value\":136826.0},{\"label\":\"20 May 26\",\"value\":129760.5},{\"label\":\"25 May 26\",\"value\":125802.0},{\"label\":\"27 May 26\",\"value\":130326.0}]}"
+maxDownDays
+: 
+57
+maxDrawDownDate
+: 
+"2026-01-27T00:00:00"
+maxDrawDownRecoverDays
+: 
+57
+maxPosition
+: 
+260
+maxPositionCount
+: 
+120
+monthAvgProfit
+: 
+10023
+monthAvgTrades
+: 
+40
+monthMaxLoss
+: 
+-41327
+monthMaxProfit
+: 
+109837
+monthMinProfit
+: 
+1729
+monthRoi
+: 
+15.38
+negativeTrades
+: 
+119
+noOfMasterSl
+: 
+0
+noOfMasterTarget
+: 
+0
+noOfTrades
+: 
+240
+plFormat
+: 
+"60.1K"
+positiveTrades
+: 
+121
+profit
+: 
+60138
+recoveryRatio
+: 
+"slow"
+riskProfile
+: 
+"Very Aggressive"
+sellTrades
+: 
+120
+slPercent
+: 
+0
+slTrades
+: 
+0
+status
+: 
+"Completed"
+targetPercent
+: 
+0
+targetTrades
+: 
+0
+totalMonths
+: 
+6
+totalNegativeDays
+: 
+37
+totalNegativeMonths
+: 
+3
+totalNegativeYears
+: 
+0
+totalPositiveDays
+: 
+38
+totalPositiveMonths
+: 
+3
+totalPositiveYears
+: 
+2
+totalReturnPercent
+: 
+89.21
+totalTrades
+: 
+240
+totalTradingDays
+: 
+75
+totalYear
+: 
+2
+yearAvgProfit
+: 
+30069
+yearAvgTrades
+: 
+120
+yearMaxLoss
+: 
+1729
+yearMaxProfit
+: 
+58409
+yearMinProfit
+: 
+1729
+yearRoi
+: 
+187.13
+message
+: 
+"Success"
+statusCode
+: 
+200"
+
+response="{
+    "statusCode": 200,
+    "message": "Success",
+    "data": {
+        "lastMonthAnalysis": "{\"data_duration\":\"1 Month\",\"start_date\":\"2026-04-27T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":-4127.4999999999964,\"roi\":-74.49,\"draw_down\":44778.5,\"draw_down_percent\":66.42,\"total_trades\":56.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":56.0,\"buy_trades\":28.0,\"sell_trades\":28.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"27 Apr 26\",\"value\":75290.5},{\"label\":\"28 Apr 26\",\"value\":83994.0},{\"label\":\"30 Apr 26\",\"value\":87036.0},{\"label\":\"04 May 26\",\"value\":86405.5},{\"label\":\"05 May 26\",\"value\":82128.5},{\"label\":\"06 May 26\",\"value\":94231.5},{\"label\":\"08 May 26\",\"value\":96227.0},{\"label\":\"13 May 26\",\"value\":89155.0},{\"label\":\"14 May 26\",\"value\":74543.0},{\"label\":\"15 May 26\",\"value\":69785.0},{\"label\":\"18 May 26\",\"value\":61887.5},{\"label\":\"19 May 26\",\"value\":62719.5},{\"label\":\"20 May 26\",\"value\":62719.5},{\"label\":\"21 May 26\",\"value\":58741.5},{\"label\":\"22 May 26\",\"value\":51448.5},{\"label\":\"25 May 26\",\"value\":58761.0},{\"label\":\"26 May 26\",\"value\":72547.5},{\"label\":\"27 May 26\",\"value\":63285.0}]}",
+        "lastThreeMonthsAnalysis": "{\"data_duration\":\"3 Months\",\"start_date\":\"2026-02-26T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":62913.5,\"roi\":378.49,\"draw_down\":64792.0,\"draw_down_percent\":96.11,\"total_trades\":118.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":118.0,\"buy_trades\":59.0,\"sell_trades\":59.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"26 Feb 26\",\"value\":50441.0},{\"label\":\"05 Mar 26\",\"value\":41068.0},{\"label\":\"16 Mar 26\",\"value\":103721.5},{\"label\":\"24 Mar 26\",\"value\":136806.5},{\"label\":\"02 Apr 26\",\"value\":148584.5},{\"label\":\"13 Apr 26\",\"value\":106146.0},{\"label\":\"20 Apr 26\",\"value\":118411.5},{\"label\":\"27 Apr 26\",\"value\":142331.5},{\"label\":\"04 May 26\",\"value\":153446.5},{\"label\":\"08 May 26\",\"value\":163268.0},{\"label\":\"15 May 26\",\"value\":136826.0},{\"label\":\"20 May 26\",\"value\":129760.5},{\"label\":\"25 May 26\",\"value\":125802.0},{\"label\":\"27 May 26\",\"value\":130326.0}]}",
+        "lastSixMonthsAnalysis": "{\"data_duration\":\"6 Months\",\"start_date\":\"2025-11-26T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":60138.0,\"roi\":178.91,\"draw_down\":67411.5,\"draw_down_percent\":100.0,\"total_trades\":240.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":240.0,\"buy_trades\":120.0,\"sell_trades\":120.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"04 Dec 25\",\"value\":60743.5},{\"label\":\"18 Dec 25\",\"value\":69681.0},{\"label\":\"13 Jan 26\",\"value\":81270.5},{\"label\":\"23 Jan 26\",\"value\":40352.999999999993},{\"label\":\"04 Feb 26\",\"value\":33235.499999999985},{\"label\":\"18 Feb 26\",\"value\":27294.499999999985},{\"label\":\"26 Feb 26\",\"value\":47665.499999999985},{\"label\":\"16 Mar 26\",\"value\":100946.0},{\"label\":\"02 Apr 26\",\"value\":145809.0},{\"label\":\"20 Apr 26\",\"value\":115636.0},{\"label\":\"04 May 26\",\"value\":150671.0},{\"label\":\"15 May 26\",\"value\":134050.5},{\"label\":\"25 May 26\",\"value\":123026.5},{\"label\":\"27 May 26\",\"value\":127550.5}]}",
+        "lastOneYearAnalysis": "{\"data_duration\":\"1 Year\",\"start_date\":\"2025-05-27T13:00:00\",\"end_date\":\"2026-05-27T13:00:00\",\"capital\":67412.5,\"profit\":60138.0,\"roi\":89.21,\"draw_down\":67411.5,\"draw_down_percent\":100.0,\"total_trades\":240.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":240.0,\"buy_trades\":120.0,\"sell_trades\":120.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"Dec 25\",\"value\":69141.5},{\"label\":\"Jan 26\",\"value\":27814.5},{\"label\":\"Feb 26\",\"value\":53775.500000000007},{\"label\":\"Mar 26\",\"value\":163612.5},{\"label\":\"Apr 26\",\"value\":151301.5},{\"label\":\"May 26\",\"value\":127550.5}]}",
+        "allDataAnalysis": "{\"data_duration\":\"All Data\",\"start_date\":\"2025-12-04T13:00:00\",\"end_date\":\"2026-05-27T15:00:00\",\"capital\":67412.5,\"profit\":60138.0,\"roi\":187.13,\"draw_down\":67411.5,\"draw_down_percent\":100.0,\"total_trades\":240.0,\"target_trades\":0.0,\"sl_trades\":0.0,\"cover_trades\":240.0,\"buy_trades\":120.0,\"sell_trades\":120.0,\"con_target_trades\":0.0,\"con_sl_trades\":0.0,\"master_target_trades\":0.0,\"master_sl_trades\":0.0,\"chart\":[{\"label\":\"Dec 25\",\"value\":69141.5},{\"label\":\"Mar 26\",\"value\":163612.5},{\"label\":\"May 26\",\"value\":127550.5}]}",
+        "drawDownHistory": "[{\"DownStartDate\":\"2025-12-04T00:00:00\",\"ExitDate\":\"2025-12-08T00:00:00\",\"MaxDownDate\":\"2025-12-04T00:00:00\",\"MaxDown\":6668.9999999999982,\"RecoverDays\":4},{\"DownStartDate\":\"2025-12-10T00:00:00\",\"ExitDate\":\"2025-12-11T00:00:00\",\"MaxDownDate\":\"2025-12-10T00:00:00\",\"MaxDown\":3555.4999999999991,\"RecoverDays\":1},{\"DownStartDate\":\"2025-12-15T00:00:00\",\"ExitDate\":\"2026-01-12T00:00:00\",\"MaxDownDate\":\"2025-12-30T00:00:00\",\"MaxDown\":13312.000000000004,\"RecoverDays\":28},{\"DownStartDate\":\"2025-12-18T00:00:00\",\"ExitDate\":\"2026-01-05T00:00:00\",\"MaxDownDate\":\"2025-12-30T00:00:00\",\"MaxDown\":6161.9999999999991,\"RecoverDays\":18},{\"DownStartDate\":\"2025-12-19T00:00:00\",\"ExitDate\":\"2025-12-24T00:00:00\",\"MaxDownDate\":\"2025-12-19T00:00:00\",\"MaxDown\":130.0,\"RecoverDays\":5},{\"DownStartDate\":\"2025-12-30T00:00:00\",\"ExitDate\":\"2026-01-05T00:00:00\",\"MaxDownDate\":\"2025-12-30T00:00:00\",\"MaxDown\":1885.0,\"RecoverDays\":6},{\"DownStartDate\":\"2026-01-13T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":67411.5,\"RecoverDays\":57},{\"DownStartDate\":\"2026-01-14T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":62101.0,\"RecoverDays\":56},{\"DownStartDate\":\"2026-01-21T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":59676.500000000007,\"RecoverDays\":49},{\"DownStartDate\":\"2026-01-22T00:00:00\",\"ExitDate\":\"2026-02-24T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":41060.5,\"RecoverDays\":33},{\"DownStartDate\":\"2026-01-27T00:00:00\",\"ExitDate\":\"2026-02-02T00:00:00\",\"MaxDownDate\":\"2026-01-27T00:00:00\",\"MaxDown\":21183.5,\"RecoverDays\":6},{\"DownStartDate\":\"2026-01-30T00:00:00\",\"ExitDate\":\"2026-02-02T00:00:00\",\"MaxDownDate\":\"2026-01-30T00:00:00\",\"MaxDown\":12395.500000000009,\"RecoverDays\":3},{\"DownStartDate\":\"2026-02-04T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":21183.499999999993,\"RecoverDays\":15},{\"DownStartDate\":\"2026-02-06T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":19259.499999999993,\"RecoverDays\":13},{\"DownStartDate\":\"2026-02-10T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":16951.999999999996,\"RecoverDays\":9},{\"DownStartDate\":\"2026-02-11T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-11T00:00:00\",\"MaxDown\":14078.999999999996,\"RecoverDays\":8},{\"DownStartDate\":\"2026-02-18T00:00:00\",\"ExitDate\":\"2026-02-19T00:00:00\",\"MaxDownDate\":\"2026-02-18T00:00:00\",\"MaxDown\":3958.4999999999986,\"RecoverDays\":1},{\"DownStartDate\":\"2026-02-23T00:00:00\",\"ExitDate\":\"2026-02-24T00:00:00\",\"MaxDownDate\":\"2026-02-23T00:00:00\",\"MaxDown\":5284.4999999999991,\"RecoverDays\":1},{\"DownStartDate\":\"2026-02-25T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":27494.999999999996,\"RecoverDays\":14},{\"DownStartDate\":\"2026-02-26T00:00:00\",\"ExitDate\":\"2026-03-11T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":26344.499999999996,\"RecoverDays\":13},{\"DownStartDate\":\"2026-03-04T00:00:00\",\"ExitDate\":\"2026-03-06T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":15482.999999999996,\"RecoverDays\":2},{\"DownStartDate\":\"2026-03-05T00:00:00\",\"ExitDate\":\"2026-03-06T00:00:00\",\"MaxDownDate\":\"2026-03-05T00:00:00\",\"MaxDown\":14871.999999999998,\"RecoverDays\":1},{\"DownStartDate\":\"2026-03-20T00:00:00\",\"ExitDate\":\"2026-03-27T00:00:00\",\"MaxDownDate\":\"2026-03-20T00:00:00\",\"MaxDown\":20065.5,\"RecoverDays\":7},{\"DownStartDate\":\"2026-04-01T00:00:00\",\"ExitDate\":\"2026-04-16T00:00:00\",\"MaxDownDate\":\"2026-04-16T00:00:00\",\"MaxDown\":64792.000000000015,\"RecoverDays\":15},{\"DownStartDate\":\"2026-04-09T00:00:00\",\"ExitDate\":\"2026-04-10T00:00:00\",\"MaxDownDate\":\"2026-04-09T00:00:00\",\"MaxDown\":3737.5000000000018,\"RecoverDays\":1},{\"DownStartDate\":\"2026-04-13T00:00:00\",\"ExitDate\":\"2026-04-30T00:00:00\",\"MaxDownDate\":\"2026-04-16T00:00:00\",\"MaxDown\":50349.0,\"RecoverDays\":17},{\"DownStartDate\":\"2026-04-16T00:00:00\",\"ExitDate\":\"2026-04-17T00:00:00\",\"MaxDownDate\":\"2026-04-16T00:00:00\",\"MaxDown\":4550.0000000000036,\"RecoverDays\":1},{\"DownStartDate\":\"2026-04-20T00:00:00\",\"ExitDate\":\"2026-04-21T00:00:00\",\"MaxDownDate\":\"2026-04-20T00:00:00\",\"MaxDown\":942.50000000000182,\"RecoverDays\":1},{\"DownStartDate\":\"2026-05-04T00:00:00\",\"ExitDate\":\"2026-05-06T00:00:00\",\"MaxDownDate\":\"2026-05-05T00:00:00\",\"MaxDown\":4907.5000000000018,\"RecoverDays\":2},{\"DownStartDate\":\"2026-05-05T00:00:00\",\"ExitDate\":\"2026-05-06T00:00:00\",\"MaxDownDate\":\"2026-05-05T00:00:00\",\"MaxDown\":4277.0000000000009,\"RecoverDays\":1},{\"DownStartDate\":\"2026-05-13T00:00:00\",\"ExitDate\":\"2026-05-22T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":44778.5,\"RecoverDays\":9},{\"DownStartDate\":\"2026-05-14T00:00:00\",\"ExitDate\":\"2026-05-22T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":37706.500000000015,\"RecoverDays\":8},{\"DownStartDate\":\"2026-05-15T00:00:00\",\"ExitDate\":\"2026-05-22T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":23094.5,\"RecoverDays\":7},{\"DownStartDate\":\"2026-05-18T00:00:00\",\"ExitDate\":\"2026-05-26T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":18336.499999999993,\"RecoverDays\":8},{\"DownStartDate\":\"2026-05-21T00:00:00\",\"ExitDate\":\"2026-05-26T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":11270.999999999996,\"RecoverDays\":5},{\"DownStartDate\":\"2026-05-22T00:00:00\",\"ExitDate\":\"2026-05-25T00:00:00\",\"MaxDownDate\":\"2026-05-22T00:00:00\",\"MaxDown\":7292.9999999999964,\"RecoverDays\":3},{\"DownStartDate\":\"2026-05-27T00:00:00\",\"ExitDate\":\"2026-05-27T00:00:00\",\"MaxDownDate\":\"2026-05-27T00:00:00\",\"MaxDown\":9262.5,\"RecoverDays\":1}]",
+        "capital": 67412.5,
+        "profit": 60138,
+        "backtestDurationDays": 174,
+        "buyTrades": 120,
+        "coverTrades": 240,
+        "drawDownPercent": 100,
+        "drawDown": 67411.5,
+        "maxDrawDownDate": "2026-01-27T00:00:00",
+        "maxDownDays": 57,
+        "drawDownEndDate": "2026-03-11T00:00:00",
+        "maxDrawDownRecoverDays": 57,
+        "drawDownStartDate": "2026-01-13T00:00:00",
+        "totalNegativeDays": 37,
+        "totalNegativeMonths": 3,
+        "totalNegativeYears": 0,
+        "totalPositiveDays": 38,
+        "totalPositiveMonths": 3,
+        "totalPositiveYears": 2,
+        "totalReturnPercent": 89.21,
+        "sellTrades": 120,
+        "slPercent": 0,
+        "slTrades": 0,
+        "targetPercent": 0,
+        "targetTrades": 0,
+        "dayAverageTrades": 3,
+        "monthAvgTrades": 40,
+        "yearAvgTrades": 120,
+        "totalMonths": 6,
+        "totalTrades": 240,
+        "totalYear": 2,
+        "dayAverageProfit": 801.84,
+        "dayMaxLoss": -45799,
+        "dayMinProfit": 0,
+        "dayMaxProfit": 48067.5,
+        "monthAvgProfit": 10023,
+        "monthMaxLoss": -41327,
+        "monthMinProfit": 1729,
+        "monthMaxProfit": 109837,
+        "yearAvgProfit": 30069,
+        "yearMaxLoss": 1729,
+        "yearMinProfit": 1729,
+        "yearMaxProfit": 58409,
+        "allMonProfit": 20137,
+        "allTueProfit": 29166,
+        "allWedProfit": -48074,
+        "allThuProfit": 7143,
+        "allFriProfit": 51766,
+        "allSatProfit": 0,
+        "allSunProfit": 0,
+        "dayRoi": 1.19,
+        "monthRoi": 15.38,
+        "yearRoi": 187.13,
+        "capitalFormat": "67.4K",
+        "plFormat": "60.1K",
+        "drawDownFormat": "67.4K",
+        "riskProfile": "Very Aggressive",
+        "recoveryRatio": "slow",
+        "status": "Completed",
+        "backtestDataStartDate": "2025-12-04T13:00:00",
+        "backtestDataEndDate": "2026-05-27T15:00:00",
+        "totalTradingDays": 75,
+        "noOfTrades": 240,
+        "backtestJobStartDate": "2026-05-28T17:41:59.223",
+        "backtestJobEndDate": "2026-05-28T17:42:04.633",
+        "positiveTrades": 121,
+        "negativeTrades": 119,
+        "consecutiveTargetTrades": 0,
+        "consecutiveSlTrades": 0,
+        "consecutivePosDays": 4,
+        "consecutiveNegDays": 4,
+        "noOfMasterTarget": 0,
+        "noOfMasterSl": 0,
+        "maxPosition": 260,
+        "maxPositionCount": 120
+    }
+}"
+"
