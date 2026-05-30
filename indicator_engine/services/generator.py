@@ -1,3 +1,5 @@
+import json
+import os
 import re
 import time
 
@@ -7,93 +9,21 @@ LOT_SIZES = {
     "MIDCPNIFTY": 75, "SENSEX": 20, "BANKEX": 15,
 }
 
-# ── Full indicator definitions — maps code → API parameter structure ────────
-INDICATOR_DEFINITIONS = {
-    "supertrend": {
-        "indicator_name": "Super Trend",
-        "parameters": [
-            {"param_name": "Length", "param_code": "length", "param_type": "int",
-             "default_value": "10", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Factor", "param_code": "factor", "param_type": "int",
-             "default_value": "3", "enum_value": "", "min_value": 1, "max_value": 200},
-        ]
-    },
-    "ma-cross-over": {
-        "indicator_name": "MA Cross Over",
-        "parameters": [
-            {"param_name": "Short", "param_code": "short", "param_type": "int",
-             "default_value": "9", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Long", "param_code": "long", "param_type": "int",
-             "default_value": "26", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Type", "param_code": "type", "param_type": "enum",
-             "default_value": "SMA", "enum_value": "SMA|EMA|WMA", "min_value": 0, "max_value": 0},
-        ]
-    },
-    "rsi": {
-        "indicator_name": "RSI",
-        "parameters": [
-            {"param_name": "Length", "param_code": "length", "param_type": "int",
-             "default_value": "14", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Smoothing Line", "param_code": "smoothing-line", "param_type": "enum",
-             "default_value": "SMA", "enum_value": "SMA|EMA|WMA", "min_value": 0, "max_value": 0},
-            {"param_name": "Smoothing Length", "param_code": "smoothing-length", "param_type": "int",
-             "default_value": "14", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Lower Band", "param_code": "lower-band", "param_type": "int",
-             "default_value": "30", "enum_value": "", "min_value": 1, "max_value": 50},
-            {"param_name": "Upper Band", "param_code": "upper-band", "param_type": "int",
-             "default_value": "70", "enum_value": "", "min_value": 50, "max_value": 100},
-        ]
-    },
-    "macd": {
-        "indicator_name": "MACD",
-        "parameters": [
-            {"param_name": "Fast Length", "param_code": "fast-length", "param_type": "int",
-             "default_value": "12", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Slow Length", "param_code": "slow-length", "param_type": "int",
-             "default_value": "26", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Source", "param_code": "source", "param_type": "enum",
-             "default_value": "Close", "enum_value": "Open|High|Low|Close", "min_value": 0, "max_value": 0},
-            {"param_name": "Signal Length", "param_code": "signal-length", "param_type": "int",
-             "default_value": "9", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Oscillator MA Type", "param_code": "oscillator-ma-type", "param_type": "enum",
-             "default_value": "EMA", "enum_value": "EMA|SMA|WMA", "min_value": 0, "max_value": 0},
-            {"param_name": "Signal Line MA Type", "param_code": "signal-line-ma-type", "param_type": "enum",
-             "default_value": "EMA", "enum_value": "EMA|SMA|WMA", "min_value": 0, "max_value": 0},
-        ]
-    },
-    "stochastic": {
-        "indicator_name": "Stochastic",
-        "parameters": [
-            {"param_name": "%K Length", "param_code": "k-length", "param_type": "int",
-             "default_value": "14", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "%D Length", "param_code": "d-length", "param_type": "int",
-             "default_value": "3", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Lower Band", "param_code": "lower-band", "param_type": "int",
-             "default_value": "20", "enum_value": "", "min_value": 1, "max_value": 50},
-            {"param_name": "Upper Band", "param_code": "upper-band", "param_type": "int",
-             "default_value": "80", "enum_value": "", "min_value": 50, "max_value": 100},
-        ]
-    },
-    "bollinger-bands": {
-        "indicator_name": "Bollinger Bands",
-        "parameters": [
-            {"param_name": "Length", "param_code": "length", "param_type": "int",
-             "default_value": "20", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Multiplier", "param_code": "multiplier", "param_type": "int",
-             "default_value": "2", "enum_value": "", "min_value": 1, "max_value": 200},
-            {"param_name": "Source", "param_code": "source", "param_type": "enum",
-             "default_value": "Close", "enum_value": "Open|High|Low|Close", "min_value": 0, "max_value": 0},
-        ]
-    },
-    # Candlestick patterns — no parameters
-    "hammer":                {"indicator_name": "Hammer",                "parameters": []},
-    "morning-star":          {"indicator_name": "Morning Star",          "parameters": []},
-    "evening-star":          {"indicator_name": "Evening Star",          "parameters": []},
-    "rising-three-methods":  {"indicator_name": "Rising Three Methods",  "parameters": []},
-    "falling-three-methods": {"indicator_name": "Falling Three Methods", "parameters": []},
-    "three-black-crows":     {"indicator_name": "Three Black Crows",     "parameters": []},
-    "three-white-soldiers":  {"indicator_name": "Three White Soldiers",  "parameters": []},
-}
+# ── Load indicator master data (with real IDs from Market Maya API) ─────────
+_MASTER_JSON_PATH = os.path.join(os.path.dirname(__file__), "indicator_master.json")
+with open(_MASTER_JSON_PATH, "r") as _f:
+    _MASTER_LIST = json.load(_f)
+
+# Build lookup: indicator_code → full master entry (with id + parameters with ids)
+# Also support short aliases: "hammer" → "candlestick-hammer", etc.
+INDICATOR_MASTER = {}
+for _entry in _MASTER_LIST:
+    code = _entry["indicator_code"]
+    INDICATOR_MASTER[code] = _entry
+    # Add short alias without "candlestick-" prefix for backward compat
+    if code.startswith("candlestick-"):
+        short = code.replace("candlestick-", "", 1)
+        INDICATOR_MASTER[short] = _entry
 
 STRATEGY_TYPE_ID = "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$"
 
@@ -115,7 +45,6 @@ class ISEPayloadGenerator:
         sl_move = int(strategy_json.get("slMove", 0))
         no_of_trail_sl = self._parse_trail_count(strategy_json.get("noOfTrailSl", 0))
 
-        # If any trailing field is set, enable the flag
         if profit_move > 0 or sl_move > 0:
             is_trail_sl = True
 
@@ -225,11 +154,13 @@ class ISEPayloadGenerator:
         }
 
     def _build_indicator(self, ind):
+        """Build indicator payload using real IDs from the Market Maya indicator master."""
         code = str(ind.get("indicator_code", "")).lower()
-        defn = INDICATOR_DEFINITIONS.get(code)
+        master = INDICATOR_MASTER.get(code)
 
-        if not defn:
-            # Unknown indicator — return minimal structure
+        if not master:
+            # Unknown indicator — return minimal structure (will likely fail on API)
+            print(f"[ISE Generator] WARNING: Unknown indicator code '{code}', no master data found")
             return {
                 "id": "",
                 "index": int(ind.get("index", 1)),
@@ -243,31 +174,32 @@ class ISEPayloadGenerator:
         if not isinstance(user_params, dict):
             user_params = {}
 
+        # Build parameter list using master template — preserving real IDs
         built_params = []
-        for p in defn["parameters"]:
-            code_key = p["param_code"]
-            # Try code key first, then param_name key as fallback
-            user_val = user_params.get(code_key, user_params.get(p["param_name"], None))
+        for p in master["parameter"]:
+            param_code = p["param_code"]
+            # Try param_code first, then param_name as fallback
+            user_val = user_params.get(param_code, user_params.get(p["param_name"], None))
             value = str(user_val) if user_val is not None else p["default_value"]
 
             built_params.append({
-                "id": "",
+                "id": p["id"],
                 "param_name": p["param_name"],
-                "param_code": code_key,
+                "param_code": param_code,
                 "param_type": p["param_type"],
-                "is_required": True,
+                "is_required": p.get("is_required", True),
                 "default_value": p["default_value"],
-                "enum_value": p["enum_value"],
-                "min_value": p["min_value"],
-                "max_value": p["max_value"],
+                "enum_value": p.get("enum_value", ""),
+                "min_value": p.get("min_value", 0),
+                "max_value": p.get("max_value", 0),
                 "value": value,
             })
 
         return {
-            "id": "",
+            "id": master["id"],
             "index": int(ind.get("index", 1)),
-            "indicator_name": defn["indicator_name"],
-            "indicator_code": code,
+            "indicator_name": master["indicator_name"],
+            "indicator_code": master["indicator_code"],
             "parameter": built_params,
         }
 
