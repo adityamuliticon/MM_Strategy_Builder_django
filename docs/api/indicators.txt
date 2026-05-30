@@ -1,0 +1,2813 @@
+this all information is get from this api
+
+
+header="Request URL
+https://webapi.marketmaya.com/api/indicatorMaster/getAllIndicatorMaster
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin"
+
+
+
+preview="
+
+{statusCode: 200, message: "Success", data: [,…]}
+data
+: 
+[,…]
+0
+: 
+{id: "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$", indicatorName: "Super Trend", indicatorCode: "supertrend",…}
+description
+: 
+"Supertrend is a trend-following technical indicator that uses price and volatility (ATR) to determine the market direction. It plots a line above or below the price, switching positions when the trend reverses. It's commonly used for identifying buy or sell signals—green line indicates uptrend, and red line indicates downtrend."
+id
+: 
+"RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$"
+indicatorCode
+: 
+"supertrend"
+indicatorName
+: 
+"Super Trend"
+noOfCandles
+: 
+15
+parameter
+: 
+[,…]
+0
+: 
+{id: "uPDAaA0$hJjD36Jju5v3Tw6OQaC0$aC0$", paramName: "Length", paramCode: "length", paramType: "int",…}
+defaultValue
+: 
+"10"
+description
+: 
+""
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"uPDAaA0$hJjD36Jju5v3Tw6OQaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"length"
+paramName
+: 
+"Length"
+paramType
+: 
+"int"
+value
+: 
+"10"
+1
+: 
+{id: "LedxLFBhHoNwaB0$sCusrDbiQaC0$aC0$", paramName: "Factor", paramCode: "factor", paramType: "int",…}
+defaultValue
+: 
+"3"
+description
+: 
+""
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"LedxLFBhHoNwaB0$sCusrDbiQaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"factor"
+paramName
+: 
+"Factor"
+paramType
+: 
+"int"
+value
+: 
+"3"
+type
+: 
+"Indicators"
+1
+: 
+{id: "pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$", indicatorName: "MA Cross Over",…}
+description
+: 
+"Moving Average Crossover is a popular trend-following strategy where a short-term moving average crossing above a long-term moving average signals a buy, while crossing below signals a sell. It helps identify potential trend reversals and momentum shifts."
+id
+: 
+"pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$"
+indicatorCode
+: 
+"ma-cross-over"
+indicatorName
+: 
+"MA Cross Over"
+noOfCandles
+: 
+30
+parameter
+: 
+[,…]
+0
+: 
+{id: "vaB0$DHIctaA0$S8hT5fq7fyTneAaC0$aC0$", paramName: "Short", paramCode: "short", paramType: "int",…}
+defaultValue
+: 
+"9"
+description
+: 
+""
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"vaB0$DHIctaA0$S8hT5fq7fyTneAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"short"
+paramName
+: 
+"Short"
+paramType
+: 
+"int"
+value
+: 
+"9"
+1
+: 
+{id: "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$", paramName: "Long", paramCode: "long", paramType: "int",…}
+defaultValue
+: 
+"26"
+description
+: 
+""
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"long"
+paramName
+: 
+"Long"
+paramType
+: 
+"int"
+value
+: 
+"26"
+2
+: 
+{id: "apgecBExRu0KpQF6l7wXLAaC0$aC0$", paramName: "Type", paramCode: "type", paramType: "enum",…}
+defaultValue
+: 
+"SMA"
+description
+: 
+""
+displayOrder
+: 
+3
+enumValue
+: 
+"SMA|EMA|WMA"
+id
+: 
+"apgecBExRu0KpQF6l7wXLAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"type"
+paramName
+: 
+"Type"
+paramType
+: 
+"enum"
+value
+: 
+"SMA"
+type
+: 
+"Indicators"
+2
+: 
+{id: "Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$", indicatorName: "RSI", indicatorCode: "rsi",…}
+description
+: 
+"RSI is a momentum oscillator that measures the speed and change of price movements on a scale of 0 to 100. Values above 70 indicate overbought conditions, and below 30 indicate oversold conditions, helping traders spot potential reversals."
+id
+: 
+"Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$"
+indicatorCode
+: 
+"rsi"
+indicatorName
+: 
+"RSI"
+noOfCandles
+: 
+30
+parameter
+: 
+[,…]
+0
+: 
+{id: "pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$", paramName: "Length", paramCode: "length", paramType: "int",…}
+defaultValue
+: 
+"14"
+description
+: 
+""
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"length"
+paramName
+: 
+"Length"
+paramType
+: 
+"int"
+value
+: 
+"14"
+1
+: 
+{id: "Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$", paramName: "Smoothing Line", paramCode: "smoothing-line",…}
+defaultValue
+: 
+"SMA"
+description
+: 
+""
+displayOrder
+: 
+2
+enumValue
+: 
+"SMA|EMA|WMA"
+id
+: 
+"Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"smoothing-line"
+paramName
+: 
+"Smoothing Line"
+paramType
+: 
+"enum"
+value
+: 
+"SMA"
+2
+: 
+{id: "CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$", paramName: "Smoothing Length", paramCode: "smoothing-length",…}
+defaultValue
+: 
+"14"
+description
+: 
+""
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"smoothing-length"
+paramName
+: 
+"Smoothing Length"
+paramType
+: 
+"int"
+value
+: 
+"14"
+3
+: 
+{id: "R74aB0$bl3GCmLEzsfNZaxP0waC0$aC0$", paramName: "Lower Band", paramCode: "lower-band",…}
+defaultValue
+: 
+"30"
+description
+: 
+"Lower band for RSI to generate trade"
+displayOrder
+: 
+4
+enumValue
+: 
+""
+id
+: 
+"R74aB0$bl3GCmLEzsfNZaxP0waC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+50
+minValue
+: 
+1
+paramCode
+: 
+"lower-band"
+paramName
+: 
+"Lower Band"
+paramType
+: 
+"int"
+value
+: 
+"30"
+4
+: 
+{id: "Es7A7bfLFaB0$aA0$u7XcfTCqNfAaC0$aC0$", paramName: "Upper Band", paramCode: "upper-band",…}
+defaultValue
+: 
+"70"
+description
+: 
+"Upper band for RSI to generate trade"
+displayOrder
+: 
+5
+enumValue
+: 
+""
+id
+: 
+"Es7A7bfLFaB0$aA0$u7XcfTCqNfAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+50
+paramCode
+: 
+"upper-band"
+paramName
+: 
+"Upper Band"
+paramType
+: 
+"int"
+value
+: 
+"70"
+type
+: 
+"Indicators"
+3
+: 
+{id: "CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$", indicatorName: "MACD", indicatorCode: "macd",…}
+description
+: 
+"MACD is a trend-following momentum indicator that shows the relationship between two moving averages. A buy signal occurs when the MACD line crosses above the signal line, and a sell signal occurs when it crosses below."
+id
+: 
+"CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$"
+indicatorCode
+: 
+"macd"
+indicatorName
+: 
+"MACD"
+noOfCandles
+: 
+30
+parameter
+: 
+[{id: "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$", paramName: "Fast Length", paramCode: "fast-length",…},…]
+0
+: 
+{id: "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$", paramName: "Fast Length", paramCode: "fast-length",…}
+defaultValue
+: 
+"12"
+description
+: 
+""
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"HGDvMula3mnAvJ9uO7OvEAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"fast-length"
+paramName
+: 
+"Fast Length"
+paramType
+: 
+"int"
+value
+: 
+"12"
+1
+: 
+{id: "YioJhK5IqBULe8fPLMnXaAaC0$aC0$", paramName: "Slow Length", paramCode: "slow-length",…}
+defaultValue
+: 
+"26"
+description
+: 
+""
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"YioJhK5IqBULe8fPLMnXaAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"slow-length"
+paramName
+: 
+"Slow Length"
+paramType
+: 
+"int"
+value
+: 
+"26"
+2
+: 
+{id: "9TILtPAIUOKuUSlcrcIBAAaC0$aC0$", paramName: "Source", paramCode: "source", paramType: "enum",…}
+defaultValue
+: 
+"Close"
+description
+: 
+""
+displayOrder
+: 
+3
+enumValue
+: 
+"Open|High|Low|Close"
+id
+: 
+"9TILtPAIUOKuUSlcrcIBAAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"source"
+paramName
+: 
+"Source"
+paramType
+: 
+"enum"
+value
+: 
+"Close"
+3
+: 
+{id: "Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$", paramName: "Signal Length", paramCode: "signal-length",…}
+defaultValue
+: 
+"9"
+description
+: 
+""
+displayOrder
+: 
+4
+enumValue
+: 
+""
+id
+: 
+"Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"signal-length"
+paramName
+: 
+"Signal Length"
+paramType
+: 
+"int"
+value
+: 
+"9"
+4
+: 
+{id: "4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$", paramName: "Oscillator MA Type",…}
+defaultValue
+: 
+"EMA"
+description
+: 
+""
+displayOrder
+: 
+5
+enumValue
+: 
+"EMA|SMA|WMA"
+id
+: 
+"4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"oscillator-ma-type"
+paramName
+: 
+"Oscillator MA Type"
+paramType
+: 
+"enum"
+value
+: 
+"EMA"
+5
+: 
+{id: "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$", paramName: "Signal Line MA Type",…}
+defaultValue
+: 
+"EMA"
+description
+: 
+""
+displayOrder
+: 
+6
+enumValue
+: 
+"EMA|SMA|WMA"
+id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"signal-line-ma-type"
+paramName
+: 
+"Signal Line MA Type"
+paramType
+: 
+"enum"
+value
+: 
+"EMA"
+type
+: 
+"Indicators"
+4
+: 
+{id: "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$", indicatorName: "Stochastic", indicatorCode: "stochastic",…}
+description
+: 
+"Stochastic is a momentum indicator that compares a stock's closing price to its price range over a period. Readings above 80 indicate overbought conditions, and below 20 indicate oversold, helping identify potential reversals."
+id
+: 
+"HGDvMula3mnAvJ9uO7OvEAaC0$aC0$"
+indicatorCode
+: 
+"stochastic"
+indicatorName
+: 
+"Stochastic"
+noOfCandles
+: 
+30
+parameter
+: 
+[{id: "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$", paramName: "%K Length", paramCode: "k-length",…},…]
+0
+: 
+{id: "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$", paramName: "%K Length", paramCode: "k-length",…}
+defaultValue
+: 
+"14"
+description
+: 
+""
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"k-length"
+paramName
+: 
+"%K Length"
+paramType
+: 
+"int"
+value
+: 
+"14"
+1
+: 
+{id: "bzHmnzAMNmtbauNqJzwEGgaC0$aC0$", paramName: "%K Smoothing", paramCode: "k-smoothing",…}
+defaultValue
+: 
+"1"
+description
+: 
+""
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"bzHmnzAMNmtbauNqJzwEGgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"k-smoothing"
+paramName
+: 
+"%K Smoothing"
+paramType
+: 
+"int"
+value
+: 
+"1"
+2
+: 
+{id: "0JT56s1rdeKWr24u8T3ldAaC0$aC0$", paramName: "%D Smoothing", paramCode: "d-smoothing",…}
+defaultValue
+: 
+"3"
+description
+: 
+""
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"0JT56s1rdeKWr24u8T3ldAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+200
+minValue
+: 
+1
+paramCode
+: 
+"d-smoothing"
+paramName
+: 
+"%D Smoothing"
+paramType
+: 
+"int"
+value
+: 
+"3"
+type
+: 
+"Indicators"
+5
+: 
+{id: "YioJhK5IqBULe8fPLMnXaAaC0$aC0$", indicatorName: "Hammer", indicatorCode: "candlestick-hammer",…}
+description
+: 
+"Hammer is a bullish reversal candlestick pattern that forms after a downtrend. It has a small body near the top and a long lower wick, signaling potential price reversal. Traders use it to spot buying opportunities at market bottoms."
+id
+: 
+"YioJhK5IqBULe8fPLMnXaAaC0$aC0$"
+indicatorCode
+: 
+"candlestick-hammer"
+indicatorName
+: 
+"Hammer"
+noOfCandles
+: 
+15
+parameter
+: 
+[{id: "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$", paramName: "Min Body-to-Range %",…},…]
+0
+: 
+{id: "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$", paramName: "Min Body-to-Range %",…}
+defaultValue
+: 
+"10"
+description
+: 
+"Minimum body size as a percentage of the total candle range (filters out doji/small candles)"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+30
+minValue
+: 
+1
+paramCode
+: 
+"min-body-to-range"
+paramName
+: 
+"Min Body-to-Range %"
+paramType
+: 
+"decimal"
+value
+: 
+"10"
+1
+: 
+{id: "FaB0$Jr8mgLXaA0$aZiTvSIutdJAaC0$aC0$", paramName: "Max Body-to-Range %",…}
+defaultValue
+: 
+"30"
+description
+: 
+"Maximum body size to ensure it's a small body"
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"FaB0$Jr8mgLXaA0$aZiTvSIutdJAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+50
+minValue
+: 
+1
+paramCode
+: 
+"max-body-to-range"
+paramName
+: 
+"Max Body-to-Range %"
+paramType
+: 
+"decimal"
+value
+: 
+"30"
+2
+: 
+{id: "kIuqIpGfQP2MGtYcGBaB0$eBgaC0$aC0$", paramName: "Min Lower Wick Ratio",…}
+defaultValue
+: 
+"2.0"
+description
+: 
+"How many times the lower wick must be larger than the body (e.g., 2x)"
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"kIuqIpGfQP2MGtYcGBaB0$eBgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+30
+minValue
+: 
+1
+paramCode
+: 
+"min-lower-wick-ratio"
+paramName
+: 
+"Min Lower Wick Ratio"
+paramType
+: 
+"decimal"
+value
+: 
+"2.0"
+3
+: 
+{id: "VL9aB0$4EQN6aAtNBFT2aA0$J5BAaC0$aC0$", paramName: "Max Upper Wick Ratio",…}
+defaultValue
+: 
+"0.3"
+description
+: 
+"Upper wick must be small or nonexistent (as a fraction of body size)"
+displayOrder
+: 
+4
+enumValue
+: 
+""
+id
+: 
+"VL9aB0$4EQN6aAtNBFT2aA0$J5BAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+10
+minValue
+: 
+0.10000000149011612
+paramCode
+: 
+"max-upper-wick-ratio"
+paramName
+: 
+"Max Upper Wick Ratio"
+paramType
+: 
+"decimal"
+value
+: 
+"0.3"
+4
+: 
+{id: "bzqpdtJfyDh1IxHkSONrygaC0$aC0$", paramName: "Allow Bearish Hammer?", paramCode: "allow_bearish",…}
+defaultValue
+: 
+"true"
+description
+: 
+"Option to include bearish-bodied hammers (open > close)"
+displayOrder
+: 
+5
+enumValue
+: 
+""
+id
+: 
+"bzqpdtJfyDh1IxHkSONrygaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"allow_bearish"
+paramName
+: 
+"Allow Bearish Hammer?"
+paramType
+: 
+"bool"
+value
+: 
+"true"
+5
+: 
+{id: "PQEWdMMV1v85z0aB0$WmM1MvAaC0$aC0$", paramName: "Require Downtrend Before Pattern?",…}
+defaultValue
+: 
+"true"
+description
+: 
+"Should the pattern only be valid in a downtrend (e.g., last 3 candles are lower highs/lows)?"
+displayOrder
+: 
+6
+enumValue
+: 
+""
+id
+: 
+"PQEWdMMV1v85z0aB0$WmM1MvAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"downtrend-before-pattern"
+paramName
+: 
+"Require Downtrend Before Pattern?"
+paramType
+: 
+"bool"
+value
+: 
+"true"
+6
+: 
+{id: "PeiwPh5cZxaB0$37aA0$4g8pgEKAaC0$aC0$", paramName: "Highlight Quality Rating",…}
+defaultValue
+: 
+"true"
+description
+: 
+"Optional scoring: strong, average, weak based on wick/body ratios"
+displayOrder
+: 
+7
+enumValue
+: 
+""
+id
+: 
+"PeiwPh5cZxaB0$37aA0$4g8pgEKAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+0
+minValue
+: 
+0
+paramCode
+: 
+"quality-rating"
+paramName
+: 
+"Highlight Quality Rating"
+paramType
+: 
+"bool"
+value
+: 
+"true"
+type
+: 
+"Patterns"
+6
+: 
+{id: "Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$", indicatorName: "Bollinger Bands",…}
+description
+: 
+"Bollinger Bands consist of a moving average with upper and lower bands based on standard deviation. Price touching the upper band suggests overbought conditions, while touching the lower band suggests oversold conditions. It helps measure volatility and potential reversal zones."
+id
+: 
+"Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$"
+indicatorCode
+: 
+"bollinger-bands"
+indicatorName
+: 
+"Bollinger Bands"
+noOfCandles
+: 
+30
+parameter
+: 
+[,…]
+0
+: 
+{id: "xgN9pEIzDeEZXhEYYpR4aQaC0$aC0$", paramName: "Length", paramCode: "length", paramType: "int",…}
+defaultValue
+: 
+"20"
+description
+: 
+""
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"xgN9pEIzDeEZXhEYYpR4aQaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+50
+minValue
+: 
+1
+paramCode
+: 
+"length"
+paramName
+: 
+"Length"
+paramType
+: 
+"int"
+value
+: 
+"20"
+1
+: 
+{id: "aBjn1oL1cgY4GJU70Rn9ZwaC0$aC0$", paramName: "Mult", paramCode: "mult", paramType: "decimal",…}
+defaultValue
+: 
+"2"
+description
+: 
+""
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"aBjn1oL1cgY4GJU70Rn9ZwaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+30
+minValue
+: 
+1
+paramCode
+: 
+"mult"
+paramName
+: 
+"Mult"
+paramType
+: 
+"decimal"
+value
+: 
+"2"
+type
+: 
+"Indicators"
+7
+: 
+{id: "4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$", indicatorName: "Morning Star",…}
+description
+: 
+"Morning Star is a bullish three-candle reversal pattern that forms after a downtrend. It consists of a large bearish candle, followed by a small indecisive candle, and then a strong bullish candle closing above the midpoint of the first candle. It signals potential trend reversal to the upside."
+id
+: 
+"4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$"
+indicatorCode
+: 
+"candlestick-morning-star"
+indicatorName
+: 
+"Morning Star"
+noOfCandles
+: 
+30
+parameter
+: 
+[{id: "isxJiIcxaB0$nqX8YX9EK6CAAaC0$aC0$", paramName: "First Candle", paramCode: "first-candle",…},…]
+0
+: 
+{id: "isxJiIcxaB0$nqX8YX9EK6CAAaC0$aC0$", paramName: "First Candle", paramCode: "first-candle",…}
+defaultValue
+: 
+"60"
+description
+: 
+"Strong bearish"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"isxJiIcxaB0$nqX8YX9EK6CAAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"first-candle"
+paramName
+: 
+"First Candle"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+1
+: 
+{id: "Ld0qx3qtaB0$gei8KAxaM7OaB0$AaC0$aC0$", paramName: "Second Candle (Star)",…}
+defaultValue
+: 
+"30"
+description
+: 
+"Small body, can be bullish or bearish, should ideally gap down from c1 close."
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"Ld0qx3qtaB0$gei8KAxaM7OaB0$AaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"second-candle"
+paramName
+: 
+"Second Candle (Star)"
+paramType
+: 
+"decimal"
+value
+: 
+"30"
+2
+: 
+{id: "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$", paramName: "Third Candle", paramCode: "third-candle",…}
+defaultValue
+: 
+"60"
+description
+: 
+"Strong bullish, must close at least halfway into c1 body."
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"QFwz7gYjmmabUT8SBvZQGgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"third-candle"
+paramName
+: 
+"Third Candle"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+type
+: 
+"Patterns"
+8
+: 
+{id: "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$", indicatorName: "Evening Star",…}
+description
+: 
+"Evening Star is a bearish three-candle reversal pattern that forms after an uptrend. It consists of a large bullish candle, followed by a small indecisive candle, and then a strong bearish candle closing below the midpoint of the first candle. It signals potential trend reversal to the downside."
+id
+: 
+"XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+indicatorCode
+: 
+"candlestick-evening-star"
+indicatorName
+: 
+"Evening Star"
+noOfCandles
+: 
+30
+parameter
+: 
+[{id: "wD6wxJ0eUsLeyT7aY8aA0$IjQaC0$aC0$", paramName: "First Candle", paramCode: "first-candle",…},…]
+0
+: 
+{id: "wD6wxJ0eUsLeyT7aY8aA0$IjQaC0$aC0$", paramName: "First Candle", paramCode: "first-candle",…}
+defaultValue
+: 
+"60"
+description
+: 
+"Strong bullish"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"wD6wxJ0eUsLeyT7aY8aA0$IjQaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"first-candle"
+paramName
+: 
+"First Candle"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+1
+: 
+{id: "M82wMeYLaDEiPd58ZmW8qQaC0$aC0$", paramName: "Second Candle (Star)", paramCode: "second-candle",…}
+defaultValue
+: 
+"30"
+description
+: 
+"Small body, can be bullish or bearish, should ideally gap up from c1 close."
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"M82wMeYLaDEiPd58ZmW8qQaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"second-candle"
+paramName
+: 
+"Second Candle (Star)"
+paramType
+: 
+"decimal"
+value
+: 
+"30"
+2
+: 
+{id: "VL6lvWZO9UCrSfXeVaB0$umlgaC0$aC0$", paramName: "Third Candle", paramCode: "third-candle",…}
+defaultValue
+: 
+"60"
+description
+: 
+"Strong bearish, musiose at least halfway into c1 body."
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"VL6lvWZO9UCrSfXeVaB0$umlgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"third-candle"
+paramName
+: 
+"Third Candle"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+type
+: 
+"Patterns"
+9
+: 
+{id: "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$", indicatorName: "Rising Three Methods",…}
+description
+: 
+"Rising Three Methods is a bullish continuation candlestick pattern. It begins with a strong bullish candle, followed by 2–3 small corrective bearish candles that stay within the first candle’s range, and ends with another strong bullish candle closing above the first candle’s close. It indicates continuation of the uptrend."
+id
+: 
+"u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$"
+indicatorCode
+: 
+"candlestick-rising-three-methods"
+indicatorName
+: 
+"Rising Three Methods"
+noOfCandles
+: 
+30
+parameter
+: 
+[{id: "S58bquuMP7CHBrtnvwmQGAaC0$aC0$", paramName: "Strong Candle Body %",…},…]
+0
+: 
+{id: "S58bquuMP7CHBrtnvwmQGAaC0$aC0$", paramName: "Strong Candle Body %",…}
+defaultValue
+: 
+"60"
+description
+: 
+"for 1st and last bullish candles"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"S58bquuMP7CHBrtnvwmQGAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"strong-candle-body-percent"
+paramName
+: 
+"Strong Candle Body %"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+1
+: 
+{id: "aaA0$FcCTTYgpkaA0$OVoO6n6bjAaC0$aC0$", paramName: "Small Candle Body %",…}
+defaultValue
+: 
+"30"
+description
+: 
+"for middle bearish candles"
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"aaA0$FcCTTYgpkaA0$OVoO6n6bjAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"small-candle-body-percent"
+paramName
+: 
+"Small Candle Body %"
+paramType
+: 
+"decimal"
+value
+: 
+"30"
+type
+: 
+"Patterns"
+10
+: 
+{id: "bzHmnzAMNmtbauNqJzwEGgaC0$aC0$", indicatorName: "Falling Three Methods",…}
+description
+: 
+"Falling Three Methods is a bearish continuation candlestick pattern. It starts with a strong bearish candle, followed by 2–3 small corrective bullish candles that remain within the first candle’s range, and ends with another strong bearish candle closing below the first candle’s close. It indicates continuation of the downtrend."
+id
+: 
+"bzHmnzAMNmtbauNqJzwEGgaC0$aC0$"
+indicatorCode
+: 
+"candlestick-falling-three-methods"
+indicatorName
+: 
+"Falling Three Methods"
+noOfCandles
+: 
+30
+parameter
+: 
+[{id: "OxpJnIzEAWy1kHsdr6P1wgaC0$aC0$", paramName: "Strong Candle Body %",…},…]
+0
+: 
+{id: "OxpJnIzEAWy1kHsdr6P1wgaC0$aC0$", paramName: "Strong Candle Body %",…}
+defaultValue
+: 
+"60"
+description
+: 
+"for 1st and last bearish candles"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"OxpJnIzEAWy1kHsdr6P1wgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"strong-candle-body-percent"
+paramName
+: 
+"Strong Candle Body %"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+1
+: 
+{id: "qo6AVyrYaB0$QKzHyDLXEku3QaC0$aC0$", paramName: "Small Candle Body %",…}
+defaultValue
+: 
+"30"
+description
+: 
+"for middle bullish candles"
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"qo6AVyrYaB0$QKzHyDLXEku3QaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"small-candle-body-percent"
+paramName
+: 
+"Small Candle Body %"
+paramType
+: 
+"decimal"
+value
+: 
+"30"
+type
+: 
+"Patterns"
+11
+: 
+{id: "0JT56s1rdeKWr24u8T3ldAaC0$aC0$", indicatorName: "Three Black Crows",…}
+description
+: 
+"A bearish reversal pattern with three consecutive long red candles, each opening within the previous candle’s body and closing lower. It signals strong selling pressure and potential trend reversal from bullish to bearish."
+id
+: 
+"0JT56s1rdeKWr24u8T3ldAaC0$aC0$"
+indicatorCode
+: 
+"candlestick-three-black-crows"
+indicatorName
+: 
+"Three Black Crows"
+noOfCandles
+: 
+6
+parameter
+: 
+[{id: "qaGyxasgey96eSAXNKPzPwaC0$aC0$", paramName: "Minimum Candle Count",…},…]
+0
+: 
+{id: "qaGyxasgey96eSAXNKPzPwaC0$aC0$", paramName: "Minimum Candle Count",…}
+defaultValue
+: 
+"3"
+description
+: 
+"No of candles"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"qaGyxasgey96eSAXNKPzPwaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+6
+minValue
+: 
+3
+paramCode
+: 
+"minimum-candle-count"
+paramName
+: 
+"Minimum Candle Count"
+paramType
+: 
+"int"
+value
+: 
+"3"
+1
+: 
+{id: "EzFIx9yPfXZXaA0$Hp47KUDEAaC0$aC0$", paramName: "Minimum Body Size %",…}
+defaultValue
+: 
+"60"
+description
+: 
+"body must be at least 60% of total range to avoid doji-like candles"
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"EzFIx9yPfXZXaA0$Hp47KUDEAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"minimum-body-size"
+paramName
+: 
+"Minimum Body Size %"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+2
+: 
+{id: "ROdLK712DNlMF5FFMGCJqgaC0$aC0$", paramName: "Upper Wick Limit %", paramCode: "upper-wick-limit",…}
+defaultValue
+: 
+"20"
+description
+: 
+"each candle should have small/no upper wick"
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"ROdLK712DNlMF5FFMGCJqgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"upper-wick-limit"
+paramName
+: 
+"Upper Wick Limit %"
+paramType
+: 
+"decimal"
+value
+: 
+"20"
+type
+: 
+"Patterns"
+12
+: 
+{id: "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$", indicatorName: "Three White Soldiers",…}
+description
+: 
+"A bullish reversal pattern with three consecutive long green candles, each opening within the previous candle’s body and closing higher. It signals strong buying pressure and potential reversal from bearish to bullish."
+id
+: 
+"aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$"
+indicatorCode
+: 
+"candlestick-three-white-soldiers"
+indicatorName
+: 
+"Three White Soldiers"
+noOfCandles
+: 
+6
+parameter
+: 
+[{id: "jsaVNqT4cJLjqR8EwUc7TgaC0$aC0$", paramName: "Minimum Candle Count",…},…]
+0
+: 
+{id: "jsaVNqT4cJLjqR8EwUc7TgaC0$aC0$", paramName: "Minimum Candle Count",…}
+defaultValue
+: 
+"3"
+description
+: 
+"No of candles"
+displayOrder
+: 
+1
+enumValue
+: 
+""
+id
+: 
+"jsaVNqT4cJLjqR8EwUc7TgaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+6
+minValue
+: 
+3
+paramCode
+: 
+"minimum-candle-count"
+paramName
+: 
+"Minimum Candle Count"
+paramType
+: 
+"int"
+value
+: 
+"3"
+1
+: 
+{id: "M2UXf5YjqWDj7ZY9jfaA0$P9AaC0$aC0$", paramName: "Minimum Body Size %",…}
+defaultValue
+: 
+"60"
+description
+: 
+"body should be strong, not small candles"
+displayOrder
+: 
+2
+enumValue
+: 
+""
+id
+: 
+"M2UXf5YjqWDj7ZY9jfaA0$P9AaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"minimum-body-size"
+paramName
+: 
+"Minimum Body Size %"
+paramType
+: 
+"decimal"
+value
+: 
+"60"
+2
+: 
+{id: "aM9uZ5ZvZs0klyoSy5Z7MAaC0$aC0$", paramName: "Lower Wick Limit %", paramCode: "lower-wick-limit",…}
+defaultValue
+: 
+"20"
+description
+: 
+"each candle should have small/no lower wick"
+displayOrder
+: 
+3
+enumValue
+: 
+""
+id
+: 
+"aM9uZ5ZvZs0klyoSy5Z7MAaC0$aC0$"
+isRequired
+: 
+true
+maxValue
+: 
+100
+minValue
+: 
+1
+paramCode
+: 
+"lower-wick-limit"
+paramName
+: 
+"Lower Wick Limit %"
+paramType
+: 
+"decimal"
+value
+: 
+"20"
+type
+: 
+"Patterns"
+message
+: 
+"Success"
+statusCode
+: 
+200
+"
+
+
+response="
+{
+    "statusCode": 200,
+    "message": "Success",
+    "data": [
+        {
+            "id": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
+            "indicatorName": "Super Trend",
+            "indicatorCode": "supertrend",
+            "description": "Supertrend is a trend-following technical indicator that uses price and volatility (ATR) to determine the market direction. It plots a line above or below the price, switching positions when the trend reverses. It's commonly used for identifying buy or sell signals—green line indicates uptrend, and red line indicates downtrend.",
+            "type": "Indicators",
+            "noOfCandles": 15,
+            "parameter": [
+                {
+                    "id": "uPDAaA0$hJjD36Jju5v3Tw6OQaC0$aC0$",
+                    "paramName": "Length",
+                    "paramCode": "length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "10",
+                    "description": "",
+                    "value": "10",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "LedxLFBhHoNwaB0$sCusrDbiQaC0$aC0$",
+                    "paramName": "Factor",
+                    "paramCode": "factor",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "3",
+                    "description": "",
+                    "value": "3",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 2
+                }
+            ]
+        },
+        {
+            "id": "pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$",
+            "indicatorName": "MA Cross Over",
+            "indicatorCode": "ma-cross-over",
+            "description": "Moving Average Crossover is a popular trend-following strategy where a short-term moving average crossing above a long-term moving average signals a buy, while crossing below signals a sell. It helps identify potential trend reversals and momentum shifts.",
+            "type": "Indicators",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "vaB0$DHIctaA0$S8hT5fq7fyTneAaC0$aC0$",
+                    "paramName": "Short",
+                    "paramCode": "short",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "9",
+                    "description": "",
+                    "value": "9",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
+                    "paramName": "Long",
+                    "paramCode": "long",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "26",
+                    "description": "",
+                    "value": "26",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "apgecBExRu0KpQF6l7wXLAaC0$aC0$",
+                    "paramName": "Type",
+                    "paramCode": "type",
+                    "paramType": "enum",
+                    "isRequired": true,
+                    "defaultValue": "SMA",
+                    "description": "",
+                    "value": "SMA",
+                    "enumValue": "SMA|EMA|WMA",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 3
+                }
+            ]
+        },
+        {
+            "id": "Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$",
+            "indicatorName": "RSI",
+            "indicatorCode": "rsi",
+            "description": "RSI is a momentum oscillator that measures the speed and change of price movements on a scale of 0 to 100. Values above 70 indicate overbought conditions, and below 30 indicate oversold conditions, helping traders spot potential reversals.",
+            "type": "Indicators",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$",
+                    "paramName": "Length",
+                    "paramCode": "length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "14",
+                    "description": "",
+                    "value": "14",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$",
+                    "paramName": "Smoothing Line",
+                    "paramCode": "smoothing-line",
+                    "paramType": "enum",
+                    "isRequired": true,
+                    "defaultValue": "SMA",
+                    "description": "",
+                    "value": "SMA",
+                    "enumValue": "SMA|EMA|WMA",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$",
+                    "paramName": "Smoothing Length",
+                    "paramCode": "smoothing-length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "14",
+                    "description": "",
+                    "value": "14",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 3
+                },
+                {
+                    "id": "R74aB0$bl3GCmLEzsfNZaxP0waC0$aC0$",
+                    "paramName": "Lower Band",
+                    "paramCode": "lower-band",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "30",
+                    "description": "Lower band for RSI to generate trade",
+                    "value": "30",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 50,
+                    "displayOrder": 4
+                },
+                {
+                    "id": "Es7A7bfLFaB0$aA0$u7XcfTCqNfAaC0$aC0$",
+                    "paramName": "Upper Band",
+                    "paramCode": "upper-band",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "70",
+                    "description": "Upper band for RSI to generate trade",
+                    "value": "70",
+                    "enumValue": "",
+                    "minValue": 50,
+                    "maxValue": 100,
+                    "displayOrder": 5
+                }
+            ]
+        },
+        {
+            "id": "CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$",
+            "indicatorName": "MACD",
+            "indicatorCode": "macd",
+            "description": "MACD is a trend-following momentum indicator that shows the relationship between two moving averages. A buy signal occurs when the MACD line crosses above the signal line, and a sell signal occurs when it crosses below.",
+            "type": "Indicators",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$",
+                    "paramName": "Fast Length",
+                    "paramCode": "fast-length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "12",
+                    "description": "",
+                    "value": "12",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
+                    "paramName": "Slow Length",
+                    "paramCode": "slow-length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "26",
+                    "description": "",
+                    "value": "26",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "9TILtPAIUOKuUSlcrcIBAAaC0$aC0$",
+                    "paramName": "Source",
+                    "paramCode": "source",
+                    "paramType": "enum",
+                    "isRequired": true,
+                    "defaultValue": "Close",
+                    "description": "",
+                    "value": "Close",
+                    "enumValue": "Open|High|Low|Close",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 3
+                },
+                {
+                    "id": "Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$",
+                    "paramName": "Signal Length",
+                    "paramCode": "signal-length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "9",
+                    "description": "",
+                    "value": "9",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 4
+                },
+                {
+                    "id": "4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$",
+                    "paramName": "Oscillator MA Type",
+                    "paramCode": "oscillator-ma-type",
+                    "paramType": "enum",
+                    "isRequired": true,
+                    "defaultValue": "EMA",
+                    "description": "",
+                    "value": "EMA",
+                    "enumValue": "EMA|SMA|WMA",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 5
+                },
+                {
+                    "id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+                    "paramName": "Signal Line MA Type",
+                    "paramCode": "signal-line-ma-type",
+                    "paramType": "enum",
+                    "isRequired": true,
+                    "defaultValue": "EMA",
+                    "description": "",
+                    "value": "EMA",
+                    "enumValue": "EMA|SMA|WMA",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 6
+                }
+            ]
+        },
+        {
+            "id": "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$",
+            "indicatorName": "Stochastic",
+            "indicatorCode": "stochastic",
+            "description": "Stochastic is a momentum indicator that compares a stock's closing price to its price range over a period. Readings above 80 indicate overbought conditions, and below 20 indicate oversold, helping identify potential reversals.",
+            "type": "Indicators",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$",
+                    "paramName": "%K Length",
+                    "paramCode": "k-length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "14",
+                    "description": "",
+                    "value": "14",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "bzHmnzAMNmtbauNqJzwEGgaC0$aC0$",
+                    "paramName": "%K Smoothing",
+                    "paramCode": "k-smoothing",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "1",
+                    "description": "",
+                    "value": "1",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "0JT56s1rdeKWr24u8T3ldAaC0$aC0$",
+                    "paramName": "%D Smoothing",
+                    "paramCode": "d-smoothing",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "3",
+                    "description": "",
+                    "value": "3",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 200,
+                    "displayOrder": 3
+                }
+            ]
+        },
+        {
+            "id": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
+            "indicatorName": "Hammer",
+            "indicatorCode": "candlestick-hammer",
+            "description": "Hammer is a bullish reversal candlestick pattern that forms after a downtrend. It has a small body near the top and a long lower wick, signaling potential price reversal. Traders use it to spot buying opportunities at market bottoms.",
+            "type": "Patterns",
+            "noOfCandles": 15,
+            "parameter": [
+                {
+                    "id": "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$",
+                    "paramName": "Min Body-to-Range %",
+                    "paramCode": "min-body-to-range",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "10",
+                    "description": "Minimum body size as a percentage of the total candle range (filters out doji/small candles)",
+                    "value": "10",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 30,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "FaB0$Jr8mgLXaA0$aZiTvSIutdJAaC0$aC0$",
+                    "paramName": "Max Body-to-Range %",
+                    "paramCode": "max-body-to-range",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "30",
+                    "description": "Maximum body size to ensure it's a small body",
+                    "value": "30",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 50,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "kIuqIpGfQP2MGtYcGBaB0$eBgaC0$aC0$",
+                    "paramName": "Min Lower Wick Ratio",
+                    "paramCode": "min-lower-wick-ratio",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "2.0",
+                    "description": "How many times the lower wick must be larger than the body (e.g., 2x)",
+                    "value": "2.0",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 30,
+                    "displayOrder": 3
+                },
+                {
+                    "id": "VL9aB0$4EQN6aAtNBFT2aA0$J5BAaC0$aC0$",
+                    "paramName": "Max Upper Wick Ratio",
+                    "paramCode": "max-upper-wick-ratio",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "0.3",
+                    "description": "Upper wick must be small or nonexistent (as a fraction of body size)",
+                    "value": "0.3",
+                    "enumValue": "",
+                    "minValue": 0.10000000149011612,
+                    "maxValue": 10,
+                    "displayOrder": 4
+                },
+                {
+                    "id": "bzqpdtJfyDh1IxHkSONrygaC0$aC0$",
+                    "paramName": "Allow Bearish Hammer?",
+                    "paramCode": "allow_bearish",
+                    "paramType": "bool",
+                    "isRequired": true,
+                    "defaultValue": "true",
+                    "description": "Option to include bearish-bodied hammers (open > close)",
+                    "value": "true",
+                    "enumValue": "",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 5
+                },
+                {
+                    "id": "PQEWdMMV1v85z0aB0$WmM1MvAaC0$aC0$",
+                    "paramName": "Require Downtrend Before Pattern?",
+                    "paramCode": "downtrend-before-pattern",
+                    "paramType": "bool",
+                    "isRequired": true,
+                    "defaultValue": "true",
+                    "description": "Should the pattern only be valid in a downtrend (e.g., last 3 candles are lower highs/lows)?",
+                    "value": "true",
+                    "enumValue": "",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 6
+                },
+                {
+                    "id": "PeiwPh5cZxaB0$37aA0$4g8pgEKAaC0$aC0$",
+                    "paramName": "Highlight Quality Rating",
+                    "paramCode": "quality-rating",
+                    "paramType": "bool",
+                    "isRequired": true,
+                    "defaultValue": "true",
+                    "description": "Optional scoring: strong, average, weak based on wick/body ratios",
+                    "value": "true",
+                    "enumValue": "",
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "displayOrder": 7
+                }
+            ]
+        },
+        {
+            "id": "Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$",
+            "indicatorName": "Bollinger Bands",
+            "indicatorCode": "bollinger-bands",
+            "description": "Bollinger Bands consist of a moving average with upper and lower bands based on standard deviation. Price touching the upper band suggests overbought conditions, while touching the lower band suggests oversold conditions. It helps measure volatility and potential reversal zones.",
+            "type": "Indicators",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "xgN9pEIzDeEZXhEYYpR4aQaC0$aC0$",
+                    "paramName": "Length",
+                    "paramCode": "length",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "20",
+                    "description": "",
+                    "value": "20",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 50,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "aBjn1oL1cgY4GJU70Rn9ZwaC0$aC0$",
+                    "paramName": "Mult",
+                    "paramCode": "mult",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "2",
+                    "description": "",
+                    "value": "2",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 30,
+                    "displayOrder": 2
+                }
+            ]
+        },
+        {
+            "id": "4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$",
+            "indicatorName": "Morning Star",
+            "indicatorCode": "candlestick-morning-star",
+            "description": "Morning Star is a bullish three-candle reversal pattern that forms after a downtrend. It consists of a large bearish candle, followed by a small indecisive candle, and then a strong bullish candle closing above the midpoint of the first candle. It signals potential trend reversal to the upside.",
+            "type": "Patterns",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "isxJiIcxaB0$nqX8YX9EK6CAAaC0$aC0$",
+                    "paramName": "First Candle",
+                    "paramCode": "first-candle",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "Strong bearish",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "Ld0qx3qtaB0$gei8KAxaM7OaB0$AaC0$aC0$",
+                    "paramName": "Second Candle (Star)",
+                    "paramCode": "second-candle",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "30",
+                    "description": "Small body, can be bullish or bearish, should ideally gap down from c1 close.",
+                    "value": "30",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$",
+                    "paramName": "Third Candle",
+                    "paramCode": "third-candle",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "Strong bullish, must close at least halfway into c1 body.",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 3
+                }
+            ]
+        },
+        {
+            "id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+            "indicatorName": "Evening Star",
+            "indicatorCode": "candlestick-evening-star",
+            "description": "Evening Star is a bearish three-candle reversal pattern that forms after an uptrend. It consists of a large bullish candle, followed by a small indecisive candle, and then a strong bearish candle closing below the midpoint of the first candle. It signals potential trend reversal to the downside.",
+            "type": "Patterns",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "wD6wxJ0eUsLeyT7aY8aA0$IjQaC0$aC0$",
+                    "paramName": "First Candle",
+                    "paramCode": "first-candle",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "Strong bullish",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "M82wMeYLaDEiPd58ZmW8qQaC0$aC0$",
+                    "paramName": "Second Candle (Star)",
+                    "paramCode": "second-candle",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "30",
+                    "description": "Small body, can be bullish or bearish, should ideally gap up from c1 close.",
+                    "value": "30",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "VL6lvWZO9UCrSfXeVaB0$umlgaC0$aC0$",
+                    "paramName": "Third Candle",
+                    "paramCode": "third-candle",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "Strong bearish, musiose at least halfway into c1 body.",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 3
+                }
+            ]
+        },
+        {
+            "id": "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$",
+            "indicatorName": "Rising Three Methods",
+            "indicatorCode": "candlestick-rising-three-methods",
+            "description": "Rising Three Methods is a bullish continuation candlestick pattern. It begins with a strong bullish candle, followed by 2–3 small corrective bearish candles that stay within the first candle’s range, and ends with another strong bullish candle closing above the first candle’s close. It indicates continuation of the uptrend.",
+            "type": "Patterns",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "S58bquuMP7CHBrtnvwmQGAaC0$aC0$",
+                    "paramName": "Strong Candle Body %",
+                    "paramCode": "strong-candle-body-percent",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "for 1st and last bullish candles",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "aaA0$FcCTTYgpkaA0$OVoO6n6bjAaC0$aC0$",
+                    "paramName": "Small Candle Body %",
+                    "paramCode": "small-candle-body-percent",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "30",
+                    "description": "for middle bearish candles",
+                    "value": "30",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 2
+                }
+            ]
+        },
+        {
+            "id": "bzHmnzAMNmtbauNqJzwEGgaC0$aC0$",
+            "indicatorName": "Falling Three Methods",
+            "indicatorCode": "candlestick-falling-three-methods",
+            "description": "Falling Three Methods is a bearish continuation candlestick pattern. It starts with a strong bearish candle, followed by 2–3 small corrective bullish candles that remain within the first candle’s range, and ends with another strong bearish candle closing below the first candle’s close. It indicates continuation of the downtrend.",
+            "type": "Patterns",
+            "noOfCandles": 30,
+            "parameter": [
+                {
+                    "id": "OxpJnIzEAWy1kHsdr6P1wgaC0$aC0$",
+                    "paramName": "Strong Candle Body %",
+                    "paramCode": "strong-candle-body-percent",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "for 1st and last bearish candles",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "qo6AVyrYaB0$QKzHyDLXEku3QaC0$aC0$",
+                    "paramName": "Small Candle Body %",
+                    "paramCode": "small-candle-body-percent",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "30",
+                    "description": "for middle bullish candles",
+                    "value": "30",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 2
+                }
+            ]
+        },
+        {
+            "id": "0JT56s1rdeKWr24u8T3ldAaC0$aC0$",
+            "indicatorName": "Three Black Crows",
+            "indicatorCode": "candlestick-three-black-crows",
+            "description": "A bearish reversal pattern with three consecutive long red candles, each opening within the previous candle’s body and closing lower. It signals strong selling pressure and potential trend reversal from bullish to bearish.",
+            "type": "Patterns",
+            "noOfCandles": 6,
+            "parameter": [
+                {
+                    "id": "qaGyxasgey96eSAXNKPzPwaC0$aC0$",
+                    "paramName": "Minimum Candle Count",
+                    "paramCode": "minimum-candle-count",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "3",
+                    "description": "No of candles",
+                    "value": "3",
+                    "enumValue": "",
+                    "minValue": 3,
+                    "maxValue": 6,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "EzFIx9yPfXZXaA0$Hp47KUDEAaC0$aC0$",
+                    "paramName": "Minimum Body Size %",
+                    "paramCode": "minimum-body-size",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "body must be at least 60% of total range to avoid doji-like candles",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "ROdLK712DNlMF5FFMGCJqgaC0$aC0$",
+                    "paramName": "Upper Wick Limit %",
+                    "paramCode": "upper-wick-limit",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "20",
+                    "description": "each candle should have small/no upper wick",
+                    "value": "20",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 3
+                }
+            ]
+        },
+        {
+            "id": "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$",
+            "indicatorName": "Three White Soldiers",
+            "indicatorCode": "candlestick-three-white-soldiers",
+            "description": "A bullish reversal pattern with three consecutive long green candles, each opening within the previous candle’s body and closing higher. It signals strong buying pressure and potential reversal from bearish to bullish.",
+            "type": "Patterns",
+            "noOfCandles": 6,
+            "parameter": [
+                {
+                    "id": "jsaVNqT4cJLjqR8EwUc7TgaC0$aC0$",
+                    "paramName": "Minimum Candle Count",
+                    "paramCode": "minimum-candle-count",
+                    "paramType": "int",
+                    "isRequired": true,
+                    "defaultValue": "3",
+                    "description": "No of candles",
+                    "value": "3",
+                    "enumValue": "",
+                    "minValue": 3,
+                    "maxValue": 6,
+                    "displayOrder": 1
+                },
+                {
+                    "id": "M2UXf5YjqWDj7ZY9jfaA0$P9AaC0$aC0$",
+                    "paramName": "Minimum Body Size %",
+                    "paramCode": "minimum-body-size",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "60",
+                    "description": "body should be strong, not small candles",
+                    "value": "60",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 2
+                },
+                {
+                    "id": "aM9uZ5ZvZs0klyoSy5Z7MAaC0$aC0$",
+                    "paramName": "Lower Wick Limit %",
+                    "paramCode": "lower-wick-limit",
+                    "paramType": "decimal",
+                    "isRequired": true,
+                    "defaultValue": "20",
+                    "description": "each candle should have small/no lower wick",
+                    "value": "20",
+                    "enumValue": "",
+                    "minValue": 1,
+                    "maxValue": 100,
+                    "displayOrder": 3
+                }
+            ]
+        }
+    ]
+}
+"

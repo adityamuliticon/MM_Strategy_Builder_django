@@ -21,6 +21,15 @@ class Config:
     MODIFY_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy"
     RENAME_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/updateStrategyName"
     GET_BALANCE_URL = "https://api.marketmaya.com/api/client/v2/getPointBalance"
+
+    # Backtest (ISE only)
+    BACKTEST_OPTIONS_URL = "https://api.marketmaya.com/api/subscription/getBacktestOptions"
+    DEDUCT_BACKTEST_POINTS_URL = "https://api.marketmaya.com/api/subscription/deductBacktestPoints"
+    GET_BACKTEST_RESULT_URL = "https://webapi.marketmaya.com/api/mainStrategy/getBackTestResult"
+    GET_STRATEGY_DETAIL_URL = "https://webapi.marketmaya.com/api/mainStrategy/getClientMyStrategyDetail"
+    GET_DAY_TRADE_HISTORY_URL = "https://webapi.marketmaya.com/api/mainStrategy/getDayTradeHistory"
+    GET_MONTH_TRADE_HISTORY_URL = "https://webapi.marketmaya.com/api/mainStrategy/getMonthTradeHistory"
+    GET_YEAR_TRADE_HISTORY_URL = "https://webapi.marketmaya.com/api/mainStrategy/getYearTradeHistory"
     
     # RAG Settings
     DOCS_PATH = "docs"

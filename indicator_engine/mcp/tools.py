@@ -2,6 +2,11 @@ from indicator_engine.services.validator import ise_validator
 from indicator_engine.services.generator import ise_generator
 from indicator_engine.services.market_maya import ise_market_maya
 from indicator_engine.rag.retriever import ise_retriever
+from indicator_engine.services.backtest import (
+    get_backtest_options as _get_backtest_options,
+    run_backtest as _run_backtest,
+    get_backtest_result as _get_backtest_result,
+)
 from services.market_maya_shared import (
     get_strategies as _get_strategies,
     delete_strategy as _delete_strategy,
@@ -59,3 +64,16 @@ def rename_strategy(strategy_id="", strategy_name="", new_name=""):
 
 def get_balance():
     return _get_balance()
+
+
+def get_backtest_options(strategy_id="", strategy_name=""):
+    return _get_backtest_options(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def run_backtest(strategy_id="", strategy_name="", start_date="", end_date=""):
+    return _run_backtest(strategy_id=strategy_id, strategy_name=strategy_name,
+                         start_date=start_date, end_date=end_date)
+
+
+def get_backtest_result(strategy_id="", strategy_name=""):
+    return _get_backtest_result(strategy_id=strategy_id, strategy_name=strategy_name)
