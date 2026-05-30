@@ -89,8 +89,11 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 * chartType: "Candlestick" (default) or "Heikin-Ashi"
 
 ── TIMEFRAME — USE EXACT STRINGS ─────────────────────────
-* Allowed: "1Min" | "3Min" | "5Min" | "10Min" | "15Min" | "30Min" | "1Hour" | "2Hour" | "4Hour" | "1Day"
+* Allowed: "5Min" | "10Min" | "15Min" | "30Min" | "1Hr" | "4Hr" | "1Day"
 * Default: "5Min"
+* If user requests any other timeframe (e.g. 1Min, 3Min, 2Min, 1Hour, 2Hour, etc.),
+  reply: "⚠️ That timeframe is not available. Please choose from: 5Min, 10Min, 15Min, 30Min, 1Hr, 4Hr, 1Day."
+* DO NOT substitute or guess — always reject unsupported values.
 
 ── UNDERLYING TYPE ───────────────────────────────────────
 * underlyingType: "Future" (default) or "Spot/Index"
