@@ -365,6 +365,158 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
     }
   ]
 }
+
+═══════════════════════════════════════════════════════════
+BACKTEST TOOLS (ISE EXCLUSIVE — only available in this module)
+═══════════════════════════════════════════════════════════
+
+7. get_backtest_options — Fetch available backtest time periods and point costs.
+   Use when user says: "backtest [strategy]", "run backtest on [strategy]",
+   "show backtest options for [strategy]", "how much does backtest cost".
+   JSON:
+   {"tool": "get_backtest_options", "arguments": {"strategy_name": "<name>"}}
+   JSON (by ID if already known):
+   {"tool": "get_backtest_options", "arguments": {"strategy_id": "<hash id>"}}
+
+8. run_backtest — Execute the backtest for the selected time period.
+   Use ONLY after user explicitly selects a period from get_backtest_options.
+   CRITICAL: Use strategy_id (the hash from get_backtest_options result), NOT strategy_name.
+   CRITICAL: Use exact start_date and end_date strings from get_backtest_options items (YYYY-MM-DD).
+   JSON:
+   {"tool": "run_backtest", "arguments": {
+     "strategy_id": "<hash_id_from_get_backtest_options>",
+     "start_date": "YYYY-MM-DD",
+     "end_date": "YYYY-MM-DD"
+   }}
+
+9. get_backtest_result — Fetch stored results from the last completed backtest (NO points charged).
+   Use when user says: "show backtest result for [strategy]", "what was the backtest result of [strategy]",
+   "show last backtest of [strategy]", "view backtest results", "check backtest".
+   This is read-only — it does NOT run a new backtest.
+   JSON:
+   {"tool": "get_backtest_result", "arguments": {"strategy_name": "<name>"}}
+   JSON (by ID):
+   {"tool": "get_backtest_result", "arguments": {"strategy_id": "<hash id>"}}
+
+BACKTEST WORKFLOW (3 steps — always follow this order):
+STEP 1: User requests backtest → call get_backtest_options
+STEP 2: Display period options table + ask which period to run
+STEP 3: After user selects → call run_backtest with the exact strategy_id and dates
+
+run_backtest RESULT HANDLING:
+- status == "success": display the 4 tables below
+- status == "error" and insufficient_balance == True: tell user their balance (available_points) is below required_points
+- status == "error" (other): show the error message clearly
+- status == "processing": say "The backtest has been triggered. It usually completes within 30 seconds. Say 'show backtest result' when ready and I'll fetch it for free using get_backtest_result." Do NOT call run_backtest again.
+- status == "timeout": say "The backtest is running on Market Maya's servers and will complete shortly. Use get_backtest_result in about a minute to fetch the results." Do NOT call run_backtest again.
+
+VIEW STORED RESULT (no points charged):
+If user says "show backtest result" / "view last backtest" → call get_backtest_result directly.
+If result status == "no_backtest": tell user no backtest has been run yet and offer to run one.
+
+DISPLAYING get_backtest_options RESULT:
+Show strategy title on top, then this table:
+| # | Period | Start Date | End Date | Points Cost |
+|---|--------|------------|----------|-------------|
+| 1 | 1 Month | YYYY-MM-DD | YYYY-MM-DD | FREE |
+| 2 | 6 Months | YYYY-MM-DD | YYYY-MM-DD | 18 pts |
+...mark 0-point entries as FREE, others as "X pts"
+
+Below the table show:
+"**Point Balance**: X | **Per Day Charge**: 0.1 pts | **Free Days**: 30 days"
+End with: "Which time period would you like to backtest?"
+
+DISPLAYING run_backtest RESULT:
+Note: run_backtest polls the server and may take ~10–15 seconds. Show results as 4 tables:
+
+### Backtest Summary
+| Metric | Value |
+|--------|-------|
+| Period | <period_start> → <period_end> (<duration_days> days, <trading_days> trading days) |
+| Capital | ₹<capital> |
+| Total P&L | ₹<profit> |
+| ROI | <roi_percent>% |
+| Max Drawdown | ₹<drawdown> (<drawdown_percent>%) |
+| Recovery Days | <max_drawdown_recover_days> days |
+
+### Trade Statistics
+| Metric | Value |
+|--------|-------|
+| Total Trades | <total> |
+| Positive Trades | <positive> |
+| Negative Trades | <negative> |
+| SL Trades | <sl> |
+| Target Trades | <target> |
+| Positive Days | <positive_days> |
+| Negative Days | <negative_days> |
+| Max Consecutive Pos Days | <consecutive_pos_days> |
+| Max Consecutive Neg Days | <consecutive_neg_days> |
+
+### Profit / ROI Metrics
+| Metric | Daily | Monthly | Yearly |
+|--------|-------|---------|--------|
+| Average Profit | ₹<day_avg> | ₹<month_avg> | ₹<year_avg> |
+| Max Profit | ₹<day_max> | ₹<month_max> | ₹<year_max> |
+| Max Loss | ₹<day_max_loss> | ₹<month_max_loss> | ₹<year_max_loss> |
+| ROI | <day_roi_pct>% | <month_roi_pct>% | <year_roi_pct>% |
+
+### Day-of-Week P&L
+| Mon | Tue | Wed | Thu | Fri |
+|-----|-----|-----|-----|-----|
+| ₹<Mon> | ₹<Tue> | ₹<Wed> | ₹<Thu> | ₹<Fri> |
+
+End the response with a one-line risk summary:
+**Risk Profile**: <risk_profile> | **Recovery**: <recovery_ratio> | **Positive Months**: <positive_months> | **Negative Months**: <negative_months>
+
+DISPLAYING get_backtest_result RESULT (stored result, no new run):
+Show strategy name and run date as a header, then the following tables in order:
+
+### Backtest Overview
+| Field | Value |
+|-------|-------|
+| Strategy | <strategy_name> |
+| Backtest Run | <backtest_run_date> |
+| Data Period | <period_start> → <period_end> |
+| Capital | ₹<capital> |
+| Year ROI | <year_roi>% |
+| Max Drawdown | <drawdown_percent>% |
+| Recovery Days | <max_drawdown_recover_days> days |
+
+### Trade Analysis
+(2-column table from trade_analysis dict — Total Trades, Positive/Negative Trades, Cover/SL/Target Trades, BUY/SELL Trades etc.)
+
+### Day / Month / Year Statistics
+(compact table combining day_analysis, month_analysis, year_analysis)
+
+### Period Comparison
+Build from period_analyses — show each period's profit, ROI, and drawdown:
+| Period | P&L | ROI | Drawdown | Draw% |
+|--------|-----|-----|----------|-------|
+| All Data | ₹... | ...% | ₹... | ...% |
+| 1 Year | ₹... | ...% | ₹... | ...% |
+| 6 Months | ₹... | ...% | ₹... | ...% |
+| 3 Months | ₹... | ...% | ₹... | ...% |
+| 1 Month | ₹... | ...% | ₹... | ...% |
+
+### Yearly P&L
+Build from year_trade_history:
+| Year | Trades | Positive | Negative | P&L |
+|------|--------|----------|----------|-----|
+| 2026 | ... | ... | ... | ₹... |
+
+### Monthly P&L
+Build from month_trade_history (oldest → newest):
+| Month | Trades | Positive | Negative | P&L |
+|-------|--------|----------|----------|-----|
+| Dec 2025 | ... | ... | ... | ₹... |
+...
+
+### Daily P&L (Recent 20 Days)
+Build from day_trade_history (most recent 20 days, newest first):
+| Date | Trades | Positive | Negative | P&L |
+|------|--------|----------|----------|-----|
+| 2026-05-27 | ... | ... | ... | ₹... |
+...
 """
 
     def process_message(self, user_message, history=None):
@@ -447,7 +599,10 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                                 "get_strategy_record",
                                                 "modify_strategy",
                                                 "rename_strategy",
-                                                "get_balance"]:
+                                                "get_balance",
+                                                "get_backtest_options",
+                                                "run_backtest",
+                                                "get_backtest_result"]:
                                         if key in data:
                                             tool_name = key
                                             val = data[key]
@@ -637,7 +792,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 tool_name = data["tool"]
                                 args = data["arguments"]
                             else:
-                                for key in ["create_and_deploy_ise_strategy", "ise_validate_strategy", "ise_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
+                                for key in ["create_and_deploy_ise_strategy", "ise_validate_strategy", "ise_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance", "get_backtest_options", "run_backtest", "get_backtest_result"]:
                                     if key in data:
                                         tool_name = key
                                         val = data[key]
@@ -665,6 +820,9 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 "modify_strategy": "Saving changes...",
                                 "rename_strategy": "Renaming strategy...",
                                 "get_balance": "Fetching balance...",
+                                "get_backtest_options": "Fetching backtest options...",
+                                "run_backtest": "Running backtest (this may take 10–30 seconds)...",
+                                "get_backtest_result": "Fetching backtest results...",
                             }
                             yield {"t": "status", "v": _status_msgs.get(tool_name, "Processing...")}
                             tool_result = ise_handler.handle_tool_call(tool_name, args)

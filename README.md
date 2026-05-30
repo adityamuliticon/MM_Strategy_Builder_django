@@ -9,7 +9,7 @@ An AI-powered trading strategy builder for the **Market Maya API**. Three isolat
 | Module | URL | Description |
 |--------|-----|-------------|
 | **Unified Strategy Builder (USB)** | `/` | Multi-leg options strategies — straddles, strangles, hedges, complex payoffs |
-| **Indicator Signal Engine (ISE)** | `/indicator/` | Indicator-driven strategies — SuperTrend, MA CrossOver, RSI, MACD, Bollinger Bands, candlestick patterns |
+| **Indicator Signal Engine (ISE)** | `/indicator/` | Indicator-driven strategies — SuperTrend, MA CrossOver, RSI, MACD, Bollinger Bands, candlestick patterns — plus **Backtest** |
 | **Inbound Signal Bridge (ISB)** | `/bridge/` | Webhook/TradingView signal execution — configure legs once, fire all on every inbound signal |
 
 Each module is fully isolated: separate Django app, FAISS vector store, session memory, and Market Maya service instance.
@@ -53,7 +53,8 @@ MM_Strategy_Builder_django/
 │   └── services/generator.py, market_maya.py, validator.py
 │
 ├── indicator_engine/              # Indicator Signal Engine (ISE)
-│   └── (same structure)
+│   ├── (same structure as USB)
+│   └── services/backtest.py       # ISE-only: get_backtest_options, run_backtest (polls until complete)
 │
 ├── inbound_signal_bridge/         # Inbound Signal Bridge (ISB)
 │   └── (same structure)
@@ -172,6 +173,68 @@ All three modules expose these conversational management commands — no UI navi
 | **Check balance** | "what is my balance" | Shows Balance, Hold Balance, Point Balance |
 
 The AI follows a **confirm-before-act** pattern for all destructive or modifying operations.
+
+---
+
+## Backtest (ISE Only)
+
+The Indicator Signal Engine supports conversational backtesting against historical Market Maya data. Backtest is **not available** in USB or ISB.
+
+### Conversational Flow
+
+**Run a new backtest (charges points):**
+1. User: *"backtest my BankNifty SuperTrend strategy"*
+2. AI calls `get_backtest_options` → displays a period selection table with point costs
+3. User: *"run 6 months"*
+4. AI calls `run_backtest` → deducts points, polls until `status == "Completed"` (≈10–15 s), then displays results
+
+**View stored results (free, no new run):**
+1. User: *"show backtest result for my strategy"*
+2. AI calls `get_backtest_result` → reads `getClientMyStrategyDetail`, displays stored analysis tables
+
+### API Chain
+
+| Step | API | Method | Notes |
+|------|-----|--------|-------|
+| 1 | `getBacktestOptions` | POST | Returns available periods (1M/6M/1Y/2Y/3Y/All) with point costs |
+| 2 | `deductBacktestPoints` | POST | Triggers the backtest run; payload: `{id, startDate, endDate, executionLevel: "Level 8"}` |
+| 3 | `getBackTestResult?id=…` | GET | Polled every 3 s until `data.status == "Completed"` (max 60 s) |
+| — | `getClientMyStrategyDetail?id=…` | GET | Strategy detail + stored summary stats (no points) |
+| — | `getDayTradeHistory` | GET | Per-day P&L summary (startDate/endDate from backtestDates) |
+| — | `getMonthTradeHistory` | GET | Per-month P&L (called once per year in range) |
+| — | `getYearTradeHistory` | GET | Per-year P&L totals |
+
+### Result Display
+
+The AI formats results as 4 Markdown tables:
+
+**`run_backtest` result (4 tables):**
+- **Backtest Summary** — capital, total P&L, ROI, max drawdown, recovery days
+- **Trade Statistics** — total/positive/negative/SL/target trades, positive/negative days
+- **Profit / ROI Metrics** — daily / monthly / yearly averages, max profit, max loss, ROI %
+- **Day-of-Week P&L** — Monday through Friday breakdown
+
+**`get_backtest_result` result (7 tables — full stored result, no new run):**
+- **Backtest Overview** — period, capital, year ROI, max drawdown, recovery days
+- **Trade Analysis** — all trade breakdown from stored analysis arrays
+- **Day / Month / Year Statistics** — positive/negative counts across all time granularities
+- **Period Comparison** — profit, ROI, drawdown for All Data / 1Y / 6M / 3M / 1M
+- **Yearly P&L** — year-by-year breakdown from `getYearTradeHistory`
+- **Monthly P&L** — month-by-month from `getMonthTradeHistory` (all years in range)
+- **Daily P&L (Recent 20)** — most recent 20 trading days from `getDayTradeHistory`
+
+Ends with a risk summary line: Risk Profile, Recovery Ratio, Positive/Negative Months.
+
+### Point Costs
+
+- **1 Month** — free (0 points, within the `wl_backtest_free_days` allowance)
+- **6 Months** — 18 points
+- **1 Year** — 36.5 points
+- **2 Years** — 73 points
+- **3 Years** — 109.5 points
+- **All Data** — 340.4 points (data from 2017-02-01)
+
+Per-day charge: 0.1 points. Check `get_balance` to see your current point balance before running.
 
 ---
 

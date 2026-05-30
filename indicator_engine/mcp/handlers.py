@@ -10,6 +10,9 @@ from indicator_engine.mcp.tools import (
     modify_strategy,
     rename_strategy,
     get_balance,
+    get_backtest_options,
+    run_backtest,
+    get_backtest_result,
 )
 
 
@@ -50,6 +53,23 @@ class ISEToolHandler:
             )
         elif tool_name == "get_balance":
             return get_balance()
+        elif tool_name == "get_backtest_options":
+            return get_backtest_options(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+            )
+        elif tool_name == "run_backtest":
+            return run_backtest(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+                start_date=arguments.get("start_date", ""),
+                end_date=arguments.get("end_date", ""),
+            )
+        elif tool_name == "get_backtest_result":
+            return get_backtest_result(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+            )
         return f"Error: Unknown tool '{tool_name}'."
 
 
