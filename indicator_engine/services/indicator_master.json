@@ -1,0 +1,577 @@
+[
+    {
+        "id": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
+        "indicator_name": "Super Trend",
+        "indicator_code": "supertrend",
+        "parameter": [
+            {
+                "id": "uPDAaA0$hJjD36Jju5v3Tw6OQaC0$aC0$",
+                "param_name": "Length",
+                "param_code": "length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "10",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "LedxLFBhHoNwaB0$sCusrDbiQaC0$aC0$",
+                "param_name": "Factor",
+                "param_code": "factor",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "3",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            }
+        ]
+    },
+    {
+        "id": "pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$",
+        "indicator_name": "MA Cross Over",
+        "indicator_code": "ma-cross-over",
+        "parameter": [
+            {
+                "id": "vaB0$DHIctaA0$S8hT5fq7fyTneAaC0$aC0$",
+                "param_name": "Short",
+                "param_code": "short",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "9",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
+                "param_name": "Long",
+                "param_code": "long",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "26",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "apgecBExRu0KpQF6l7wXLAaC0$aC0$",
+                "param_name": "Type",
+                "param_code": "type",
+                "param_type": "enum",
+                "is_required": true,
+                "default_value": "SMA",
+                "enum_value": "SMA|EMA|WMA",
+                "min_value": 0,
+                "max_value": 0
+            }
+        ]
+    },
+    {
+        "id": "Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$",
+        "indicator_name": "RSI",
+        "indicator_code": "rsi",
+        "parameter": [
+            {
+                "id": "pfkabQTN6IFgEaB0$D8tgAPSAaC0$aC0$",
+                "param_name": "Length",
+                "param_code": "length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "14",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "Kwxs1QlaA0$YKEPikaB0$BeBca9gaC0$aC0$",
+                "param_name": "Smoothing Line",
+                "param_code": "smoothing-line",
+                "param_type": "enum",
+                "is_required": true,
+                "default_value": "SMA",
+                "enum_value": "SMA|EMA|WMA",
+                "min_value": 0,
+                "max_value": 0
+            },
+            {
+                "id": "CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$",
+                "param_name": "Smoothing Length",
+                "param_code": "smoothing-length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "14",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "R74aB0$bl3GCmLEzsfNZaxP0waC0$aC0$",
+                "param_name": "Lower Band",
+                "param_code": "lower-band",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "30",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 50
+            },
+            {
+                "id": "Es7A7bfLFaB0$aA0$u7XcfTCqNfAaC0$aC0$",
+                "param_name": "Upper Band",
+                "param_code": "upper-band",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "70",
+                "enum_value": "",
+                "min_value": 50,
+                "max_value": 100
+            }
+        ]
+    },
+    {
+        "id": "CEwyrN4AlIaB0$33iljtrx3RwaC0$aC0$",
+        "indicator_name": "MACD",
+        "indicator_code": "macd",
+        "parameter": [
+            {
+                "id": "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$",
+                "param_name": "Fast Length",
+                "param_code": "fast-length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "12",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
+                "param_name": "Slow Length",
+                "param_code": "slow-length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "26",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "9TILtPAIUOKuUSlcrcIBAAaC0$aC0$",
+                "param_name": "Source",
+                "param_code": "source",
+                "param_type": "enum",
+                "is_required": true,
+                "default_value": "Close",
+                "enum_value": "Open|High|Low|Close",
+                "min_value": 0,
+                "max_value": 0
+            },
+            {
+                "id": "Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$",
+                "param_name": "Signal Length",
+                "param_code": "signal-length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "9",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$",
+                "param_name": "Oscillator MA Type",
+                "param_code": "oscillator-ma-type",
+                "param_type": "enum",
+                "is_required": true,
+                "default_value": "EMA",
+                "enum_value": "EMA|SMA|WMA",
+                "min_value": 0,
+                "max_value": 0
+            },
+            {
+                "id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+                "param_name": "Signal Line MA Type",
+                "param_code": "signal-line-ma-type",
+                "param_type": "enum",
+                "is_required": true,
+                "default_value": "EMA",
+                "enum_value": "EMA|SMA|WMA",
+                "min_value": 0,
+                "max_value": 0
+            }
+        ]
+    },
+    {
+        "id": "HGDvMula3mnAvJ9uO7OvEAaC0$aC0$",
+        "indicator_name": "Stochastic",
+        "indicator_code": "stochastic",
+        "parameter": [
+            {
+                "id": "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$",
+                "param_name": "%K Length",
+                "param_code": "k-length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "14",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "bzHmnzAMNmtbauNqJzwEGgaC0$aC0$",
+                "param_name": "%K Smoothing",
+                "param_code": "k-smoothing",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "1",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            },
+            {
+                "id": "0JT56s1rdeKWr24u8T3ldAaC0$aC0$",
+                "param_name": "%D Smoothing",
+                "param_code": "d-smoothing",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "3",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 200
+            }
+        ]
+    },
+    {
+        "id": "Mw4pyrjebjQ6uix5yjrdfAaC0$aC0$",
+        "indicator_name": "Bollinger Bands",
+        "indicator_code": "bollinger-bands",
+        "parameter": [
+            {
+                "id": "xgN9pEIzDeEZXhEYYpR4aQaC0$aC0$",
+                "param_name": "Length",
+                "param_code": "length",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "20",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 50
+            },
+            {
+                "id": "aBjn1oL1cgY4GJU70Rn9ZwaC0$aC0$",
+                "param_name": "Mult",
+                "param_code": "mult",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "2",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 30
+            }
+        ]
+    },
+    {
+        "id": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
+        "indicator_name": "Hammer",
+        "indicator_code": "candlestick-hammer",
+        "parameter": [
+            {
+                "id": "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$",
+                "param_name": "Min Body-to-Range %",
+                "param_code": "min-body-to-range",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "10",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 30
+            },
+            {
+                "id": "FaB0$Jr8mgLXaA0$aZiTvSIutdJAaC0$aC0$",
+                "param_name": "Max Body-to-Range %",
+                "param_code": "max-body-to-range",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "30",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 50
+            },
+            {
+                "id": "kIuqIpGfQP2MGtYcGBaB0$eBgaC0$aC0$",
+                "param_name": "Min Lower Wick Ratio",
+                "param_code": "min-lower-wick-ratio",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "2.0",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 30
+            },
+            {
+                "id": "VL9aB0$4EQN6aAtNBFT2aA0$J5BAaC0$aC0$",
+                "param_name": "Max Upper Wick Ratio",
+                "param_code": "max-upper-wick-ratio",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "0.3",
+                "enum_value": "",
+                "min_value": 0.10000000149011612,
+                "max_value": 10
+            },
+            {
+                "id": "bzqpdtJfyDh1IxHkSONrygaC0$aC0$",
+                "param_name": "Allow Bearish Hammer?",
+                "param_code": "allow_bearish",
+                "param_type": "bool",
+                "is_required": true,
+                "default_value": "true",
+                "enum_value": "",
+                "min_value": 0,
+                "max_value": 0
+            },
+            {
+                "id": "PQEWdMMV1v85z0aB0$WmM1MvAaC0$aC0$",
+                "param_name": "Require Downtrend Before Pattern?",
+                "param_code": "downtrend-before-pattern",
+                "param_type": "bool",
+                "is_required": true,
+                "default_value": "true",
+                "enum_value": "",
+                "min_value": 0,
+                "max_value": 0
+            },
+            {
+                "id": "PeiwPh5cZxaB0$37aA0$4g8pgEKAaC0$aC0$",
+                "param_name": "Highlight Quality Rating",
+                "param_code": "quality-rating",
+                "param_type": "bool",
+                "is_required": true,
+                "default_value": "true",
+                "enum_value": "",
+                "min_value": 0,
+                "max_value": 0
+            }
+        ]
+    },
+    {
+        "id": "4WY5hLeoY8aA0$olaA0$a5Px1ZAgaC0$aC0$",
+        "indicator_name": "Morning Star",
+        "indicator_code": "candlestick-morning-star",
+        "parameter": [
+            {
+                "id": "isxJiIcxaB0$nqX8YX9EK6CAAaC0$aC0$",
+                "param_name": "First Candle",
+                "param_code": "first-candle",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "Ld0qx3qtaB0$gei8KAxaM7OaB0$AaC0$aC0$",
+                "param_name": "Second Candle (Star)",
+                "param_code": "second-candle",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "30",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$",
+                "param_name": "Third Candle",
+                "param_code": "third-candle",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            }
+        ]
+    },
+    {
+        "id": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+        "indicator_name": "Evening Star",
+        "indicator_code": "candlestick-evening-star",
+        "parameter": [
+            {
+                "id": "wD6wxJ0eUsLeyT7aY8aA0$IjQaC0$aC0$",
+                "param_name": "First Candle",
+                "param_code": "first-candle",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "M82wMeYLaDEiPd58ZmW8qQaC0$aC0$",
+                "param_name": "Second Candle (Star)",
+                "param_code": "second-candle",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "30",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "VL6lvWZO9UCrSfXeVaB0$umlgaC0$aC0$",
+                "param_name": "Third Candle",
+                "param_code": "third-candle",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            }
+        ]
+    },
+    {
+        "id": "u0tZ1TaB0$SsbC6nKWfZQlvwQaC0$aC0$",
+        "indicator_name": "Rising Three Methods",
+        "indicator_code": "candlestick-rising-three-methods",
+        "parameter": [
+            {
+                "id": "S58bquuMP7CHBrtnvwmQGAaC0$aC0$",
+                "param_name": "Strong Candle Body %",
+                "param_code": "strong-candle-body-percent",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "aaA0$FcCTTYgpkaA0$OVoO6n6bjAaC0$aC0$",
+                "param_name": "Small Candle Body %",
+                "param_code": "small-candle-body-percent",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "30",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            }
+        ]
+    },
+    {
+        "id": "bzHmnzAMNmtbauNqJzwEGgaC0$aC0$",
+        "indicator_name": "Falling Three Methods",
+        "indicator_code": "candlestick-falling-three-methods",
+        "parameter": [
+            {
+                "id": "OxpJnIzEAWy1kHsdr6P1wgaC0$aC0$",
+                "param_name": "Strong Candle Body %",
+                "param_code": "strong-candle-body-percent",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "qo6AVyrYaB0$QKzHyDLXEku3QaC0$aC0$",
+                "param_name": "Small Candle Body %",
+                "param_code": "small-candle-body-percent",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "30",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            }
+        ]
+    },
+    {
+        "id": "0JT56s1rdeKWr24u8T3ldAaC0$aC0$",
+        "indicator_name": "Three Black Crows",
+        "indicator_code": "candlestick-three-black-crows",
+        "parameter": [
+            {
+                "id": "qaGyxasgey96eSAXNKPzPwaC0$aC0$",
+                "param_name": "Minimum Candle Count",
+                "param_code": "minimum-candle-count",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "3",
+                "enum_value": "",
+                "min_value": 3,
+                "max_value": 6
+            },
+            {
+                "id": "EzFIx9yPfXZXaA0$Hp47KUDEAaC0$aC0$",
+                "param_name": "Minimum Body Size %",
+                "param_code": "minimum-body-size",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "ROdLK712DNlMF5FFMGCJqgaC0$aC0$",
+                "param_name": "Upper Wick Limit %",
+                "param_code": "upper-wick-limit",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "20",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            }
+        ]
+    },
+    {
+        "id": "aB0$CmwcaA0$5rfz9i6jqSH8tGoAaC0$aC0$",
+        "indicator_name": "Three White Soldiers",
+        "indicator_code": "candlestick-three-white-soldiers",
+        "parameter": [
+            {
+                "id": "jsaVNqT4cJLjqR8EwUc7TgaC0$aC0$",
+                "param_name": "Minimum Candle Count",
+                "param_code": "minimum-candle-count",
+                "param_type": "int",
+                "is_required": true,
+                "default_value": "3",
+                "enum_value": "",
+                "min_value": 3,
+                "max_value": 6
+            },
+            {
+                "id": "M2UXf5YjqWDj7ZY9jfaA0$P9AaC0$aC0$",
+                "param_name": "Minimum Body Size %",
+                "param_code": "minimum-body-size",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "60",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            },
+            {
+                "id": "aM9uZ5ZvZs0klyoSy5Z7MAaC0$aC0$",
+                "param_name": "Lower Wick Limit %",
+                "param_code": "lower-wick-limit",
+                "param_type": "decimal",
+                "is_required": true,
+                "default_value": "20",
+                "enum_value": "",
+                "min_value": 1,
+                "max_value": 100
+            }
+        ]
+    }
+]

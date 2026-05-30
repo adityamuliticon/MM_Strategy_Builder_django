@@ -120,17 +120,17 @@ Indicators:
   "macd"             → MACD              (params: fast-length, slow-length, source [Open|High|Low|Close],
                                            signal-length, oscillator-ma-type [EMA|SMA|WMA],
                                            signal-line-ma-type [EMA|SMA|WMA])
-  "stochastic"       → Stochastic        (params: k-length, d-length, lower-band, upper-band)
-  "bollinger-bands"  → Bollinger Bands   (params: length, multiplier, source [Open|High|Low|Close])
+  "stochastic"       → Stochastic        (params: k-length, k-smoothing, d-smoothing)
+  "bollinger-bands"  → Bollinger Bands   (params: length, mult)
 
-Candlestick Patterns (no parameters):
-  "hammer"                → BUY signal
-  "morning-star"          → BUY signal
-  "evening-star"          → SELL signal
-  "rising-three-methods"  → BUY signal
-  "falling-three-methods" → SELL signal
-  "three-black-crows"     → SELL signal
-  "three-white-soldiers"  → BUY signal
+Candlestick Patterns (use "candlestick-" prefix — MANDATORY):
+  "candlestick-hammer"                → BUY signal
+  "candlestick-morning-star"          → BUY signal
+  "candlestick-evening-star"          → SELL signal
+  "candlestick-rising-three-methods"  → BUY signal
+  "candlestick-falling-three-methods" → SELL signal
+  "candlestick-three-black-crows"     → SELL signal
+  "candlestick-three-white-soldiers"  → BUY signal
 
 ── INDICATOR PARAMETER DEFAULTS ──────────────────────────
 If user does not specify a parameter, use the defaults:
@@ -139,8 +139,8 @@ If user does not specify a parameter, use the defaults:
   rsi:             length=14, smoothing-line="SMA", smoothing-length=14, lower-band=30, upper-band=70
   macd:            fast-length=12, slow-length=26, source="Close", signal-length=9,
                    oscillator-ma-type="EMA", signal-line-ma-type="EMA"
-  stochastic:      k-length=14, d-length=3, lower-band=20, upper-band=80
-  bollinger-bands: length=20, multiplier=2, source="Close"
+  stochastic:      k-length=14, k-smoothing=1, d-smoothing=3
+  bollinger-bands: length=20, mult=2
 
 ── LEG-LEVEL TRAIL SL ────────────────────────────────────
 * isTrailSl: true when trail SL is active for this leg
