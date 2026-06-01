@@ -105,6 +105,7 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 * Only include SAT if user explicitly requests Saturday.
 
 ── INDICATORS — AND / OR LOGIC ───────────────────────────
+* You can add UNLIMITED indicators (there is NO limit of 10 indicators; users can add as many indicators as they want).
 * index field controls AND/OR grouping:
     - Same index value (e.g., both index: 1) → AND (all must fire simultaneously)
     - Different index values (index: 1 and index: 2) → OR (any group firing is enough)
