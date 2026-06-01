@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Maya | AI Strategy Builder</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=11">
+    <script src="{% static 'js/theme.js' %}?v=11"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,16 +16,25 @@
         <h2>Market Maya</h2>
         <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;">AI Strategy Builder v1.0</p>
         <div style="margin-top: 40px;">
-            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Switch Strategy</h3>
-            <a href="/indicator/" style="display: block; margin-top: 10px; color: #00f2ff; font-size: 0.85rem; text-decoration: none;">
-                → Indicator Signal Engine
-            </a>
-            <a href="/bridge/" style="display: block; margin-top: 8px; color: #00f2ff; font-size: 0.85rem; text-decoration: none;">
-                → Inbound Signal Bridge
-            </a>
-            <a href="/logs/" style="display: block; margin-top: 8px; color: #f0c040; font-size: 0.85rem; text-decoration: none;">
-                → Chat Logs
-            </a>
+            <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">Switch Strategy</h3>
+            <div class="sidebar-nav">
+                <a href="/" class="sidebar-btn active">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">Unified Builder</span>
+                </a>
+                <a href="/indicator/" class="sidebar-btn">
+                    <span class="btn-icon">📈</span>
+                    <span class="btn-text">Indicator Engine</span>
+                </a>
+                <a href="/bridge/" class="sidebar-btn">
+                    <span class="btn-icon">🔌</span>
+                    <span class="btn-text">Signal Bridge</span>
+                </a>
+                <a href="/logs/" class="sidebar-btn">
+                    <span class="btn-icon">📋</span>
+                    <span class="btn-text">Chat Logs</span>
+                </a>
+            </div>
         </div>
         <div style="margin-top: 40px;">
             <h3 style="font-size: 0.9rem; color: var(--text-muted);">Status</h3>
@@ -36,8 +46,14 @@
     </div>
     <div class="main-chat">
         <div class="header">
-            <h1>Unified Strategy Builder</h1>
-            <div style="font-size: 0.9rem; color: var(--text-muted);">Session: #MM-7829</div>
+            <div style="display: flex; flex-direction: column;">
+                <h1>Unified Strategy Builder</h1>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">Session: #MM-7829</div>
+            </div>
+            <button id="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode">
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </button>
         </div>
         <div class="chat-container" id="chat-container">
             <div class="message ai-message">
