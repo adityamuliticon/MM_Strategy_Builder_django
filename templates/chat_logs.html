@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Maya | Chat Logs</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=11">
+    <script src="{% static 'js/theme.js' %}?v=11"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -18,13 +19,15 @@
             gap: 10px; padding: 16px 24px 0;
         }
         .stat-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 10px; padding: 12px 14px;
+            box-shadow: var(--shadow-premium);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .stat-card.highlight { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.07); }
         .stat-card .label { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
-        .stat-card .value { font-size: 1.25rem; font-weight: 700; color: #fff; margin-top: 4px; }
+        .stat-card .value { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; transition: color 0.3s ease; }
         .stat-card .sub   { font-size: .7rem; color: var(--text-muted); margin-top: 2px; }
         .value.green { color: var(--success); }
         .value.cyan  { color: #00f2ff; }
@@ -36,30 +39,31 @@
             padding: 14px 24px 0;
         }
         .filter-section { display: flex; align-items: center; gap: 6px; }
-        .filter-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 6px; }
+        .filter-divider { width: 1px; height: 24px; background: var(--border-color); margin: 0 6px; }
 
         .quick-btn {
             padding: 5px 12px; border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.12);
+            border: 1px solid var(--border-color);
             background: transparent; color: var(--text-muted);
             font-size: .75rem; cursor: pointer; transition: all .18s;
         }
         .quick-btn:hover, .quick-btn.active {
-            background: rgba(0,242,255,0.12); border-color: #00f2ff; color: #00f2ff;
+            background: rgba(0,242,255,0.12); border-color: var(--primary-glow); color: var(--primary-glow);
         }
 
         .date-input {
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 6px; padding: 5px 10px; color: #ccd; font-size: .78rem;
+            background: var(--input-bg); border: 1px solid var(--border-color);
+            border-radius: 6px; padding: 5px 10px; color: var(--input-text); font-size: .78rem;
             font-family: inherit; outline: none; cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .date-input:focus { border-color: #00f2ff; }
+        .date-input:focus { border-color: var(--primary-glow); }
         .date-input::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
 
         .apply-btn {
             padding: 5px 14px; border-radius: 6px;
-            background: rgba(0,242,255,0.15); border: 1px solid #00f2ff;
-            color: #00f2ff; font-size: .78rem; cursor: pointer; transition: all .18s;
+            background: rgba(0,242,255,0.15); border: 1px solid var(--primary-glow);
+            color: var(--primary-glow); font-size: .78rem; cursor: pointer; transition: all .18s;
         }
         .apply-btn:hover { background: rgba(0,242,255,0.25); }
 
@@ -108,9 +112,10 @@
         .bar:hover { opacity: .8; }
         .bar .bar-tip {
             display: none; position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%);
-            background: #1a1d26; border: 1px solid rgba(255,255,255,0.15);
+            background: var(--bg-dark); border: 1px solid var(--border-color);
             border-radius: 5px; padding: 4px 8px; white-space: nowrap;
-            font-size: .7rem; color: #eee; pointer-events: none; z-index: 10;
+            font-size: .7rem; color: var(--text-main); pointer-events: none; z-index: 10;
+            box-shadow: var(--shadow-premium);
         }
         .bar:hover .bar-tip { display: block; }
         .bar-day { font-size: .6rem; color: var(--text-muted); white-space: nowrap; }
@@ -135,15 +140,16 @@
         .table-wrap { flex: 1; overflow-y: auto; padding: 10px 24px 24px; }
         table { width: 100%; border-collapse: collapse; font-size: .78rem; }
         thead th {
-            position: sticky; top: 0; background: #0e1117; z-index: 2;
+            position: sticky; top: 0; background: var(--bg-dark); z-index: 2;
             padding: 9px 10px; text-align: left;
             color: var(--text-muted); font-weight: 600; font-size: .68rem;
             text-transform: uppercase; letter-spacing: .05em;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
         }
-        tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background .15s; }
-        tbody tr:hover { background: rgba(255,255,255,0.03); }
-        td { padding: 9px 10px; vertical-align: top; color: #cdd; }
+        tbody tr { border-bottom: 1px solid var(--border-color); transition: background .15s; }
+        tbody tr:hover { background: var(--th-bg); }
+        td { padding: 9px 10px; vertical-align: top; color: var(--text-main); transition: color 0.3s ease; }
 
         .msg-cell { max-width: 230px; cursor: pointer; }
         .msg-short { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; color: #aab; }
@@ -167,25 +173,40 @@
     <h2>Market Maya</h2>
     <p style="color:var(--text-muted);font-size:.8rem;margin-top:10px;">Chat Logs & Analytics</p>
     <div style="margin-top:40px;">
-        <h3 style="font-size:.9rem;color:var(--text-muted);">Switch Module</h3>
-        <a href="/"           style="display:block;margin-top:10px;color:#00f2ff;font-size:.85rem;text-decoration:none;">→ Unified Strategy Builder</a>
-        <a href="/indicator/" style="display:block;margin-top:8px;color:#00f2ff;font-size:.85rem;text-decoration:none;">→ Indicator Signal Engine</a>
-        <a href="/bridge/"    style="display:block;margin-top:8px;color:#00f2ff;font-size:.85rem;text-decoration:none;">→ Inbound Signal Bridge</a>
+        <h3 style="font-size:.9rem;color:var(--text-muted);margin-bottom:5px;">Switch Strategy</h3>
+        <div class="sidebar-nav">
+            <a href="/" class="sidebar-btn">
+                <span class="btn-icon">⚡</span>
+                <span class="btn-text">Unified Builder</span>
+            </a>
+            <a href="/indicator/" class="sidebar-btn">
+                <span class="btn-icon">📈</span>
+                <span class="btn-text">Indicator Engine</span>
+            </a>
+            <a href="/bridge/" class="sidebar-btn">
+                <span class="btn-icon">🔌</span>
+                <span class="btn-text">Signal Bridge</span>
+            </a>
+            <a href="/logs/" class="sidebar-btn active">
+                <span class="btn-icon">📋</span>
+                <span class="btn-text">Chat Logs</span>
+            </a>
+        </div>
     </div>
     <div style="margin-top:40px;">
         <h3 style="font-size:.9rem;color:var(--text-muted);">Pricing</h3>
         <p style="font-size:.73rem;color:var(--text-muted);margin-top:8px;line-height:1.6;">
-            Edit <code style="color:#00f2ff;">config.py</code><br>
-            <code style="color:#aab;">COST_PER_1M_INPUT_TOKENS_USD</code><br>
-            <code style="color:#aab;">COST_PER_1M_OUTPUT_TOKENS_USD</code><br>
-            <code style="color:#aab;">USD_TO_INR_RATE</code>
+            Edit <code style="color:var(--primary-glow);">config.py</code><br>
+            <code style="color:var(--text-muted);">COST_PER_1M_INPUT_TOKENS_USD</code><br>
+            <code style="color:var(--text-muted);">COST_PER_1M_OUTPUT_TOKENS_USD</code><br>
+            <code style="color:var(--text-muted);">USD_TO_INR_RATE</code>
         </p>
     </div>
     <div style="margin-top:30px;">
         <h3 style="font-size:.9rem;color:var(--text-muted);">All-time Totals</h3>
-        <p style="font-size:.78rem;color:#ccd;margin-top:8px;line-height:1.8;">
-            Requests: <strong style="color:#fff;">{{ all_stats.total_requests|default:0 }}</strong><br>
-            Tokens: <strong style="color:#fff;">{{ all_stats.total_tokens|default:0 }}</strong><br>
+        <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px;line-height:1.8;">
+            Requests: <strong style="color:var(--text-main);">{{ all_stats.total_requests|default:0 }}</strong><br>
+            Tokens: <strong style="color:var(--text-main);">{{ all_stats.total_tokens|default:0 }}</strong><br>
             Cost: <strong style="color:#f0c040;">₹{% if all_stats.total_cost_inr %}{{ all_stats.total_cost_inr|floatformat:2 }}{% else %}0.00{% endif %}</strong>
         </p>
     </div>
@@ -193,10 +214,16 @@
 
 <div class="main-chat logs-main">
     <div class="header">
-        <h1>Chat Logs</h1>
-        <div style="font-size:.85rem;color:var(--text-muted);">
-            {% if is_filtered %}Filtered · {% endif %}{{ stats.total_requests|default:0 }} request{{ stats.total_requests|default:0|pluralize }}
+        <div style="display: flex; flex-direction: column;">
+            <h1>Chat Logs</h1>
+            <div style="font-size:.85rem;color:var(--text-muted); margin-top: 2px;">
+                {% if is_filtered %}Filtered · {% endif %}{{ stats.total_requests|default:0 }} request{{ stats.total_requests|default:0|pluralize }}
+            </div>
         </div>
+        <button id="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode" type="button">
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
     </div>
 
     <!-- ── Date filter bar ── -->
