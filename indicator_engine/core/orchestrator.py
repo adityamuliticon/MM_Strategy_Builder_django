@@ -51,7 +51,7 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 ── EXCHANGE & SEGMENT RULES ──────────────────────────────
 * BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY → exchange: "NFO"
 * SENSEX, BANKEX → exchange: "BFO"
-* NSE stocks → exchange: "NSE", segment: "Stock"
+* NSE stocks → exchange: "NSE", segment: "EQ"
 * segment for derivatives: "FUT" or "OPT"
 * NEVER use "INDEX" as segment.
 
@@ -65,8 +65,8 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 
 ── OPTION TYPE & ATM ─────────────────────────────────────
 * For OPT segment: optionType must be "CE" or "PE"
-* atm: 0 = ATM strike, positive = OTM for CE / ITM for PE, negative = ITM for CE / OTM for PE
-  Example: CE +200 OTM → atm: 200  |  PE -200 OTM → atm: -200
+* atm: 0 = ATM strike, positive = OTM for CE / OTM for PE, negative = ITM for CE / ITM for PE
+  Example: CE +200 OTM → atm: 200  |  PE +200 OTM → atm: 200, CE -200 ITM → atm: -200  |  PE -200 ITM → atm: -200
 * For FUT or Stock segment: optionType = "" (empty), atm = 0
 
 ── callType RULE — CRITICAL ──────────────────────────────
