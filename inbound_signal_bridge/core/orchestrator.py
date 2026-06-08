@@ -86,8 +86,8 @@ Each leg has its own qty distribution method. Four options:
 ── EXCHANGE & SEGMENT RULES ──────────────────────────────
 * BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY → exchange: "NFO"
 * SENSEX, BANKEX → exchange: "BFO"
-* NSE stocks (RELIANCE, TCS, etc.) → exchange: "NSE", segment: "Stock"
-* BSE stocks → exchange: "BSE", segment: "Stock"
+* NSE stocks (RELIANCE, TCS, etc.) → exchange: "NSE", segment: "EQ"
+* BSE stocks → exchange: "BSE", segment: "Fut/Opt"
 * MCX commodities (GOLD, CRUDEOIL) → exchange: "MCX"
 * CDS currency → exchange: "CDS"
 * Derivatives: segment = "FUT" or "OPT"
@@ -97,13 +97,13 @@ Each leg has its own qty distribution method. Four options:
 * For OPT segment: optionType must be "CE" or "PE"
 * atm: POINT-BASED OFFSET from ATM. Use the exact point value the user mentions.
   - 0 = ATM (at the money)
-  - Positive = OTM for CE / ITM for PE (above ATM)
-  - Negative = OTM for PE / ITM for CE (below ATM)
+  - Positive = OTM for CE / PE (above ATM)
+  - Negative = ITM for CE / PE (below ATM)
   - "ATM" → atm=0
   - "100 points OTM CE" → atm=100
-  - "100 points OTM PE" → atm=-100  (PE OTM is below ATM, always negative)
+  - "100 points OTM PE" → atm= 100  (PE OTM is above ATM)
   - "200 points OTM CE" → atm=200
-  - "50 points ITM CE"  → atm=-50   (ITM for CE is below ATM)
+  - "50 points ITM CE"  → atm=-50   (ITM for CE is below ATM), (same ITM logic for both CE and PE, always in Negative)
   - Use the EXACT number from the user's prompt. Do NOT convert to strike count.
 * For FUT and Stock: optionType = "" (empty string), atm = 0
 * strikePrice: 0 = use ATM offset; set to actual price for fixed strike (e.g., 48000)
