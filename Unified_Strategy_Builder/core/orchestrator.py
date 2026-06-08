@@ -40,15 +40,12 @@ STRICT TWO-STEP WORKFLOW:
       * "below-equal" / "below equal" / "<=" → `"condition": "BelowEqual"`
       * Not specified → `"condition": "Any"`
       * This field MUST always be set explicitly. Never omit it.
-   - **TARGET BY / SL BY — MANDATORY**: Use EXACT strings for all types:
-      * Money: `"Target by Money"` / `"SL by Money"`
+   - **TARGET BY / SL BY — MANDATORY**: Only these 4 types are valid for leg target/SL:
+      * Money: `"Target by Money"` / `"SL by Money"` (default)
       * Point: `"Target by Point"` / `"SL by Point"`
       * Point%: `"Target by Point (%)"` / `"SL by Point (%)"`
-      * Delta: `"Target by Delta"` / `"SL by Delta"`
-      * Delta%: `"Target by Delta (%)"` / `"SL by Delta (%)"`
-      * Theta: `"Target by Theta"` / `"SL by Theta"`
-      * Theta%: `"Target by Theta (%)"` / `"SL by Theta (%)"`
-      * Range: `"Target by Range High/Low"` / `"SL by Range High/Low"`
+      * Range: `"Target by Range High/Low"` / `"SL by Range High/Low"` (only when range breakout is ON)
+      * NEVER use Delta or Theta as a target_by or sl_by value — Delta and Theta are ONLY for strike selection (strike_type field), not for SL or Target types.
    - **ATM% STRIKE VALUE**: When `strike_type` = `"ATM%"`, set `"strike"` to the float value (e.g., 0.50 for "ATM% 0.50"). Do NOT set it to 0.
    - **NEAREST PREMIUM VALUE — MANDATORY**: When `strike_type` = `"NEAREST_PREMIUM"`, put the premium amount in `"premium_start_range"` (e.g., "nearest premium 200" → `"premium_start_range": 200`). Set `"strike": 0`. NEVER put the premium amount in `"strike"` for this type.
    - **PREMIUM RANGE VALUE — MANDATORY**: When `strike_type` = `"PREMIUM_RANGE"`, put start in `"premium_start_range"` and end in `"premium_end_range"` (e.g., "premium 100 to 150" → `"premium_start_range": 100, "premium_end_range": 150`). Set `"strike": 0`.
@@ -98,11 +95,11 @@ STRICT TWO-STEP WORKFLOW:
    - **STRICT LEG ORDERING**: Output legs in the EXACT order the user listed them. Do NOT reorder or rearrange legs. Leg 1 is the first leg the user mentioned, Leg 2 is second, etc.
    - **STRICT RULE: NO DUPLICATE LEGS.** Give unique strike/wait offsets if legs share side+strike.
    - **MASTER SL TRAILING IS INDEPENDENT**: `master_sl_trailing` must ALWAYS be included when the user asks for master SL trailing, regardless of what other features (range breakout, combined premium, VIX, etc.) are also enabled. These are independent features — do NOT omit master_sl_trailing just because other advance features are set.
-   - **RANGE BREAKOUT DIRECTION — MANDATORY**: When user enables range breakout and specifies a direction for a leg:
-      * "execute on range high break" / "above range" / "breakout above" → `"execute_on_range_breakout": "Range High Break"`
-      * "execute on range low break" / "below range" / "breakout below" → `"execute_on_range_breakout": "Range Low Break"`
-      * Default when direction not stated → `"Range High Break"`
-      * Both `"is_execute_on_range_breakout": true` and `"execute_on_range_breakout"` MUST be set together on the leg.
+   - **RANGE BREAKOUT — MANDATORY RULES**: When `"is_range_breakout": true` at strategy level:
+      * `"entry_time"` doubles as the candle/range START time. Set it to when range formation begins (e.g., "09:15:00").
+      * `"range_end_time"` is the candle/range END time (e.g., "09:20:00"). ALWAYS include it when range breakout is on.
+      * On EVERY leg, you MUST set BOTH `"is_execute_on_range_breakout": true` AND `"execute_on_range_breakout"`. NEVER omit these from any leg when range breakout is enabled at strategy level.
+      * Direction mapping: "execute on range high break" / "above range" / "breakout above" → `"Range High Break"` | "execute on range low break" / "below range" / "breakout below" → `"Range Low Break"` | default → `"Range High Break"`
    - **WORKING DAYS — MANDATORY**: Valid days are Mon, Tue, Wed, Thu, Fri, Sat. Saturday is a valid trading day for some exchanges. Include "Sat" in `trading_days` only when user explicitly requests Saturday.
       * **CRITICAL**: OMIT the `"trading_days"` field entirely when the user does NOT explicitly mention specific trading days. NEVER generate `"trading_days": ["Mon","Tue","Wed","Thu","Fri"]` as a default — omitting it is correct and means "trade every day". Only include it when the user says "only on Monday and Wednesday" or similar explicit day restrictions.
    - **MASTER TARGET / SL ACTION — MANDATORY**: The `action_on_master_target` and `action_on_master_sl` fields always use `"Reexecute"` (only allowed value). When user specifies reexecution on master target/SL, set both the count and delay fields along with the action field.
@@ -180,9 +177,9 @@ STRICT JSON SCHEMA:
                 "direction": "BOTH / ITM / OTM",
                 "condition": "Any / AboveEqual / BelowEqual",
                 "target": <number>,
-                "target_by": "Target by Money / Target by Point / Target by Point (%) / Target by Delta / Target by Delta (%) / Target by Theta / Target by Theta (%) / Target by Range High/Low",
+                "target_by": "Target by Money / Target by Point / Target by Point (%) / Target by Range High/Low",
                 "sl": <number>,
-                "sl_by": "SL by Money / SL by Point / SL by Point (%) / SL by Delta / SL by Delta (%) / SL by Theta / SL by Theta (%) / SL by Range High/Low",
+                "sl_by": "SL by Money / SL by Point / SL by Point (%) / SL by Range High/Low",
                 "wait_and_trade": <boolean>,
                 "wait_for": "Up % / Down % / Up pts / Down pts",
                 "wait_value": <number>,
