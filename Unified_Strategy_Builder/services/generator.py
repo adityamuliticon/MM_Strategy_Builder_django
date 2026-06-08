@@ -27,9 +27,15 @@ class PayloadGenerator:
         underlying = f"{symbol} {segment} {exchange}"
 
         # ── Legs ─────────────────────────────────────────────────────────────
+        is_range_breakout = main_params.get("isRangeBreakOut", main_params.get("is_range_breakout", False))
         generated_legs = []
         for leg_input in (legs if isinstance(legs, list) else []):
             leg_payload = self._generate_leg_payload(leg_input, exchange, symbol)
+            # If range breakout is ON at strategy level and leg doesn't explicitly
+            # disable it, force isExecuteOnRangeBreakout to True so the leg
+            # actually trades on the breakout signal.
+            if is_range_breakout and not leg_input.get("isExecuteOnRangeBreakout", leg_input.get("is_execute_on_range_breakout", None)) is False:
+                leg_payload["isExecuteOnRangeBreakout"] = True
             generated_legs.append(leg_payload)
 
         # ── Master Target / SL ────────────────────────────────────────────────
@@ -81,7 +87,15 @@ class PayloadGenerator:
             "runFri": any(d.lower().startswith("fri") for d in trading_days) if trading_days else True,
             "runSat": any(d.lower().startswith("sat") for d in trading_days) if trading_days else False,
         }
-        is_explicit_days = len(trading_days) > 0
+        # Only treat as explicitly set when the user picked a non-default subset.
+        # Mon-Fri (all 5 weekdays, no Saturday) is the system default —
+        # the LLM often outputs it even when the user said nothing about days.
+        _lower_days = [d.lower() for d in trading_days]
+        _all_weekdays = all(p in " ".join(_lower_days) for p in ("mon", "tue", "wed", "thu", "fri"))
+        _has_sat = any(d.startswith("sat") for d in _lower_days)
+        _has_sun = any(d.startswith("sun") for d in _lower_days)
+        _is_full_default = _all_weekdays and not _has_sat and not _has_sun and len(trading_days) == 5
+        is_explicit_days = len(trading_days) > 0 and not _is_full_default
 
         # ── isIntraday — support trading_type string fallback ─────────────────
         is_intraday = main_params.get("isIntraday", main_params.get("is_intraday", None))
@@ -231,7 +245,16 @@ class PayloadGenerator:
             s_range = int(atm_val)
             atm_val = 0
 
-        # Target / SL — API always requires integer (even for Delta/Theta types)
+        # For Delta/Theta types: Market Maya reads the value from premiumStartRange,
+        # not atm. LLM puts the user's delta/theta number in atm_val — reroute it.
+        if atm_type in ("Strike By Nearest Delta", "Strike By Nearest Theta") and atm_val != 0:
+            s_range = int(atm_val)
+            atm_val = 0.0
+        if atm_type in ("Strike By Delta Range", "Strike By Theta Range") and atm_val != 0:
+            s_range = int(atm_val)  # start of range; end comes from premiumEndRange
+            atm_val = 0.0
+
+        # Target / SL — API always requires integer
         raw_t_by = str(leg.get("targetBy", leg.get("target_by", "Target by Money")))
         raw_s_by = str(leg.get("slBy", leg.get("sl_by", "SL by Money")))
         t_raw = float(leg.get("target", 0))
@@ -419,14 +442,6 @@ class PayloadGenerator:
             "POINT(%)": f"{category} by Point (%)",
             "PERCENTAGE": f"{category} by Point (%)",
             "PERCENT": f"{category} by Point (%)",
-            "DELTA": f"{category} by Delta",
-            "DELTA%": f"{category} by Delta (%)",
-            "DELTA (%)": f"{category} by Delta (%)",
-            "DELTA(%)": f"{category} by Delta (%)",
-            "THETA": f"{category} by Theta",
-            "THETA%": f"{category} by Theta (%)",
-            "THETA (%)": f"{category} by Theta (%)",
-            "THETA(%)": f"{category} by Theta (%)",
             "RANGE": f"{category} by Range High/Low",
             "RANGE HIGH/LOW": f"{category} by Range High/Low",
         }
