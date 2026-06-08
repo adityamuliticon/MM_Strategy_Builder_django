@@ -76,14 +76,14 @@ def _auth_headers():
     }
 
 
-def get_strategies(search="", skip=0, take=50, trading_type="All"):
+def get_strategies(search="", skip=0, take=50, trading_type="All", strategy_master_ids=None):
     payload = {
         "skip": skip,
         "take": take,
         "search": search,
         "symbols": [],
         "tradingType": trading_type,
-        "strategyMasterIds": [],
+        "strategyMasterIds": strategy_master_ids or [],
         "strategyMaster": {"id": "", "strategy_name": "All Plugins", "selected": True},
         "AuthorIds": [],
         "sortBy": "newest",

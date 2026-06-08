@@ -1,0 +1,331 @@
+MLH E2E Test Run: 2026-06-02T15:07:38.819894
+Results: 18/20 tests passed, 264/268 checks passed
+
+
+============================================================
+PROMPT 1 — BankNifty Short Straddle, Intraday MIS, Master Target+SL  [PASS] [24/24]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'BANKNIFTY'
+  ✅ exchange: 'NFO'
+  ✅ isIntraday: True
+  ✅ productType: 'MIS'
+  ✅ underlying: 'BANKNIFTY FUT NFO'
+  ✅ target: 5000.0
+  ✅ sl: 3000.0
+  ✅ is_btst_stbt: False
+  ✅ is_range_break_out: False
+  ✅ l1.tradeSide: 'SELL'
+  ✅ l1.optionType: 'CE'
+  ✅ l1.segment: 'OPT'
+  ✅ l1.atm: 0
+  ✅ l1.lot: 1
+  ✅ l1.qty: 30
+  ✅ l1.expiry: 'WEEKLY'
+  ✅ l2.tradeSide: 'SELL'
+  ✅ l2.optionType: 'PE'
+  ✅ l2.atm: 0
+  ✅ l2.qty: 30
+  ✅ l1.product: None
+  ✅ l1.workingDay: 'ALL'
+  ✅ l1.qty_distribution: 'Fix'
+
+============================================================
+PROMPT 2 — Nifty Strangle, Per-Leg Target/SL, ATM Offset, 2 Lots  [PASS] [19/19]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'NIFTY'
+  ✅ exchange: 'NFO'
+  ✅ l1.optionType: 'CE'
+  ✅ l1.tradeSide: 'SELL'
+  ✅ l1.lot: 2
+  ✅ l1.qty: 50
+  ✅ l1.atm OTM (CE): 200 >= 100
+  ✅ l1.target: 2000.0
+  ✅ l1.sl: 1500.0
+  ✅ l2.optionType: 'PE'
+  ✅ l2.tradeSide: 'SELL'
+  ✅ l2.lot: 2
+  ✅ l2.qty: 50
+  ✅ l2.atm OTM (PE): 200 >= 100
+  ✅ l2.target: 2000.0
+  ✅ l2.sl: 1500.0
+  ✅ master target disabled: 0.0
+  ✅ master sl disabled: 0.0
+
+============================================================
+PROMPT 3 — BankNifty Iron Condor, 4 Legs, Master Target  [PASS] [25/25]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'BANKNIFTY'
+  ✅ leg_count: 4
+  ✅ l1 SELL CE: ('SELL', 'CE')
+  ✅ l1.atm OTM CE: 300
+  ✅ l2 SELL PE: ('SELL', 'PE')
+  ✅ l2.atm OTM PE: -300
+  ✅ l3 BUY CE: ('BUY', 'CE')
+  ✅ l3.atm: 500
+  ✅ l4 BUY PE: ('BUY', 'PE')
+  ✅ l4.atm: -500
+  ✅ l1.lot=1: 1
+  ✅ l1.qty=30: 30
+  ✅ l1.expiry: 'WEEKLY'
+  ✅ l2.lot=1: 1
+  ✅ l2.qty=30: 30
+  ✅ l2.expiry: 'WEEKLY'
+  ✅ l3.lot=1: 1
+  ✅ l3.qty=30: 30
+  ✅ l3.expiry: 'WEEKLY'
+  ✅ l4.lot=1: 1
+  ✅ l4.qty=30: 30
+  ✅ l4.expiry: 'WEEKLY'
+  ✅ master target: 4000.0
+  ✅ master sl=0: 0.0
+
+============================================================
+PROMPT 4 — Range Breakout Mode, Direction High+Low per Leg  [PASS] [11/11]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_range_break_out: True
+  ✅ is_btst_stbt: False
+  ✅ isIntraday: True
+  ✅ range_time: '09:30'
+  ✅ l1.optionType CE: 'CE'
+  ✅ l1.range_breakout_direction: 'High'
+  ✅ l1.tradeSide BUY: 'BUY'
+  ✅ l2.optionType PE: 'PE'
+  ✅ l2.range_breakout_direction: 'Low'
+  ✅ l2.tradeSide BUY: 'BUY'
+
+============================================================
+PROMPT 5 — BTST/STBT Mode Forces NRML and Not Intraday  [PASS] [12/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_btst_stbt: True
+  ✅ is_range_break_out: False
+  ✅ isIntraday: False
+  ✅ productType: 'NRML'
+  ✅ symbol: 'NIFTY'
+  ✅ l1.optionType CE: 'CE'
+  ✅ l1.tradeSide: 'SELL'
+  ✅ l2.optionType PE: 'PE'
+  ✅ l2.tradeSide: 'SELL'
+  ✅ master target: 8000.0
+  ✅ master sl: 5000.0
+
+============================================================
+PROMPT 6 — FINNIFTY lot size verification (lot=2 → qty=80)  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'FINNIFTY'
+  ✅ exchange: 'NFO'
+  ✅ l1.lot: 2
+  ✅ l1.qty: 80
+  ✅ l2.lot: 2
+  ✅ l2.qty: 80
+  ✅ l1.optionType CE: 'CE'
+  ✅ l2.optionType PE: 'PE'
+
+============================================================
+PROMPT 7 — Wait-and-Trade: Up% active, Down Pts active, none disabled  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'BANKNIFTY'
+  ✅ l1.is_wait_and_trade: True
+  ✅ l1.wait_for UP%: 'UP %'
+  ✅ l1.wait_value: 0.5
+  ✅ l2.is_wait_and_trade: True
+  ✅ l2.wait_for Down Pts: 'Down Pts.'
+  ✅ l2.wait_value: 100.0
+  ✅ l3.is_wait_and_trade: False
+
+============================================================
+PROMPT 8 — VIX Filter + Working Days Mon/Wed/Fri  [PASS] [12/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ enableVixFilter: True
+  ✅ vixStartValue: 12.0
+  ✅ vixEndValue: 22.0
+  ✅ mon: True
+  ✅ tue: False
+  ✅ wed: True
+  ✅ thu: False
+  ✅ fri: True
+  ✅ sat: False
+  ✅ sun: False
+  ✅ isIntraday: True
+
+============================================================
+PROMPT 9 — Master Trail SL (Dynamic): profitMove, slMove, noOfTrailSL  [FAIL] [6/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ isTrailSl: True
+  ✅ noOfTrailSL: 5
+  ✅ master target: 6000.0
+  ✅ master sl: 3000.0
+  ✅ symbol: 'BANKNIFTY'
+  ❌ profitMove: expected=1000.0, got=2000.0
+  ❌ slMove: expected=500.0, got=1000.0
+  ❌ startTrailAfterProfit: expected=2000.0, got=0.0
+
+============================================================
+PROMPT 10 — sqroffAllLegs, cosider_closed_pnl, requiredMargin  [PASS] [7/7]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ squareoffLegs: True
+  ✅ sqroffAllLegs: True
+  ✅ squareoffRejection: True
+  ✅ cosider_closed_pnl: True
+  ✅ requiredMargin: 150000.0
+  ✅ leg_count: 4
+
+============================================================
+PROMPT 11 — Positional NRML, Pre-Expiry Sqroff, Monthly Expiry  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ isIntraday: False
+  ✅ productType: 'NRML'
+  ✅ is_btst_stbt: False
+  ✅ sqroff_before_expiry_days: 2
+  ✅ sqroffTime: '15:00'
+  ✅ l1.expiry MONTHLY: 'MONTHLY'
+  ✅ l2.expiry MONTHLY: 'MONTHLY'
+  ✅ master target: 10000.0
+  ✅ master sl: 6000.0
+
+============================================================
+PROMPT 12 — Per-Leg Trail SL (market_move, sl_move, count, by)  [PASS] [7/7]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ l1.is_trail_sl: True
+  ✅ l1.trail_sl_market_move: 500.0
+  ✅ l1.trail_sl_move: 200.0
+  ✅ l1.no_of_time_trail_sl: 3
+  ✅ l1.trail_sl_by: 'Money'
+  ✅ l2.is_trail_sl False: False
+
+============================================================
+PROMPT 13 — Per-Leg Re-entry + Re-execute  [PASS] [6/6]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ l1.reentry_on: 'SL Only'
+  ✅ l1.no_of_reentry: 2
+  ✅ l2.reexecute_on: 'TP Only'
+  ✅ l2.no_of_reexecute: 3
+  ✅ l2.reexecute_delay: 5
+
+============================================================
+PROMPT 14 — Dynamic ATM Type (Premium Range Selection)  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ l1.atmType: 'Dynamic'
+  ✅ l1.premiumStartRange: 100.0
+  ✅ l1.premiumEndRange: 180.0
+  ✅ l1.optionType CE: 'CE'
+  ✅ l2.atmType: 'Dynamic'
+  ✅ l2.premiumStartRange: 100.0
+  ✅ l2.premiumEndRange: 180.0
+  ✅ l2.optionType PE: 'PE'
+
+============================================================
+PROMPT 15 — SENSEX on BFO Exchange, Lot Size=20  [FAIL] [11/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'SENSEX'
+  ✅ exchange: 'BFO'
+  ✅ isIntraday: True
+  ✅ l1.symbol: 'SENSEX'
+  ✅ l1.lot: 1
+  ✅ l1.qty: 20
+  ✅ l2.lot: 2
+  ✅ l2.qty: 40
+  ✅ l1.optionType CE: 'CE'
+  ✅ l2.optionType PE: 'PE'
+  ❌ underlying: expected='SENSEX FUT BFO', got='SENSEX OPT BFO'
+
+============================================================
+PROMPT 16 — is_live_mtm_profit_move (int 1) + Trading Cycle  [PASS] [6/6]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_live_mtm_profit_move: 1
+  ✅ isTrailSl: True
+  ✅ noOfIntradayCycle: 3
+  ✅ intraday_cycle_delay: 10
+  ✅ symbol: 'NIFTY'
+
+============================================================
+PROMPT 17 — FUT + OPT Mixed Legs (Covered Call), Different Expiries  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'BANKNIFTY'
+  ✅ leg_count: 3
+  ✅ FUT leg count: 1
+  ✅ OPT leg count: 2
+  ✅ FUT leg tradeSide: 'BUY'
+  ✅ FUT leg optionType empty: ''
+  ✅ FUT leg qty: 30
+  ✅ SELL CE OPT exists: True
+  ✅ BUY PE OPT exists: True
+
+============================================================
+PROMPT 18 — Ratio Spread, Different Lots per Leg  [PASS] [15/15]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'BANKNIFTY'
+  ✅ leg_count: 4
+  ✅ l1 SELL CE: ('SELL', 'CE')
+  ✅ l1.lot=2: 2
+  ✅ l1.qty=60: 60
+  ✅ l2 BUY CE: ('BUY', 'CE')
+  ✅ l2.lot=1: 1
+  ✅ l2.qty=30: 30
+  ✅ l3 SELL PE: ('SELL', 'PE')
+  ✅ l3.lot=2: 2
+  ✅ l3.qty=60: 60
+  ✅ l4 BUY PE: ('BUY', 'PE')
+  ✅ l4.lot=1: 1
+  ✅ l4.qty=30: 30
+
+============================================================
+PROMPT 19 — Required Margin, Descriptions, MIDCPNIFTY lot size  [PASS] [14/14]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'MIDCPNIFTY'
+  ✅ requiredMargin: 200000.0
+  ✅ mon: True
+  ✅ tue: True
+  ✅ wed: True
+  ✅ thu: True
+  ✅ fri: True
+  ✅ sat: False
+  ✅ shortDescription non-empty: 'MIDCPNIFTY short straddle weekly'
+  ✅ longDescription non-empty: 'Automated MIDCPNIFTY short straddle strategy with weekly exp'
+  ✅ shortDescription contains MIDCPNIFTY contains 'MIDCP'
+  ✅ l1.lot=1: 1
+  ✅ l1.qty=75: 75
+
+============================================================
+PROMPT 20 — Maximum Complexity (ALL Parameters Combined)  [PASS] [42/42]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ symbol: 'BANKNIFTY'
+  ✅ exchange: 'NFO'
+  ✅ isIntraday: True
+  ✅ productType: 'MIS'
+  ✅ is_btst_stbt: False
+  ✅ is_range_break_out: False
+  ✅ leg_count: 4
+  ✅ l1.tradeSide SELL: 'SELL'
+  ✅ l1.optionType CE: 'CE'
+  ✅ l1.atmType Dynamic: 'Dynamic'
+  ✅ l1.premiumStartRange: 120.0 > 0
+  ✅ l1.premiumEndRange: 200.0 > 0
+  ✅ l1.is_trail_sl: True
+  ✅ l1.trail_sl_market_move: 600.0 > 0
+  ✅ l1.trail_sl_move: 250.0 > 0
+  ✅ l2.tradeSide SELL: 'SELL'
+  ✅ l2.optionType PE: 'PE'
+  ✅ l2.atmType Dynamic: 'Dynamic'
+  ✅ l2.reexecute count: 2 > 0
+  ✅ l3 BUY CE: ('BUY', 'CE')
+  ✅ l4 BUY PE: ('BUY', 'PE')
+  ✅ isTrailSl: True
+  ✅ profitMove: 2000.0 > 0
+  ✅ slMove: 1000.0 > 0
+  ✅ noOfTrailSL: 4 > 0
+  ✅ enableVixFilter: True
+  ✅ vixStartValue: 13.0 > 0
+  ✅ vixEndValue: 21.0 > 0
+  ✅ mon: True
+  ✅ tue: True
+  ✅ wed: True
+  ✅ thu: True
+  ✅ fri: False
+  ✅ noOfIntradayCycle: 2 > 1
+  ✅ cosider_closed_pnl: True
+  ✅ squareoffLegs: True
+  ✅ sqroffAllLegs: True
+  ✅ requiredMargin: 175000.0 > 0
+  ✅ shortDescription non-empty: 'BNF dynamic premium hedge with trail SL and cycle'
+  ✅ master target: 8000.0
+  ✅ master sl: 5000.0

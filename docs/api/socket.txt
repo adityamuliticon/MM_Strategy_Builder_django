@@ -1,0 +1,127 @@
+first->
+
+header="Request URL
+wss://algosocketserver.marketmaya.com/algo-server?usertype=Client&executionLevel=Level%208&id=48519
+Request Method
+GET
+Status Code
+101 Switching Protocols
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a04b424a0f818afd-BOM
+connection
+upgrade
+date
+Mon, 01 Jun 2026 03:51:16 GMT
+nel
+{"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+report-to
+{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=0UOk2aWuH1vhhdBX2tDcDiSlMn5BCozqSBPfoi4xW4PuC5P%2F8Jpx5p8YkrSxnuGP9JxLCkxn2t%2FaazxiHd3m0IX0GFOjESldMKMxWUZHwdAfOWL64QxUhiOaYAfFgsX5%2FORxVdKg3x5DKZCB0%2BTIgl4%3D"}],"group":"cf-nel","max_age":604800}
+sec-websocket-accept
+I5HL+KXu9c3xwS8MGDeKKh2uVR0=
+server
+cloudflare
+server-timing
+cfL4;desc="?proto=TCP&rtt=25869&min_rtt=25479&rtt_var=10336&sent=7&recv=7&lost=0&retrans=0&sent_bytes=3299&recv_bytes=3413&delivery_rate=151017&cwnd=53&unsent_bytes=0&cid=eef4516e6c729fae&ts=123&x=0"
+speculation-rules
+"/cdn-cgi/speculation"
+upgrade
+websocket
+x-powered-by
+ASP.NET
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+cache-control
+no-cache
+connection
+Upgrade
+host
+algosocketserver.marketmaya.com
+origin
+https://terminal.marketmaya.com
+pragma
+no-cache
+sec-websocket-extensions
+permessage-deflate; client_max_window_bits
+sec-websocket-key
+xaSrV9leLLwHoQfHjf5XXw==
+sec-websocket-version
+13
+upgrade
+websocket
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+"
+
+
+paylod="usertype=Client&executionLevel=Level%208&id=48519"
+
+
+
+
+second->
+
+
+
+header="Request URL
+wss://mifeed1.marketmaya.com/ws
+Request Method
+GET
+Status Code
+101 Switching Protocols
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a04b4244298446f3-BOM
+connection
+upgrade
+date
+Mon, 01 Jun 2026 03:51:15 GMT
+nel
+{"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+report-to
+{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=ZyS0sfFgInBfp730ppe6dGT22%2BCnvBcZIVpaHPC53fz0%2FvF7N4w%2Bte6xq06vVgPusknsBwNX5BawMiwTIDd4TSpkdc4yAtMUkIkj1ujQk6YFR5dTgHYVzl8a6EpiPj8%2FP3BnPOHXS3o%3D"}],"group":"cf-nel","max_age":604800}
+sec-websocket-accept
+0P3iCfX5tflgcMxy9AGsRPdKSWg=
+server
+cloudflare
+server-timing
+cfL4;desc="?proto=TCP&rtt=37178&min_rtt=29609&rtt_var=14071&sent=6&recv=8&lost=0&retrans=0&sent_bytes=3276&recv_bytes=3368&delivery_rate=132861&cwnd=53&unsent_bytes=0&cid=c8d86dc5865574b1&ts=143&x=0"
+speculation-rules
+"/cdn-cgi/speculation"
+upgrade
+websocket
+x-powered-by
+ASP.NET
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+cache-control
+no-cache
+connection
+Upgrade
+host
+mifeed1.marketmaya.com
+origin
+https://terminal.marketmaya.com
+pragma
+no-cache
+sec-websocket-extensions
+permessage-deflate; client_max_window_bits
+sec-websocket-key
+kioMpMK6zfIDx1aqzb+LMA==
+sec-websocket-version
+13
+upgrade
+websocket
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+"

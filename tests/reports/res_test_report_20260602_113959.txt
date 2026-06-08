@@ -1,0 +1,325 @@
+RES Test Run: 2026-06-02T11:39:59.143684
+Results: 20/20 tests passed, 262/262 checks passed
+
+
+============================================================
+TEST 1 – BankNifty FUT BUY Intraday — Core Main Parameters  [PASS] [28/28]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'NFO'
+  ✅ main_segment: 'FUT'
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ main_contract: 'NEAR'
+  ✅ main_expiry: 'MONTHLY'
+  ✅ atm: 0
+  ✅ option_type: ''
+  ✅ lot: 1
+  ✅ qty_type: 'Qty'
+  ✅ qty: 30
+  ✅ is_intraday: True
+  ✅ product_type: 'MIS'
+  ✅ intraday_entry_time: '09:20'
+  ✅ intraday_exit_time: '15:00'
+  ✅ jobbing_side: 'BUY'
+  ✅ average_by: 'Point'
+  ✅ average_value: 100.0
+  ✅ target_by: 'Point'
+  ✅ target: 100.0
+  ✅ maximum_steps: 10
+  ✅ strategy_id: 'YioJhK5IqBULe8fPLMnXaAaC0$aC0$'
+  ✅ order_type: 'Market Order'
+  ✅ allow_update_parameters: True
+  ✅ rebacktest: False
+  ✅ is_add_hedge_leg: False
+  ✅ is_auto_rollover: False
+  ✅ reset_cycle_by_master_tpsl: False
+
+============================================================
+TEST 2 – NIFTY FUT SELL Intraday + Sqroff on Max Steps  [PASS] [14/14]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'NFO'
+  ✅ main_symbol: 'NIFTY'
+  ✅ main_segment: 'FUT'
+  ✅ jobbing_side: 'SELL'
+  ✅ is_intraday: True
+  ✅ product_type: 'MIS'
+  ✅ average_by: 'Point'
+  ✅ average_value: 50.0
+  ✅ target: 50.0
+  ✅ maximum_steps: 5
+  ✅ sqroff_on_maximum_steps: True
+  ✅ maximum_target_steps: 0
+  ✅ qty: 25
+
+============================================================
+TEST 3 – Percentage Average + Percentage Target  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ jobbing_side: 'BUY'
+  ✅ average_by: 'Percentage'
+  ✅ average_value: 1.0
+  ✅ target_by: 'Percentage'
+  ✅ target: 0.5
+  ✅ maximum_steps: 8
+  ✅ is_intraday: True
+
+============================================================
+TEST 4 – USDINR CDS SELL + Multiply Qty Each Step  [PASS] [12/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'CDS'
+  ✅ main_segment: 'FUT'
+  ✅ main_symbol: 'USDINR'
+  ✅ jobbing_side: 'SELL'
+  ✅ average_value: 5.0
+  ✅ maximum_steps: 8
+  ✅ sqroff_on_maximum_steps: True
+  ✅ increase_qty_on_avg: True
+  ✅ increase_qty_type: 'Multiply'
+  ✅ increase_qty: 2.0
+  ✅ is_intraday: True
+
+============================================================
+TEST 5 – MCX SILVER Positional NRML + Target Disabled  [PASS] [14/14]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'MCX'
+  ✅ main_segment: 'FUT'
+  ✅ main_symbol: 'SILVER'
+  ✅ main_contract: 'NEAR'
+  ✅ main_expiry: 'MONTHLY'
+  ✅ jobbing_side: 'BUY'
+  ✅ is_intraday: False
+  ✅ product_type: 'NRML'
+  ✅ average_by: 'Point'
+  ✅ average_value: 100.0
+  ✅ target: 0.0
+  ✅ maximum_steps: 15
+  ✅ is_auto_rollover: False
+
+============================================================
+TEST 6 – Master SL Only (no Master Target)  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ reset_cycle_by_master_tpsl: True
+  ✅ master_sl_money: 50000.0
+  ✅ master_tp_money: 0.0
+  ✅ is_trail_sl: False
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+  ✅ is_intraday: True
+
+============================================================
+TEST 7 – Master TP + Master SL + Trail SL (profit_move/sl_move/count)  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ reset_cycle_by_master_tpsl: True
+  ✅ master_tp_money: 10000.0
+  ✅ master_sl_money: 50000.0
+  ✅ is_trail_sl: True
+  ✅ profit_move: 5000.0
+  ✅ sl_move: 2000.0
+  ✅ no_of_trail_sl: 3
+  ✅ average_value: 100.0
+  ✅ is_intraday: True
+
+============================================================
+TEST 8 – Increase Qty by Addition (Increase type)  [PASS] [8/8]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ increase_qty_on_avg: True
+  ✅ increase_qty_type: 'Increase'
+  ✅ increase_qty: 1.0
+  ✅ lot: 1
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+
+============================================================
+TEST 9 – Positional + Auto Rollover (days + time)  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ is_intraday: False
+  ✅ product_type: 'NRML'
+  ✅ is_auto_rollover: True
+  ✅ rollover_before_days: 1
+  ✅ rollover_time contains '14:29'
+  ✅ average_value: 200.0
+  ✅ maximum_steps: 20
+  ✅ main_symbol: 'BANKNIFTY'
+
+============================================================
+TEST 10 – Add Hedge Leg (NIFTY FUT BUY)  [PASS] [13/13]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ is_add_hedge_leg: True
+  ✅ hedge_leg_count: True
+  ✅ hedge.symbol: 'NIFTY'
+  ✅ hedge.segment: 'FUT'
+  ✅ hedge.exchange: 'NFO'
+  ✅ hedge.trade_side: 'BUY'
+  ✅ hedge.lot: 1
+  ✅ hedge.qty: 0
+  ✅ hedge.target: 0
+  ✅ hedge.sl: 0
+  ✅ average_value: 100.0
+
+============================================================
+TEST 11 – Opening Qty (different qty for first step)  [PASS] [7/7]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ scalping_opening_qty: 3
+  ✅ lot: 1
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+  ✅ is_intraday: True
+
+============================================================
+TEST 12 – OPT Segment CE ATM Weekly  [PASS] [12/12]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'NFO'
+  ✅ main_segment: 'OPT'
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ main_expiry: 'WEEKLY'
+  ✅ option_type: 'CE'
+  ✅ atm: 0
+  ✅ jobbing_side: 'BUY'
+  ✅ average_value: 5.0
+  ✅ target: 5.0
+  ✅ maximum_steps: 10
+  ✅ is_intraday: True
+
+============================================================
+TEST 13 – Jobbing Start Price + Jobbing End Price  [PASS] [7/7]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ jobbing_start_price: 48000.0
+  ✅ jobbing_end_price: 45000.0
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+  ✅ is_intraday: True
+
+============================================================
+TEST 14 – Reset Cycle After Steps on Positive MTM  [PASS] [6/6]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ reset_cycle_on_positive_mtm: 4
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+  ✅ is_intraday: True
+
+============================================================
+TEST 15 – Calculate Qty on Market Jump  [PASS] [7/7]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ calculate_qty_on_market_jump: True
+  ✅ is_intraday: False
+  ✅ product_type: 'NRML'
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+
+============================================================
+TEST 16 – NSE Stock Segment + Required Margin  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'NSE'
+  ✅ main_segment: 'Stock'
+  ✅ main_symbol: 'RELIANCE'
+  ✅ jobbing_side: 'BUY'
+  ✅ is_intraday: False
+  ✅ product_type: 'NRML'
+  ✅ average_value: 10.0
+  ✅ maximum_steps: 20
+  ✅ required_margin: 500000.0
+
+============================================================
+TEST 17 – Max Target Steps + Custom Entry/Exit Time  [PASS] [9/9]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ jobbing_side: 'SELL'
+  ✅ maximum_steps: 15
+  ✅ maximum_target_steps: 5
+  ✅ intraday_entry_time: '09:15'
+  ✅ intraday_exit_time: '14:30'
+  ✅ average_value: 100.0
+  ✅ is_intraday: True
+
+============================================================
+TEST 18 – Exit Order Product Type + Required Margin + Descriptions  [PASS] [10/10]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ product_type: 'MIS'
+  ✅ exit_order_product_type: 'NRML'
+  ✅ required_margin: 150000.0
+  ✅ is_intraday: True
+  ✅ average_value: 100.0
+  ✅ maximum_steps: 10
+  ✅ short_description is non-empty: 'BANKNIFTY intraday BUY scalper'
+  ✅ long_description is non-empty: 'Averaging down on BankNifty futures with 100-point step inte'
+
+============================================================
+TEST 19 – Positional + Rollover + Market Jump + Master SL Combo  [PASS] [13/13]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ is_intraday: False
+  ✅ product_type: 'NRML'
+  ✅ is_auto_rollover: True
+  ✅ rollover_before_days: 2
+  ✅ rollover_time contains '14:00'
+  ✅ calculate_qty_on_market_jump: True
+  ✅ reset_cycle_by_master_tpsl: True
+  ✅ master_sl_money: 100000.0
+  ✅ is_trail_sl: False
+  ✅ average_value: 200.0
+  ✅ maximum_steps: 20
+
+============================================================
+TEST 20 – MAXIMUM COMPLEXITY (All Parameters Combined)  [PASS] [55/55]
+  ✅ Market Maya deployment: HTTP 200 SUCCESS
+  ✅ main_exchange: 'NFO'
+  ✅ main_segment: 'FUT'
+  ✅ main_symbol: 'BANKNIFTY'
+  ✅ main_contract: 'NEAR'
+  ✅ main_expiry: 'MONTHLY'
+  ✅ is_intraday: False
+  ✅ product_type: 'NRML'
+  ✅ exit_order_product_type: 'NRML'
+  ✅ intraday_entry_time: '09:15'
+  ✅ intraday_exit_time: '14:30'
+  ✅ jobbing_side: 'BUY'
+  ✅ average_by: 'Point'
+  ✅ average_value: 200.0
+  ✅ target_by: 'Point'
+  ✅ target: 200.0
+  ✅ maximum_steps: 20
+  ✅ maximum_target_steps: 8
+  ✅ sqroff_on_maximum_steps: True
+  ✅ lot: 1
+  ✅ scalping_opening_qty: 2
+  ✅ increase_qty_on_avg: True
+  ✅ increase_qty_type: 'Multiply'
+  ✅ increase_qty: 2.0
+  ✅ jobbing_start_price: 49000.0
+  ✅ jobbing_end_price: 45000.0
+  ✅ reset_cycle_on_positive_mtm: 5
+  ✅ calculate_qty_on_market_jump: True
+  ✅ required_margin: 500000.0
+  ✅ reset_cycle_by_master_tpsl: True
+  ✅ master_tp_money: 50000.0
+  ✅ master_sl_money: 100000.0
+  ✅ is_trail_sl: True
+  ✅ profit_move: 20000.0
+  ✅ sl_move: 10000.0
+  ✅ no_of_trail_sl: 5
+  ✅ is_auto_rollover: True
+  ✅ rollover_before_days: 2
+  ✅ rollover_time contains '14:00'
+  ✅ is_add_hedge_leg: True
+  ✅ hedge_leg_count: True
+  ✅ hedge.symbol: 'NIFTY'
+  ✅ hedge.segment: 'FUT'
+  ✅ hedge.trade_side: 'BUY'
+  ✅ hedge.lot: 1
+  ✅ hedge.qty: 0
+  ✅ hedge.target: 0
+  ✅ hedge.sl: 0
+  ✅ strategy_id: 'YioJhK5IqBULe8fPLMnXaAaC0$aC0$'
+  ✅ order_type: 'Market Order'
+  ✅ allow_update_parameters: True
+  ✅ rebacktest: False
+  ✅ effect_all_sub_strategies: False
+  ✅ short_description is non-empty: 'Full-complexity BankNifty positional BUY scalper with all ad'
+  ✅ long_description is non-empty: 'Maximum parameter BankNifty RES strategy combining positiona'

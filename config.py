@@ -21,6 +21,12 @@ class Config:
     MODIFY_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy"
     RENAME_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/updateStrategyName"
     GET_BALANCE_URL = "https://api.marketmaya.com/api/client/v2/getPointBalance"
+    CREATE_SCALPING_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/createScalpingStrategy"
+    CREATE_MULTI_LEG_HEDGER_URL = "https://api.marketmaya.com/api/mainStrategy/CreateMultiLegCallPutStrategy"
+
+    # Deploy
+    GET_CHARGES_URL = "https://api.marketmaya.com/api/transaction/getCharges"
+    DEPLOY_STRATEGY_URL = "https://webapi.marketmaya.com/api/mainStrategy/deploy"
 
     # Backtest (ISE only)
     BACKTEST_OPTIONS_URL = "https://api.marketmaya.com/api/subscription/getBacktestOptions"

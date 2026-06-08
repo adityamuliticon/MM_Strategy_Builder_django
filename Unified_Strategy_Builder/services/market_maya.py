@@ -8,7 +8,7 @@ class MarketMayaService:
         if self.token and not self.token.startswith("Bearer "):
             self.token = f"Bearer {self.token}"
 
-    def deploy_strategy(self, payload):
+    def save_strategy(self, payload):
         """
         Deploys a strategy to Market Maya. Logs payload + API response together AFTER the call.
         """
@@ -50,7 +50,7 @@ class MarketMayaService:
 
         # Log payload + actual API result together AFTER the call
         try:
-            with open("logs/deployed_strategies.log", "a") as f:
+            with open("logs/saved_strategies.log", "a") as f:
                 log_entry = {
                     "timestamp": datetime.now().isoformat(),
                     "strategy_name": payload.get("strategyName", "Unknown"),

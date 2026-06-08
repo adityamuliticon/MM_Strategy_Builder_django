@@ -16,6 +16,8 @@ INSTALLED_APPS = [
     'Unified_Strategy_Builder',
     'indicator_engine',
     'inbound_signal_bridge',
+    'rapid_execution_scalper',
+    'multi_leg_hedger',
     'chat_logs',
 ]
 

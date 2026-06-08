@@ -107,13 +107,13 @@ STRICT TWO-STEP WORKFLOW:
       * **CRITICAL**: OMIT the `"trading_days"` field entirely when the user does NOT explicitly mention specific trading days. NEVER generate `"trading_days": ["Mon","Tue","Wed","Thu","Fri"]` as a default — omitting it is correct and means "trade every day". Only include it when the user says "only on Monday and Wednesday" or similar explicit day restrictions.
    - **MASTER TARGET / SL ACTION — MANDATORY**: The `action_on_master_target` and `action_on_master_sl` fields always use `"Reexecute"` (only allowed value). When user specifies reexecution on master target/SL, set both the count and delay fields along with the action field.
    - **BOOLEAN FLAGS ARE INDEPENDENT**: `sqroff_all_legs`, `sqroff_on_rejection`, `enable_tp_sl_on_pause` are each independent boolean flags. When the user explicitly enables any of these, you MUST set it to `true` in the JSON. NEVER drop a boolean flag just because the prompt is complex or many other fields are also being set.
-   - DO NOT call `create_and_deploy_strategy` yet. Ask: "Shall I proceed?"
+   - DO NOT call `create_and_save_strategy` yet. Ask: "Shall I proceed to save?"
 
-2. EXECUTION: ONLY after user approval, call `create_and_deploy_strategy`.
+2. EXECUTION: ONLY after explicit user approval like "yes", "ok", "save it", "proceed" — call `create_and_save_strategy`.
 
 STRICT JSON SCHEMA:
 {
-  "tool": "create_and_deploy_strategy",
+  "tool": "create_and_save_strategy",
   "arguments": {
     "strategy_json": {
         "strategyName": "<string>",
@@ -309,20 +309,98 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
     }
   ]
 }
+
+═══════════════════════════════════════════════════════════
+DEPLOY TOOLS
+═══════════════════════════════════════════════════════════
+
+get_deploy_options — Fetch point balance + per-order charges before deploying.
+    Use when user says: "deploy [strategy]", "start [strategy]", "activate [strategy]",
+    "go live with [strategy]", "paper trade [strategy]", "how much does deploy cost".
+    JSON:
+    {"tool": "get_deploy_options", "arguments": {"strategy_name": "<name>"}}
+
+deploy_strategy — Deploy strategy to Live or Paper trading on Market Maya.
+    Use ONLY after user confirms trading mode from get_deploy_options.
+    JSON:
+    {"tool": "deploy_strategy", "arguments": {
+      "strategy_name": "<name>",
+      "trading_mode": "Live",
+      "qty_multiply": 1,
+      "entry_execution_type": "PSUEDO",
+      "entry_psuedo_value": 0,
+      "entry_psuedo_type": "Auto",
+      "entry_wait_seconds": 30,
+      "entry_no_of_try": 2,
+      "entry_market_order_after_retry": false,
+      "exit_execution_type": "PSUEDO",
+      "exit_psuedo_value": 0,
+      "exit_psuedo_type": "Auto",
+      "exit_wait_seconds": 30,
+      "exit_no_of_try": 2,
+      "exit_market_order_after_retry": false
+    }}
+    trading_mode: "Live" (default) or "Paper"
+    qty_multiply: quantity multiplier (default 1)
+    All entry/exit fields default to PSUEDO execution — only change if user asks.
+
+DEPLOY WORKFLOW (2 steps):
+STEP 1: User requests deploy → call get_deploy_options → show this table:
+
+| Field | Value |
+|-------|-------|
+| Strategy | <strategy_name> |
+| Point Balance | <point_balance> pts |
+| Live Trading Charge | <live_trade_charge_per_order> pt per order |
+| Paper Trading Charge | <paper_trade_charge_per_order> pt per order |
+
+Then show: "**Disclaimer**: Market Maya charges per order on live execution."
+Ask: "Which trading mode would you like? **Live Trading** or **Paper Trading**? (Multiplier: 1 by default)"
+
+STEP 2: After user confirms → call deploy_strategy with trading_mode and qty_multiply.
+
+DISPLAYING deploy_strategy RESULT:
+On success show:
+| Field | Value |
+|-------|-------|
+| Strategy | <strategy_name> |
+| Deployment ID | <deployment_id> |
+| Trading Mode | <trading_mode> |
+| Updated Balance | <updated_point_balance> pts |
+
+On error: show the error message clearly. Common errors:
+- "already deployed" → tell user strategy is already running live/paper
+- "insufficient balance" → tell user to top up their point balance
 """
 
     def process_message(self, user_message, history=None):
         if history is None:
             history = []
-            
+
+        # Detect confirmation messages to force save tool call
+        _confirm_words = {'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok', 'sure', 'approve', 'approved', 'continue', 'do it', 'submit'}
+        _is_confirm = bool(history) and any(w in user_message.lower() for w in _confirm_words)
+
         # Get context from RAG
         context = retriever.get_context(user_message)
-        
+
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "system", "content": f"Relevant Documentation Context:\n{context}"}
         ] + history + [{"role": "user", "content": user_message}]
-        
+
+        # Augment confirmation messages with explicit save instruction
+        if _is_confirm:
+            messages[-1] = {
+                "role": "user",
+                "content": (
+                    user_message +
+                    "\n\n[SAVE NOW: Output ONLY a JSON block calling create_and_save_strategy. "
+                    "Use ALL field values from the preview tables above. "
+                    "Format exactly: {\"tool\": \"create_and_save_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+                )
+            }
+
         # Loop for multi-step tool calls
         max_turns = 10
         executed_tools = set()
@@ -386,13 +464,13 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                     tool_name = data["tool"]
                                     args = data["arguments"]
                                 else:
-                                    # Handle direct format like {"create_and_deploy_strategy": {...}}
-                                    for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
+                                    # Handle direct format like {"create_and_save_strategy": {...}}
+                                    for key in ["create_and_save_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance", "get_deploy_options", "deploy_strategy"]:
                                         if key in data:
                                             tool_name = key
                                             val = data[key]
                                             # Ensure args is wrapped in strategy_json if the tool expects it
-                                            if tool_name in ["create_and_deploy_strategy", "validate_strategy"]:
+                                            if tool_name in ["create_and_save_strategy", "validate_strategy"]:
                                                 if "strategy_json" in val: args = val
                                                 else: args = {"strategy_json": val}
                                             else:
@@ -420,10 +498,10 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 tool_called = True
                                 
                                 # CRITICAL: If deployment succeeded, stop the loop to prevent double-execution
-                                if tool_name == "create_and_deploy_strategy" and tool_result.get("status") == "success":
+                                if tool_name == "create_and_save_strategy" and tool_result.get("status") == "success":
                                     clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
                                     if not clean_summary: clean_summary = content
-                                    return {"message": clean_summary + "\n\n**Strategy Deployed Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
+                                    return {"message": clean_summary + "\n\n**Strategy Saved Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
                                     
                                 break 
                         except Exception as e:
@@ -443,7 +521,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
             return {"message": ui_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
         
         # If we hit the limit, try to get a final summary from the AI
-        messages.append({"role": "user", "content": "You have done enough research. Please provide the final strategy summary and ask for deployment confirmation now."})
+        messages.append({"role": "user", "content": "You have done enough research. Please provide the final strategy summary and ask for save confirmation now."})
         try:
             final_attempt = self.client.chat.completions.create(
                 model=self.model,
@@ -462,11 +540,27 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
         if history is None:
             history = []
 
+        # Detect confirmation messages to force save tool call
+        _confirm_words = {'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok', 'sure', 'approve', 'approved', 'continue', 'do it', 'submit'}
+        _is_confirm = bool(history) and any(w in user_message.lower() for w in _confirm_words)
+
         context = retriever.get_context(user_message)
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "system", "content": f"Relevant Documentation Context:\n{context}"}
         ] + history + [{"role": "user", "content": user_message}]
+
+        # Augment confirmation messages with explicit save instruction
+        if _is_confirm:
+            messages[-1] = {
+                "role": "user",
+                "content": (
+                    user_message +
+                    "\n\n[SAVE NOW: Output ONLY a JSON block calling create_and_save_strategy. "
+                    "Use ALL field values from the preview tables above. "
+                    "Format exactly: {\"tool\": \"create_and_save_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+                )
+            }
 
         max_turns = 10
         executed_tools = set()
@@ -580,11 +674,11 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 tool_name = data["tool"]
                                 args = data["arguments"]
                             else:
-                                for key in ["create_and_deploy_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
+                                for key in ["create_and_save_strategy", "validate_strategy", "get_validation_rules", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
                                     if key in data:
                                         tool_name = key
                                         val = data[key]
-                                        if tool_name in ["create_and_deploy_strategy", "validate_strategy"]:
+                                        if tool_name in ["create_and_save_strategy", "validate_strategy"]:
                                             args = val if "strategy_json" in val else {"strategy_json": val}
                                         else:
                                             args = val
@@ -598,13 +692,15 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                             executed_tools.add(tool_key)
 
                             _status_msgs = {
-                                "create_and_deploy_strategy": "Deploying strategy to Market Maya...",
+                                "create_and_save_strategy": "Saving strategy to Market Maya...",
                                 "get_my_strategies": "Fetching your strategies...",
                                 "delete_strategy": "Deleting strategy...",
                                 "get_strategy_record": "Fetching strategy record...",
                                 "modify_strategy": "Saving changes...",
                                 "rename_strategy": "Renaming strategy...",
                                 "get_balance": "Fetching balance...",
+                                "get_deploy_options": "Fetching deploy options...",
+                                "deploy_strategy": "Deploying strategy to Market Maya...",
                             }
                             yield {"t": "status", "v": _status_msgs.get(tool_name, "Processing...")}
                             tool_result = handler.handle_tool_call(tool_name, args)
@@ -613,8 +709,8 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                             messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
                             tool_called = True
 
-                            if tool_name == "create_and_deploy_strategy" and tool_result.get("status") == "success":
-                                yield {"t": "chunk", "v": "\n\n**Strategy Deployed Successfully.**"}
+                            if tool_name == "create_and_save_strategy" and tool_result.get("status") == "success":
+                                yield {"t": "chunk", "v": "\n\n**Strategy Saved Successfully.**"}
                                 yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
                                 return
                             break

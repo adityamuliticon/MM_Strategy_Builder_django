@@ -1,0 +1,117 @@
+header="Request URL
+https://api.marketmaya.com/api/mainStrategy/createScalpingStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0539710ee978a26-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Tue, 02 Jun 2026 04:07:15 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=XHkyUi8%2BBDfPynaNRkum0ro48onY7gehNOOp1Bbj47n3d5HfIjmlkLRYT9AclIWEUwhYmbfk25QC0hAr%2BRJLFJMDB9ozxyYgeLrzzvAVFOX6j8iIDzBq6biIGJVVZ37tJmSULg%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/createScalpingStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODA0MjQ5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMTkxLjE5MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiMWNjZjFkOTgtMDY3YS00NjkxLTg0NTgtOTkwMzZmMzBiNTU4IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc4MDM3MDY2OCwibmJmIjoxNzgwMzcwNjY4fQ.J_0Ba-KJv9GtbRtBs2aVKSgjifl3IbRYPTqUf4JwjnsC28VMsU6FLHNLR06CZER1ZTu7XkDDPMGzJpCJ574qZQ
+content-length
+1714
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+
+paylode="{"id":"","strategy_name":"aditya1233","short_description":"","long_description":"","strategy_id":"YioJhK5IqBULe8fPLMnXaAaC0$aC0$","mix_name":"360ONE OPT NEAR WEEKLY 0 CE","main_exchange":"NFO","main_segment":"OPT","main_symbol":"360ONE","main_contract":"NEAR","main_expiry":"WEEKLY","product_type":"MIS","exit_order_product_type":"NRML","qty_type":"Qty","qty":500,"lot":1,"atm":0,"strike_price":0,"option_type":"CE","intraday_entry_time":"09:15","intraday_exit_time":"15:29","is_intraday":true,"jobbing_side":"BUY","jobbing_start_price":10,"jobbing_end_price":19,"average_by":"Point","average_value":100,"target_by":"Point","target":0,"intraday_target":200,"maximum_steps":50,"maximum_target_steps":20,"sqroff_on_maximum_steps":true,"calculate_qty_on_market_jump":true,"allow_update_parameters":true,"order_type":"Market Order","no_of_limit_order_retry":0,"retry_at_every_seconds":0,"market_order_after_retry":false,"reset_cycle_by_master_tpsl":true,"rollover_before_days":1,"is_auto_rollover":true,"is_add_hedge_leg":true,"rollover_time":"14:29","master_tp_money":10,"master_sl_money":100,"reset_cycle_on_positive_mtm":4,"required_margin":1000,"is_trail_sl":true,"profit_move":10,"sl_move":100,"no_of_trail_sl":89,"scalping_opening_qty":1,"increase_qty_on_avg":true,"increase_qty":1,"increase_qty_type":"Increase","rebacktest":false,"sub":[{"call_type":"BUY","exchange":"NFO","segment":"FUT","symbol":"BANKNIFTY","contract":"NEAR","expiry":"MONTHLY","atm":0,"option_type":"","qty":0,"lot":1,"trade_side":"BUY","target":0,"target_by":"Money","sl":0,"sl_by":"Money","trail_sl_market_move":0,"trail_sl_move":0,"no_of_time_trail_sl":0,"is_trail_sl":false,"is_reverse_signal":false}],"effect_all_sub_strategies":false}"
+
+
+preview="[{client_id: 48519, is_deployed: false, id: 447775, execution_level: "Level 8"}]
+0
+: 
+{client_id: 48519, is_deployed: false, id: 447775, execution_level: "Level 8"}
+client_id
+: 
+48519
+execution_level
+: 
+"Level 8"
+id
+: 
+447775
+is_deployed
+: 
+false"
+
+
+response="[
+    {
+        "client_id": 48519,
+        "is_deployed": false,
+        "id": 447775,
+        "execution_level": "Level 8"
+    }
+]"
