@@ -33,11 +33,11 @@ STRICT TWO-STEP WORKFLOW
 
 STEP 1 — PREVIEW (ALWAYS FIRST):
 Show the complete strategy as 4 Markdown tables (Main, Symbols, Advance, Description).
-End with: "Shall I proceed to deploy?"
-DO NOT call create_and_deploy_isb_strategy yet.
+End with: "Shall I proceed to save?"
+DO NOT call create_and_save_isb_strategy yet.
 
-STEP 2 — DEPLOY (ONLY after explicit user approval):
-Call create_and_deploy_isb_strategy with the full strategy_json.
+STEP 2 — SAVE (ONLY after explicit user approval):
+Call create_and_save_isb_strategy with the full strategy_json.
 
 ═══════════════════════════════════════════════════════════
 MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
@@ -179,7 +179,7 @@ STRICT JSON SCHEMA — CALL EXACTLY AS SHOWN
 ═══════════════════════════════════════════════════════════
 
 {
-  "tool": "create_and_deploy_isb_strategy",
+  "tool": "create_and_save_isb_strategy",
   "arguments": {
     "strategy_json": {
       "strategyName": "<Name_NNNN>",
@@ -433,7 +433,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                     tool_name = data["tool"]
                                     args = data["arguments"]
                                 else:
-                                    for key in ["create_and_deploy_isb_strategy",
+                                    for key in ["create_and_save_isb_strategy",
                                                 "isb_validate_strategy",
                                                 "isb_generate_payload",
                                                 "get_my_strategies",
@@ -445,7 +445,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                         if key in data:
                                             tool_name = key
                                             val = data[key]
-                                            if key in ("create_and_deploy_isb_strategy", "isb_validate_strategy", "isb_generate_payload"):
+                                            if key in ("create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"):
                                                 if "strategy_json" in val:
                                                     args = val
                                                 else:
@@ -473,11 +473,11 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 })
                                 tool_called = True
 
-                                if tool_name == "create_and_deploy_isb_strategy" and tool_result.get("status") == "success":
+                                if tool_name == "create_and_save_isb_strategy" and tool_result.get("status") == "success":
                                     clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
                                     if not clean_summary:
                                         clean_summary = content
-                                    return {"message": clean_summary + "\n\n**Strategy Deployed Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
+                                    return {"message": clean_summary + "\n\n**Strategy Saved Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
 
                                 break
                         except Exception as e:
@@ -497,7 +497,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
 
         messages.append({
             "role": "user",
-            "content": "Summarise the strategy and ask for deployment confirmation now."
+            "content": "Summarise the strategy and ask for save confirmation now."
         })
         try:
             final = self.client.chat.completions.create(model=self.model, messages=messages)
@@ -631,11 +631,11 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                                 tool_name = data["tool"]
                                 args = data["arguments"]
                             else:
-                                for key in ["create_and_deploy_isb_strategy", "isb_validate_strategy", "isb_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
+                                for key in ["create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
                                     if key in data:
                                         tool_name = key
                                         val = data[key]
-                                        if key in ("create_and_deploy_isb_strategy", "isb_validate_strategy", "isb_generate_payload"):
+                                        if key in ("create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"):
                                             if "strategy_json" in val:
                                                 args = val
                                             else:
@@ -652,7 +652,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                             executed_tools.add(tool_key)
 
                             _status_msgs = {
-                                "create_and_deploy_isb_strategy": "Deploying strategy to Market Maya...",
+                                "create_and_save_isb_strategy": "Saving strategy to Market Maya...",
                                 "get_my_strategies": "Fetching your strategies...",
                                 "delete_strategy": "Deleting strategy...",
                                 "get_strategy_record": "Fetching strategy record...",
@@ -667,8 +667,8 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
                             messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
                             tool_called = True
 
-                            if tool_name == "create_and_deploy_isb_strategy" and tool_result.get("status") == "success":
-                                yield {"t": "chunk", "v": "\n\n**Strategy Deployed Successfully.**"}
+                            if tool_name == "create_and_save_isb_strategy" and tool_result.get("status") == "success":
+                                yield {"t": "chunk", "v": "\n\n**Strategy Saved Successfully.**"}
                                 yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
                                 return
                             break

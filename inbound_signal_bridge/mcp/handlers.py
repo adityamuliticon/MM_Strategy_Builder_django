@@ -3,7 +3,7 @@ from inbound_signal_bridge.mcp.tools import (
     isb_validate_strategy,
     isb_generate_payload,
     isb_deploy,
-    create_and_deploy_isb_strategy,
+    create_and_save_isb_strategy,
     get_my_strategies,
     delete_strategy,
     get_strategy_record,
@@ -19,11 +19,11 @@ class ISBToolHandler:
             if tool_name == "isb_get_validation_rules":
                 return isb_get_validation_rules(arguments.get("parameter_name", ""))
             elif tool_name in ("isb_validate_strategy", "isb_generate_payload",
-                               "create_and_deploy_isb_strategy"):
+                               "create_and_save_isb_strategy"):
                 fn = {
                     "isb_validate_strategy": isb_validate_strategy,
                     "isb_generate_payload": isb_generate_payload,
-                    "create_and_deploy_isb_strategy": create_and_deploy_isb_strategy,
+                    "create_and_save_isb_strategy": create_and_save_isb_strategy,
                 }[tool_name]
                 return fn(arguments.get("strategy_json", arguments))
             elif tool_name == "isb_deploy":
