@@ -74,7 +74,19 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    transition: background-color 0.3s ease, border-right-color 0.3s ease;
+    color: var(--text-main);
+    transition: background-color 0.3s ease, border-right-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    transition: color 0.3s ease;
+}
+
+.light-theme .sidebar h2 {
+    color: var(--text-main);
 }
 
 /* Sidebar links adapting nicely */
@@ -127,11 +139,59 @@ body {
     transition: background 0.3s ease;
 }
 
+/* Balance Widget */
+.balance-widget {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(0, 242, 255, 0.05);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.balance-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.balance-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary-glow);
+    font-variant-numeric: tabular-nums;
+}
+
+.balance-unit {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.balance-widget.loading .balance-value {
+    opacity: 0.4;
+}
+
+.light-theme .balance-widget {
+    background: rgba(14, 165, 233, 0.04);
+    border-color: rgba(14, 165, 233, 0.2);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 /* Theme Toggle Button styling */
 .theme-btn {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted) !important;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-main) !important;
     cursor: pointer;
     width: 38px;
     height: 38px;
@@ -147,7 +207,7 @@ body {
 .theme-btn svg {
     width: 20px !important;
     height: 20px !important;
-    stroke: var(--text-muted) !important;
+    stroke: var(--text-main) !important;
     fill: none;
     transition: stroke 0.3s ease, transform 0.5s ease;
 }
@@ -162,6 +222,11 @@ body {
 
 .theme-btn:hover svg {
     stroke: var(--primary-glow) !important;
+}
+
+.light-theme .theme-btn {
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.2);
 }
 
 /* Hide sun in dark theme, hide moon in light theme */
@@ -376,7 +441,7 @@ input:disabled {
 }
 
 .sidebar-btn {
-    display: flex;
+    display: flex !important;
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
@@ -435,5 +500,202 @@ input:disabled {
 
 .sidebar-btn:hover .btn-icon {
     transform: scale(1.1);
+}
+
+.sidebar-btn .btn-text {
+    flex: 1;
+}
+
+.strategy-count {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--primary-glow);
+    background: rgba(0, 242, 255, 0.08);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    border-radius: 10px;
+    padding: 1px 7px;
+    min-width: 26px;
+    text-align: center;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+
+.sidebar-btn.active .strategy-count {
+    background: rgba(0, 242, 255, 0.15);
+    border-color: var(--primary-glow);
+}
+
+.sidebar-btn:hover .strategy-count {
+    background: rgba(0, 242, 255, 0.12);
+    border-color: var(--primary-glow);
+}
+
+.light-theme .strategy-count {
+    color: var(--primary-glow);
+    background: rgba(14, 165, 233, 0.06);
+    border-color: rgba(14, 165, 233, 0.25);
+}
+
+.light-theme .sidebar-btn.active .strategy-count {
+    background: rgba(14, 165, 233, 0.12);
+    border-color: var(--primary-glow);
+}
+
+/* ======================================================
+   UI Improvements — v17
+   ====================================================== */
+
+/* Sidebar brand: gradient logo */
+.sidebar h2 {
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    background: var(--gradient-title);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: none;
+}
+
+/* Subtle diamond mark before logo */
+.sidebar h2::before {
+    content: '◆ ';
+    font-size: 0.65em;
+    background: var(--gradient-title);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Status dot with pulse animation */
+@keyframes status-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55); }
+    70%  { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);  }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);    }
+}
+
+.status-dot {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    background: var(--success) !important;
+    animation: status-pulse 2.5s ease-out infinite;
+    flex-shrink: 0;
+}
+
+/* Input area focus glow */
+.input-area:focus-within {
+    border-color: rgba(0, 242, 255, 0.45);
+    box-shadow: 0 0 0 3px rgba(0, 242, 255, 0.07), var(--shadow-premium);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.light-theme .input-area:focus-within {
+    border-color: rgba(14, 165, 233, 0.45);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.07), var(--shadow-premium);
+}
+
+/* AI message: left accent border */
+.ai-message {
+    border-left: 3px solid var(--primary-glow) !important;
+    max-width: 85%;
+}
+
+/* User message: subtle gradient instead of flat blue */
+.user-message {
+    background: linear-gradient(135deg, #0055dd 0%, #0099ff 100%) !important;
+    max-width: 78%;
+}
+
+/* Thinking indicator: shimmer pulse */
+@keyframes thinking-shimmer {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 1;    }
+}
+
+.thinking-msg {
+    font-style: normal !important;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--primary-glow) !important;
+    animation: thinking-shimmer 1.4s ease-in-out infinite;
+    letter-spacing: 0.01em;
+}
+
+/* Session badge: monospace chip */
+.session-badge {
+    display: inline-block;
+    font-size: 0.71rem;
+    color: var(--text-muted);
+    background: rgba(0, 242, 255, 0.04);
+    border: 1px solid rgba(0, 242, 255, 0.14);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+    letter-spacing: 0.06em;
+    transition: all 0.3s ease;
+}
+
+.light-theme .session-badge {
+    background: rgba(14, 165, 233, 0.04);
+    border-color: rgba(14, 165, 233, 0.18);
+}
+
+/* Chat container: subtle ambient gradients */
+.chat-container {
+    background:
+        radial-gradient(ellipse at 15% 60%, rgba(0, 242, 255, 0.025) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 10%, rgba(0, 80, 255, 0.02) 0%, transparent 50%);
+}
+
+/* Code blocks inside messages */
+.message pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    margin: 10px 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.message pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+/* Blockquote in messages */
+.message blockquote {
+    border-left: 3px solid var(--primary-glow);
+    padding: 4px 0 4px 12px;
+    margin: 8px 0;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Balance value: flash on update */
+@keyframes balance-flash {
+    0%   { color: var(--primary-glow); transform: scale(1); }
+    30%  { color: #00ff99;             transform: scale(1.1); }
+    100% { color: var(--primary-glow); transform: scale(1); }
+}
+
+.balance-value.updated {
+    animation: balance-flash 0.5s ease-out;
+}
+
+/* Send button: gradient + dark text for contrast on cyan */
+#send-btn {
+    background: linear-gradient(135deg, #00d4ee 0%, #0066ff 100%);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) #send-btn:hover {
+    box-shadow: 0 0 22px rgba(0, 212, 238, 0.45);
 }
 

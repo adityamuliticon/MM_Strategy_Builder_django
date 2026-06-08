@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | Multi-Leg Hedger</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=17">
+    <script src="{% static 'js/theme.js' %}?v=15"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Market Maya</h2>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">Switch Strategy</h3>
+            <div class="sidebar-nav">
+                <a href="/" class="sidebar-btn">
+                    <span class="btn-text">Unified Builder</span>
+                    <span class="strategy-count" id="count-usb">—</span>
+                </a>
+                <a href="/indicator/" class="sidebar-btn">
+                    <span class="btn-text">Indicator Engine</span>
+                    <span class="strategy-count" id="count-ise">—</span>
+                </a>
+                <a href="/hedger/" class="sidebar-btn active">
+                    <span class="btn-text">Multi-Leg Hedger</span>
+                    <span class="strategy-count" id="count-mlh">—</span>
+                </a>
+                <a href="/bridge/" class="sidebar-btn">
+                    <span class="btn-text">Signal Bridge</span>
+                    <span class="strategy-count" id="count-isb">—</span>
+                </a>
+                <a href="/scalper/" class="sidebar-btn">
+                    <span class="btn-text">RES Scalper</span>
+                    <span class="strategy-count" id="count-res">—</span>
+                </a>
+                <a href="/logs/" class="sidebar-btn">
+                    <span class="btn-text">Chat Logs</span>
+                    <span class="btn-icon">📋</span>
+                </a>
+            </div>
+        </div>
+        <div style="margin-top: 40px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-muted);">Status</h3>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <div class="status-dot"></div>
+                <span>Connected</span>
+            </div>
+        </div>
+    </div>
+    <div class="main-chat">
+        <div class="header">
+            <div style="display: flex; flex-direction: column;">
+                <h1>Multi-Leg Hedger</h1>
+                <div style="margin-top: 4px;"><span class="session-badge">Session: #MLH-0001</span></div>
+            </div>
+            <div class="header-right" style="display:flex;align-items:center;gap:12px;">
+                <div class="balance-widget" id="balance-widget">
+                    <span class="balance-label">Points</span>
+                    <span class="balance-value" id="user-balance">—</span>
+                    <span class="balance-unit">pts</span>
+                </div>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode">
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="chat-container" id="chat-container">
+            <div class="message ai-message">
+                Hello! I am your Multi-Leg Hedger builder. I help you create multi-leg options and futures hedging strategies with up to unlimited legs. Each leg can be independently configured with its own instrument, direction, quantity, entry/exit conditions, and stop-loss. Try: "Create a BankNifty Iron Condor — sell CE and PE ATM, buy wings 500 points away, 2 lots each" or "NIFTY straddle sell 1 lot ATM CE and PE with 20% SL and 30% target".
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Describe your multi-leg hedging strategy..." autocomplete="off">
+            <button id="send-btn">Send Prompt</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        function loadBalance() {
+            fetch('/api/balance/')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var el = document.getElementById('user-balance');
+                    if (!el) return;
+                    var newVal = (data.point_balance !== null && data.point_balance !== undefined) ? String(data.point_balance) : '—';
+                    if (el.textContent !== newVal) {
+                        el.textContent = newVal;
+                        el.classList.remove('updated');
+                        void el.offsetWidth;
+                        el.classList.add('updated');
+                        setTimeout(function() { el.classList.remove('updated'); }, 600);
+                    }
+                })
+                .catch(function() {});
+        }
+        loadBalance();
+
+        function loadStrategyCounts() {
+            fetch('/api/strategy-counts/')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    ['usb','ise','mlh','isb','res'].forEach(function(k) {
+                        var el = document.getElementById('count-' + k);
+                        if (el) el.textContent = (data[k] !== null && data[k] !== undefined) ? data[k] : '—';
+                    });
+                })
+                .catch(function() {});
+        }
+        loadStrategyCounts();
+
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function setInputLocked(locked) {
+            sendBtn.disabled = locked;
+            userInput.disabled = locked;
+        }
+
+        async function handleSend() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-message';
+            userDiv.textContent = text;
+            chatContainer.appendChild(userDiv);
+            userInput.value = '';
+            setInputLocked(true);
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message ai-message';
+            msgDiv.innerHTML = '<em class="thinking-msg">Market Maya is thinking...</em> <span class="streaming-cursor">▌</span>';
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            let accumulated = '';
+
+            try {
+                const response = await fetch('/hedger/api/chat/stream', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, session_id: 'mlh_user_1' })
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const parts = buffer.split('\n\n');
+                    buffer = parts.pop();
+
+                    for (const part of parts) {
+                        if (!part.startsWith('data: ')) continue;
+                        try {
+                            const event = JSON.parse(part.slice(6));
+                            if (event.t === 'chunk') {
+                                accumulated += event.v;
+                                msgDiv.innerHTML = marked.parse(accumulated) + '<span class="streaming-cursor">▌</span>';
+                                chatContainer.scrollTop = chatContainer.scrollHeight;
+                            } else if (event.t === 'status') {
+                                msgDiv.innerHTML = marked.parse(accumulated) +
+                                    `<p class="deploy-status"><em>${event.v}</em> <span class="streaming-cursor">▌</span></p>`;
+                            } else if (event.t === 'done') {
+                                msgDiv.innerHTML = marked.parse(accumulated);
+                                chatContainer.scrollTop = chatContainer.scrollHeight;
+                            } else if (event.t === 'error') {
+                                msgDiv.innerHTML = marked.parse(event.v || 'An error occurred.');
+                            }
+                        } catch (_) {}
+                    }
+                }
+
+                if (msgDiv.innerHTML.includes('streaming-cursor')) {
+                    msgDiv.innerHTML = marked.parse(accumulated) || 'No response.';
+                }
+
+                if (accumulated.includes('Strategy Saved Successfully')) {
+                    loadStrategyCounts();
+                }
+
+                loadBalance();
+
+            } catch (error) {
+                msgDiv.innerHTML = 'Error: Could not connect to the backend.';
+            } finally {
+                setInputLocked(false);
+                userInput.focus();
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
+</body>
+</html>

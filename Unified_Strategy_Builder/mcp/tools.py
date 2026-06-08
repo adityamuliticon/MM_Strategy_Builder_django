@@ -10,6 +10,10 @@ from services.market_maya_shared import (
     rename_strategy as _rename_strategy,
     get_balance as _get_balance,
 )
+from services.deploy import (
+    get_deploy_options as _get_deploy_options,
+    deploy_strategy as _deploy_strategy,
+)
 
 def get_validation_rules(parameter_name):
     """
@@ -45,9 +49,9 @@ def deploy(payload):
     """
     Deploys the strategy to Market Maya.
     """
-    return market_maya.deploy_strategy(payload)
+    return market_maya.save_strategy(payload)
 
-def create_and_deploy_strategy(strategy_json):
+def create_and_save_strategy(strategy_json):
     """
     Generates the correct V3 payload and deploys it in one step.
     """
@@ -77,3 +81,24 @@ def rename_strategy(strategy_id="", strategy_name="", new_name=""):
 
 def get_balance():
     return _get_balance()
+
+
+def get_deploy_options(strategy_id="", strategy_name=""):
+    return _get_deploy_options(strategy_id=strategy_id, strategy_name=strategy_name)
+
+
+def deploy_strategy(strategy_id="", strategy_name="", trading_mode="Live", qty_multiply=1,
+                    entry_execution_type="PSUEDO", entry_psuedo_value=0, entry_psuedo_type="Auto",
+                    entry_wait_seconds=30, entry_no_of_try=2, entry_market_order_after_retry=False,
+                    exit_execution_type="PSUEDO", exit_psuedo_value=0, exit_psuedo_type="Auto",
+                    exit_wait_seconds=30, exit_no_of_try=2, exit_market_order_after_retry=False):
+    return _deploy_strategy(
+        strategy_id=strategy_id, strategy_name=strategy_name, trading_mode=trading_mode,
+        qty_multiply=qty_multiply,
+        entry_execution_type=entry_execution_type, entry_psuedo_value=entry_psuedo_value,
+        entry_psuedo_type=entry_psuedo_type, entry_wait_seconds=entry_wait_seconds,
+        entry_no_of_try=entry_no_of_try, entry_market_order_after_retry=entry_market_order_after_retry,
+        exit_execution_type=exit_execution_type, exit_psuedo_value=exit_psuedo_value,
+        exit_psuedo_type=exit_psuedo_type, exit_wait_seconds=exit_wait_seconds,
+        exit_no_of_try=exit_no_of_try, exit_market_order_after_retry=exit_market_order_after_retry,
+    )

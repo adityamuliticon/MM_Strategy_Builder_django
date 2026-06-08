@@ -1,0 +1,264 @@
+header="Request URL
+https://api.marketmaya.com/api/symbol/getSymbolProperty
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a054a851ff7f8b03-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Tue, 02 Jun 2026 07:13:48 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Qk74nszWoQyhc%2FUPmfHkhBOQegAJyBN0tyM%2FyZjE1EIAOIc9F9yN4zrM4EHEnpiYD9ZNzg8QkSqOMiZCFwpKOF7bmPGWrG9q4iAMK3arjQ1TTcpVLxCjXUK0VFdy4vsYusx4tQ%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/symbol/getSymbolProperty
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODA0MjQ5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMTkxLjE5MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiMWNjZjFkOTgtMDY3YS00NjkxLTg0NTgtOTkwMzZmMzBiNTU4IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc4MDM3MDY2OCwibmJmIjoxNzgwMzcwNjY4fQ.J_0Ba-KJv9GtbRtBs2aVKSgjifl3IbRYPTqUf4JwjnsC28VMsU6FLHNLR06CZER1ZTu7XkDDPMGzJpCJ574qZQ
+content-length
+55
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+
+
+response="{
+    "exist": true,
+    "property": {
+        "all_time_high": 0.0,
+        "all_time_low": 0.0,
+        "backtest_data_start_date": "2017-02-01T00:00:00",
+        "company_name": "",
+        "contract": "JUN26",
+        "contract_type": "NEAR",
+        "current_price": 0.0,
+        "decimal_digits": 1,
+        "entry_date_time": "2026-05-30T08:02:32.77",
+        "exchange": "NFO",
+        "exchange_code": 2,
+        "expiry_date_time": "2026-06-30T20:00:00",
+        "expiry_type": "MONTHLY",
+        "high_price": 0.0,
+        "id": "voVtizPTOF9UJ2qYHMNWwQaC0$aC0$",
+        "id_int": 25005027,
+        "img_url": "",
+        "instrument_tocken": "62326",
+        "intraday_sqroff_time": "2023-01-01T15:20:00",
+        "is_contract_symbol": true,
+        "is_index_symbol": false,
+        "is_stock_symbol": false,
+        "is_tradable": true,
+        "is_weekly_contract": false,
+        "lot_size": 1.0,
+        "low_price": 0.0,
+        "market_capital": 0.0,
+        "market_end_time": "2023-01-01T15:30:00",
+        "market_start_time": "2023-01-01T09:15:00",
+        "min_qty": 30.0,
+        "multiplier": 1.0,
+        "open_price": 0.0,
+        "option_type": "",
+        "previous_day_close": 0.0,
+        "required_intraday_margin": 0.0,
+        "required_positional_margin": 0.0,
+        "segment": "FUT",
+        "segment_type": "FUT",
+        "strike_price": 0.0,
+        "strike_price_gap": 100.0,
+        "symbol": "BANKNIFTY JUN FUT",
+        "symbol_short_name": "BANKNIFTY",
+        "tick_size": 0.2,
+        "trading_symbol": "BANKNIFTY26JUNFUT",
+        "update_date_time": "2026-05-30T08:02:32.77",
+        "week_52_high": 0.0,
+        "week_52_low": 0.0
+    }
+}
+
+
+
+=============================================================================
+
+
+header="Request URL
+https://api.marketmaya.com/api/mainStrategy/CreateMultiLegCallPutStrategy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a054acbf1d018a24-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Tue, 02 Jun 2026 07:16:49 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=t1As23nGhF03twYEi7n4fqrPuDn6xQGv4h3B3qZ0WX28pR53Vpx7AtnVX0GP4nswzHr3k17Hbyj0yv5i7Ig6WtNjMogSZmfic3HJZoly5YZtoQKXGkYY6hSEPD2klcyaRzlwDw%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/CreateMultiLegCallPutStrategy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODA0MjQ5OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMTkxLjE5MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiMWNjZjFkOTgtMDY3YS00NjkxLTg0NTgtOTkwMzZmMzBiNTU4IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc4MDM3MDY2OCwibmJmIjoxNzgwMzcwNjY4fQ.J_0Ba-KJv9GtbRtBs2aVKSgjifl3IbRYPTqUf4JwjnsC28VMsU6FLHNLR06CZER1ZTu7XkDDPMGzJpCJ574qZQ
+content-length
+2043
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+
+
+paylode="{"id":"","strategyName":"12342123123","shortDescription":"","longDescription":"","exchange":"NFO","segment":"FUT","symbol":"BANKNIFTY","entryTime":"09:16","exitTime":"15:29","strategyId":"RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$","underlying":"BANKNIFTY FUT NFO","productType":"NRML","qtyMultiply":1,"targetBy":"Money","target":0,"slBy":"Money","sl":0,"requiredMargin":1,"mon":true,"tue":true,"wed":true,"thu":true,"fri":true,"sat":false,"sun":false,"followSimulator":true,"squareoffRejection":true,"squareoffLegs":false,"paperTrading":true,"allowLateTrading":true,"cosider_closed_pnl":false,"allowUpdateParameters":true,"isTrailSl":false,"isIntraday":false,"enableVixFilter":false,"vixStartValue":0,"vixEndValue":0,"trail_sl_by":"Money","startTrailAfterProfit":0,"profitMove":0,"slMove":0,"noOfTrailSL":0,"noOfIntradayCycle":1,"pauseAndSqrOffOnMarginExceed":true,"sqroffAllLegs":false,"sqroffByFixTime":false,"sqroffWeekDay":"","sqroffTime":"","replaceMasterSlWithStartTrailing":false,"isResetCycle":false,"resetCycleIndexPercentage":0,"noOfCyclePerDay":0,"trailType":"Dynamic","is_btst_stbt":false,"is_live_mtm_profit_move":0,"intraday_cycle_delay":0,"is_range_break_out":false,"range_time":"09:17","index_move_by":"Percentage(%)","sqroff_before_expiry_days":0,"chk_con_delay_after_market_start":0,"fixTrail":"","rebacktest":false,"sub":[{"exchange":"NFO","segment":"FUT","symbol":"BANKNIFTY","contract":"NEAR","expiry":"MONTHLY","atm":0,"strikePrice":0,"optionType":"","atmType":"Fix","qtyType":"Qty","tradeSide":"BUY","range_breakout_direction":"High","qty_distribution":"Fix","qty":30,"targetBy":"Money","target":0,"slBy":"Money","sl":0,"lot":1,"trail_sl_market_move":0,"trail_sl_move":0,"no_of_time_trail_sl":0,"is_trail_sl":false,"trail_sl_by":"Point","premiumStartRange":0,"premiumEndRange":0,"trail_sl_cost":false,"reentry_on":"None","no_of_reentry":0,"reexecute_delay":0,"workingDay":"ALL","wait_for":"None","wait_value":0,"reexecute_on":"None","no_of_reexecute":0}],"requiredCapital":1,"isEditCode":false,"effect_all_sub_strategies":false}"
+
+
+preview="[{client_id: 48519, is_deployed: false, id: 447840, execution_level: "Level 8"}]
+0
+: 
+{client_id: 48519, is_deployed: false, id: 447840, execution_level: "Level 8"}
+client_id
+: 
+48519
+execution_level
+: 
+"Level 8"
+id
+: 
+447840
+is_deployed
+: 
+false"
+
+
+response="[
+    {
+        "client_id": 48519,
+        "is_deployed": false,
+        "id": 447840,
+        "execution_level": "Level 8"
+    }
+]"

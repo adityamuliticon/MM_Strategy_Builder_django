@@ -1,4 +1,5 @@
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +7,39 @@ from django.views.decorators.csrf import csrf_exempt
 from Unified_Strategy_Builder.core.orchestrator import orchestrator
 from chat_logs.models import ChatLog
 from config import Config
+from services.market_maya_shared import get_strategies, get_balance
+
+_STRATEGY_TYPE_IDS = {
+    "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
+    "ise": "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$",
+    "isb": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+    "res": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
+    "mlh": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
+}
+
+
+def _fetch_count(key, type_id):
+    result = get_strategies(take=1, strategy_master_ids=[type_id])
+    if result.get("status") == "success":
+        return key, result["total"]
+    return key, None
+
+
+def strategy_counts_view(request):
+    counts = {}
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {executor.submit(_fetch_count, k, v): k for k, v in _STRATEGY_TYPE_IDS.items()}
+        for future in as_completed(futures):
+            key, count = future.result()
+            counts[key] = count
+    return JsonResponse(counts)
+
+
+def balance_view(request):
+    result = get_balance()
+    if result.get("status") == "success":
+        return JsonResponse({"point_balance": result["point_balance"]})
+    return JsonResponse({"point_balance": None})
 
 memory = {}
 

@@ -6,6 +6,8 @@ class ChatLog(models.Model):
         ('USB', 'Unified Strategy Builder'),
         ('ISE', 'Indicator Signal Engine'),
         ('ISB', 'Inbound Signal Bridge'),
+        ('RES', 'Rapid Execution Scalper'),
+        ('MLH', 'Multi-Leg Hedger'),
     ]
 
     timestamp       = models.DateTimeField(auto_now_add=True, db_index=True)

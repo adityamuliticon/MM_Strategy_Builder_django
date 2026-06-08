@@ -84,6 +84,14 @@ async function handleSend() {
             msgDiv.innerHTML = marked.parse(accumulated) || 'No response.';
         }
 
+        if (accumulated.includes('Strategy Saved Successfully') && typeof window.loadStrategyCounts === 'function') {
+            window.loadStrategyCounts();
+        }
+
+        if (typeof window.loadBalance === 'function') {
+            window.loadBalance();
+        }
+
     } catch (error) {
         msgDiv.innerHTML = 'Error: Could not connect to the backend.';
     } finally {

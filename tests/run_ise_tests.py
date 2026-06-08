@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 
 BASE_URL = "http://localhost:8000/indicator/api/chat"
-LOG_FILE = "logs/deployed_strategies.log"
+LOG_FILE = "logs/saved_strategies.log"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper: send one chat turn to ISE endpoint

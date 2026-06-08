@@ -10,7 +10,7 @@ class ISEMarketMayaService:
             self.token = f"Bearer {self.token}"
         self.url = f"{Config.MARKET_MAYA_BASE_URL}/mainStrategy/createIndicatorStrategy"
 
-    def deploy_strategy(self, payload):
+    def save_strategy(self, payload):
         from datetime import datetime
 
         headers = {
@@ -47,7 +47,7 @@ class ISEMarketMayaService:
             result = {"status": "error", "message": api_response}
 
         try:
-            with open("logs/deployed_strategies.log", "a") as f:
+            with open("logs/saved_strategies.log", "a") as f:
                 log_entry = {
                     "timestamp": datetime.now().isoformat(),
                     "strategy_type": "indicator_signal_engine",

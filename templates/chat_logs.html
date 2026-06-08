@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Maya | Chat Logs</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=11">
-    <script src="{% static 'js/theme.js' %}?v=11"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=17">
+    <script src="{% static 'js/theme.js' %}?v=16"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -133,6 +133,8 @@
         .badge-USB { background: rgba(0,242,255,.15); color: #00f2ff; }
         .badge-ISE { background: rgba(120,80,255,.2);  color: #a080ff; }
         .badge-ISB { background: rgba(0,200,120,.15);  color: #00e090; }
+        .badge-RES { background: rgba(255,160,50,.15); color: #ffa032; }
+        .badge-MLH { background: rgba(100,180,255,.15); color: #64b4ff; }
         .ms-val { font-size: .78rem; color: #dde; }
         .ms-val span { color: var(--text-muted); }
 
@@ -171,25 +173,32 @@
 <body>
 <div class="sidebar">
     <h2>Market Maya</h2>
-    <p style="color:var(--text-muted);font-size:.8rem;margin-top:10px;">Chat Logs & Analytics</p>
     <div style="margin-top:40px;">
         <h3 style="font-size:.9rem;color:var(--text-muted);margin-bottom:5px;">Switch Strategy</h3>
         <div class="sidebar-nav">
             <a href="/" class="sidebar-btn">
-                <span class="btn-icon">⚡</span>
                 <span class="btn-text">Unified Builder</span>
+                <span class="strategy-count" id="count-usb">—</span>
             </a>
             <a href="/indicator/" class="sidebar-btn">
-                <span class="btn-icon">📈</span>
                 <span class="btn-text">Indicator Engine</span>
+                <span class="strategy-count" id="count-ise">—</span>
+            </a>
+            <a href="/hedger/" class="sidebar-btn">
+                <span class="btn-text">Multi-Leg Hedger</span>
+                <span class="strategy-count" id="count-mlh">—</span>
             </a>
             <a href="/bridge/" class="sidebar-btn">
-                <span class="btn-icon">🔌</span>
                 <span class="btn-text">Signal Bridge</span>
+                <span class="strategy-count" id="count-isb">—</span>
+            </a>
+            <a href="/scalper/" class="sidebar-btn">
+                <span class="btn-text">RES Scalper</span>
+                <span class="strategy-count" id="count-res">—</span>
             </a>
             <a href="/logs/" class="sidebar-btn active">
-                <span class="btn-icon">📋</span>
                 <span class="btn-text">Chat Logs</span>
+                <span class="btn-icon">📋</span>
             </a>
         </div>
     </div>
@@ -220,10 +229,17 @@
                 {% if is_filtered %}Filtered · {% endif %}{{ stats.total_requests|default:0 }} request{{ stats.total_requests|default:0|pluralize }}
             </div>
         </div>
-        <button id="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode" type="button">
-            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-        </button>
+        <div class="header-right" style="display:flex;align-items:center;gap:12px;">
+            <div class="balance-widget" id="balance-widget">
+                <span class="balance-label">Points</span>
+                <span class="balance-value" id="user-balance">—</span>
+                <span class="balance-unit">pts</span>
+            </div>
+            <button id="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode" type="button">
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </button>
+        </div>
     </div>
 
     <!-- ── Date filter bar ── -->
@@ -342,6 +358,10 @@
            class="quick-btn {% if active_module == 'ISE' %}active{% endif %}">ISE</a>
         <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}module=ISB"
            class="quick-btn {% if active_module == 'ISB' %}active{% endif %}">ISB</a>
+        <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}module=RES"
+           class="quick-btn {% if active_module == 'RES' %}active{% endif %}">RES</a>
+        <a href="?{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}{% if quick %}quick={{ quick }}&{% endif %}module=MLH"
+           class="quick-btn {% if active_module == 'MLH' %}active{% endif %}">MLH</a>
     </div>
 
     <!-- ── Logs table ── -->
@@ -404,6 +424,37 @@
 </div>
 
 <script>
+function loadBalance() {
+    fetch('/api/balance/')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var el = document.getElementById('user-balance');
+            if (!el) return;
+            var newVal = (data.point_balance !== null && data.point_balance !== undefined) ? String(data.point_balance) : '—';
+            if (el.textContent !== newVal) {
+                el.textContent = newVal;
+                el.classList.remove('updated');
+                void el.offsetWidth;
+                el.classList.add('updated');
+                setTimeout(function() { el.classList.remove('updated'); }, 600);
+            }
+        })
+        .catch(function() {});
+}
+function loadStrategyCounts() {
+    fetch('/api/strategy-counts/')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            ['usb','ise','mlh','isb','res'].forEach(function(k) {
+                var el = document.getElementById('count-' + k);
+                if (el) el.textContent = (data[k] !== null && data[k] !== undefined) ? data[k] : '—';
+            });
+        })
+        .catch(function() {});
+}
+loadBalance();
+loadStrategyCounts();
+
 // ── Build bar chart from server data ──
 const chartData = {{ daily_chart|safe }};
 
