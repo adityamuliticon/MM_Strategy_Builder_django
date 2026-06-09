@@ -289,8 +289,14 @@ class PayloadGenerator:
         target_action_leg   = int(leg.get("actionOnTargetLegNo", leg.get("target_action_leg_no", leg.get("action_on_target_leg_no", 0))))
         target_action_delay = int(leg.get("actionOnTargetDelay", leg.get("target_action_delay", leg.get("action_on_target_delay", 0))))
         is_enable_aot = leg.get("isEnableActionOnTarget", leg.get("is_enable_action_on_target", False))
-        if target_action_leg > 0 or action_on_target == "Reenter Leg":
+        # Only auto-enable when there IS a real leg target — Market Maya rejects
+        # isEnableActionOnTarget=true when isEnableLegTarget=false (no target set).
+        has_real_target = t_val > 0
+        if (target_action_leg > 0 or action_on_target == "Reenter Leg") and has_real_target:
             is_enable_aot = True
+        # Market Maya requires delay >= 1 for Reenter/Execute Leg actions
+        if action_on_target in ("Reenter Leg", "Execute Leg") and target_action_delay == 0 and is_enable_aot:
+            target_action_delay = 5
 
         # ── isEnableActionOnSl — auto-enable when leg_no > 0 or Reenter ──────
         action_on_sl    = leg.get("actionOnSl", leg.get("action_on_sl", "Execute Leg"))
@@ -299,6 +305,9 @@ class PayloadGenerator:
         is_enable_aosl = leg.get("isEnableActionOnSl", leg.get("is_enable_action_on_sl", False))
         if sl_action_leg > 0 or action_on_sl == "Reenter Leg":
             is_enable_aosl = True
+        # Market Maya requires delay >= 1 for Reenter/Execute Leg actions
+        if action_on_sl in ("Reenter Leg", "Execute Leg") and sl_action_delay == 0 and is_enable_aosl:
+            sl_action_delay = 5
 
         # ── isWaitAndTrade — auto-enable when waitValue > 0 ──────────────────
         wait_and_trade = leg.get("isWaitAndTrade", leg.get("wait_and_trade", leg.get("is_wait_and_trade", False)))
