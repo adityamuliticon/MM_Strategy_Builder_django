@@ -31,10 +31,13 @@ STRICT TWO-STEP WORKFLOW:
       * Default is `true` / `"MIS"` if not mentioned.
       * BOTH fields MUST be set together. Never set `isIntraday: false` without also setting `productType: "NRML"`.
    - **STRIKE DIRECTION — MANDATORY**:
-      * User says "OTM" / "out-of-the-money" → `"direction": "OTM"`
-      * User says "ITM" / "in-the-money" → `"direction": "ITM"`
-      * ATM strikes or unspecified → `"direction": "BOTH"`
-      * This field MUST always be set explicitly. Never omit it.
+      Market Maya Unified uses a SIGNED ATM offset ONLY. There is no separate OTM/ITM dropdown — direction is encoded by the SIGN of `"strike"`. ALWAYS set `"direction": "BOTH"`.
+      * CE OTM (above ATM) → `"strike": +N` (positive). Example: "150 OTM call" → `"strike": 150, "direction": "BOTH"`
+      * CE ITM (below ATM) → `"strike": -N` (negative). Example: "100 ITM call" → `"strike": -100, "direction": "BOTH"`
+      * PE OTM (below ATM) → `"strike": -N` (negative). Example: "150 OTM put" → `"strike": -150, "direction": "BOTH"`
+      * PE ITM (above ATM) → `"strike": +N` (positive). Example: "100 ITM put" → `"strike": 100, "direction": "BOTH"`
+      * ATM → `"strike": 0, "direction": "BOTH"`
+      * CRITICAL: NEVER set `"direction": "OTM"` or `"direction": "ITM"` — these are NOT used in Unified. The sign of `"strike"` alone determines OTM/ITM. Always `"direction": "BOTH"`.
    - **STRIKE CONDITION — MANDATORY** (for Nearest Premium / Delta / Theta only):
       * "above-equal" / "above equal" / ">=" → `"condition": "AboveEqual"`
       * "below-equal" / "below equal" / "<=" → `"condition": "BelowEqual"`
@@ -60,15 +63,26 @@ STRICT TWO-STEP WORKFLOW:
       * Set `"wait_for"`: `"Up %"` / `"Down %"` / `"Up pts"` / `"Down pts"`
       * Set `"wait_value"`: the numeric threshold.
       * All three fields MUST be set together.
-   - **ACTION ON TARGET / SL — MANDATORY**: When user says "on target execute/reenter/sqroff leg N after X sec":
-      * `"action_on_target"`: `"Execute Leg"` / `"Reenter Leg"` / `"Sqroff Leg"`
-      * `"target_action_leg_no"`: the leg number (integer, 1-indexed)
-      * `"target_action_delay"`: delay in seconds (integer)
+   - **ACTION ON TARGET / SL — MANDATORY**: When user says "on target/SL execute/reenter/sqroff leg N after X sec":
+      * `"action_on_target"` / `"action_on_sl"`: `"Execute Leg"` / `"Reenter Leg"` / `"Sqroff Leg"`
+      * `"target_action_leg_no"` / `"sl_action_leg_no"`: the leg number (integer, 1-indexed)
+      * `"target_action_delay"` / `"sl_action_delay"`: delay in seconds (integer, 0 if not specified)
       * All three fields MUST be set together. NEVER leave leg_no = 0 when a leg is referenced.
-      * Same applies to `action_on_sl`, `sl_action_leg_no`, `sl_action_delay`.
-      * **API CONSTRAINT — CRITICAL**: Only Leg 1 may use `"Execute Leg"` or `"Reenter Leg"` as action_on_target pointing to an idle leg. Legs 2, 3, 4+ can ONLY use `"Sqroff Leg"` as action on target or SL. NEVER assign `"Execute Leg"` or `"Reenter Leg"` action_on_target to any leg other than Leg 1.
-      * `"Execute Leg"` and `"Reenter Leg"` MUST reference an IDLE leg (isIdle=true). Never reference an active leg.
+      * **CRITICAL DISTINCTION — read carefully**:
+        - `"Execute Leg"` → triggers an IDLE leg (`is_idle: true`) for the FIRST TIME. The referenced leg MUST be idle.
+        - `"Reenter Leg"` → RE-EXECUTES a leg that has already run at least once. The referenced leg is ACTIVE (not idle). Use this when user says "on SL hit reenter Leg 1" — Leg 1 already ran, now re-enter it again.
+        - `"Sqroff Leg"` → squares off (closes) another leg.
+        - NEVER confuse Execute (first-time trigger of idle leg) with Reenter (re-entry of already-executed leg).
+      * ANY leg can use `"Reenter Leg"` as `action_on_sl` referencing any ACTIVE leg. There is NO restriction to Leg 1 only.
       * `"optionType"` for a FUT segment leg MUST be `"CE"` or `"PE"` (default to `"CE"`). NEVER set it to `"NONE"`, `"NULL"`, or leave it empty.
+   - **SEQUENTIAL LEG EXECUTION — MANDATORY**: When user says "Leg 2 should enter ONLY AFTER Leg 1 is bought/filled/executed":
+      * Set `"is_idle": true` on Leg 2 (the leg that must wait).
+      * On Leg 1, set: `"action_on_target": "Execute Leg"`, `"target_action_leg_no": 2`, `"target_action_delay": 0`
+        (Market Maya fires this when Leg 1 enters the market and its position is taken.)
+      * An IDLE leg MUST have `"is_execute_on_range_breakout": false` — explicitly set this. It is triggered by Leg 1's action, NOT by the range breakout.
+      * RANGE BREAKOUT EXCEPTION: `"is_execute_on_range_breakout"` MUST be `false` for idle legs even when range breakout is enabled at strategy level.
+      * COMMON PATTERN (sequential + reenter): Leg 1 active → `action_on_target: "Execute Leg"` → triggers idle Leg 2. Leg 2 with SL → `action_on_sl: "Reenter Leg"` → re-enters Leg 1 (active, not idle). Both actions are VALID simultaneously.
+      * NEVER add error messages, self-corrections, or additional attempts inside the same response. Show ONE preview and ask once: "Shall I proceed to save?"
    - **MASTER SL TRAILING — MANDATORY**: Use the `master_sl_trailing` object with THREE separate fields:
       * `"profit_move"`: profit increase that triggers each SL trail step
       * `"sl_move"`: how much to move the SL per trail step
@@ -91,14 +105,15 @@ STRICT TWO-STEP WORKFLOW:
       * SENSEX, BANKEX → exchange MUST be `"BFO"`, segment MUST be `"FUT"` (never INDEX — Market Maya rejects INDEX)
       * NSE stocks → exchange `"NSE"`, segment `"Stock"`
       * CRITICAL: The main strategy `segment` field MUST always be `"FUT"` for all index derivatives (NIFTY/BANKNIFTY/SENSEX/BANKEX/FINNIFTY). NEVER use `"INDEX"` — Market Maya API rejects it.
-   - **PE LEG ATM OFFSETS — MANDATORY**: For PUT options, OTM is BELOW the ATM. ATM offset for a PE leg that is N points OTM MUST be negative (e.g., "PE ATM-300" → `"strike": -300`). NEVER send a positive ATM offset for a PE OTM leg.
+   - **PE LEG ATM OFFSETS — MANDATORY**: For PUT options, OTM is BELOW ATM (negative `"strike"`), ITM is ABOVE ATM (positive `"strike"`). This is the OPPOSITE of CE. See STRIKE DIRECTION rule above — sign of `"strike"` determines everything, `"direction"` is always `"BOTH"`.
    - **STRICT LEG ORDERING**: Output legs in the EXACT order the user listed them. Do NOT reorder or rearrange legs. Leg 1 is the first leg the user mentioned, Leg 2 is second, etc.
    - **STRICT RULE: NO DUPLICATE LEGS.** Give unique strike/wait offsets if legs share side+strike.
    - **MASTER SL TRAILING IS INDEPENDENT**: `master_sl_trailing` must ALWAYS be included when the user asks for master SL trailing, regardless of what other features (range breakout, combined premium, VIX, etc.) are also enabled. These are independent features — do NOT omit master_sl_trailing just because other advance features are set.
    - **RANGE BREAKOUT — MANDATORY RULES**: When `"is_range_breakout": true` at strategy level:
       * `"entry_time"` doubles as the candle/range START time. Set it to when range formation begins (e.g., "09:15:00").
       * `"range_end_time"` is the candle/range END time (e.g., "09:20:00"). ALWAYS include it when range breakout is on.
-      * On EVERY leg, you MUST set BOTH `"is_execute_on_range_breakout": true` AND `"execute_on_range_breakout"`. NEVER omit these from any leg when range breakout is enabled at strategy level.
+      * On EVERY ACTIVE (non-idle) leg, you MUST set BOTH `"is_execute_on_range_breakout": true` AND `"execute_on_range_breakout"`. NEVER omit these from any active leg when range breakout is enabled.
+      * EXCEPTION: Legs with `"is_idle": true` MUST have `"is_execute_on_range_breakout": false`. They are triggered by another leg's action, NOT by the range breakout.
       * Direction mapping: "execute on range high break" / "above range" / "breakout above" → `"Range High Break"` | "execute on range low break" / "below range" / "breakout below" → `"Range Low Break"` | default → `"Range High Break"`
    - **WORKING DAYS — MANDATORY**: Valid days are Mon, Tue, Wed, Thu, Fri, Sat. Saturday is a valid trading day for some exchanges. Include "Sat" in `trading_days` only when user explicitly requests Saturday.
       * **CRITICAL**: OMIT the `"trading_days"` field entirely when the user does NOT explicitly mention specific trading days. NEVER generate `"trading_days": ["Mon","Tue","Wed","Thu","Fri"]` as a default — omitting it is correct and means "trade every day". Only include it when the user says "only on Monday and Wednesday" or similar explicit day restrictions.

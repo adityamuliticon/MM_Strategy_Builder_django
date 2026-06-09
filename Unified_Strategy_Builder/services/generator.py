@@ -31,10 +31,11 @@ class PayloadGenerator:
         generated_legs = []
         for leg_input in (legs if isinstance(legs, list) else []):
             leg_payload = self._generate_leg_payload(leg_input, exchange, symbol)
-            # If range breakout is ON at strategy level and leg doesn't explicitly
-            # disable it, force isExecuteOnRangeBreakout to True so the leg
-            # actually trades on the breakout signal.
-            if is_range_breakout and not leg_input.get("isExecuteOnRangeBreakout", leg_input.get("is_execute_on_range_breakout", None)) is False:
+            # If range breakout is ON at strategy level and the leg is not idle
+            # and doesn't explicitly disable it, force isExecuteOnRangeBreakout to True.
+            # Idle legs are triggered by another leg's action — they must NOT auto-execute on breakout.
+            is_idle = leg_input.get("isIdle", leg_input.get("is_idle", False))
+            if is_range_breakout and not is_idle and not leg_input.get("isExecuteOnRangeBreakout", leg_input.get("is_execute_on_range_breakout", None)) is False:
                 leg_payload["isExecuteOnRangeBreakout"] = True
             generated_legs.append(leg_payload)
 
@@ -421,9 +422,7 @@ class PayloadGenerator:
         return mapping.get(val.upper(), "Any")
 
     def _map_strike_direction(self, value):
-        val = str(value).upper()
-        if val in ("BOTH", "ITM", "OTM"):
-            return val
+        # USB uses signed atm value for direction; strikeDirection is always "BOTH"
         return "BOTH"
 
     def _map_target_by(self, value, category):

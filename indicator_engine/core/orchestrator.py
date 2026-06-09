@@ -65,8 +65,14 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 
 ── OPTION TYPE & ATM ─────────────────────────────────────
 * For OPT segment: optionType must be "CE" or "PE"
-* atm: 0 = ATM strike, positive = OTM for CE / OTM for PE, negative = ITM for CE / ITM for PE
-  Example: CE +200 OTM → atm: 200  |  PE +200 OTM → atm: 200, CE -200 ITM → atm: -200  |  PE -200 ITM → atm: -200
+* atm: SIGNED OFFSET from ATM. The SIGN encodes OTM/ITM direction:
+  - CE OTM (above ATM) → positive.  "200 OTM call" → atm: 200
+  - CE ITM (below ATM) → negative.  "200 ITM call" → atm: -200
+  - PE OTM (below ATM) → negative.  "200 OTM put"  → atm: -200
+  - PE ITM (above ATM) → positive.  "200 ITM put"  → atm: 200
+  - ATM → atm: 0
+  CRITICAL: CE OTM=positive / ITM=negative. PE OTM=negative / ITM=positive. (PE is OPPOSITE of CE)
+  NEVER use positive atm for PE OTM or negative atm for CE OTM.
 * For FUT or Stock segment: optionType = "" (empty), atm = 0
 
 ── callType RULE — CRITICAL ──────────────────────────────

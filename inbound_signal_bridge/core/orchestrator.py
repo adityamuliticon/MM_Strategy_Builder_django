@@ -95,16 +95,16 @@ Each leg has its own qty distribution method. Four options:
 
 ── OPTION TYPE & ATM ─────────────────────────────────────
 * For OPT segment: optionType must be "CE" or "PE"
-* atm: POINT-BASED OFFSET from ATM. Use the exact point value the user mentions.
-  - 0 = ATM (at the money)
-  - Positive = OTM for CE / PE (above ATM)
-  - Negative = ITM for CE / PE (below ATM)
-  - "ATM" → atm=0
-  - "100 points OTM CE" → atm=100
-  - "100 points OTM PE" → atm= 100  (PE OTM is above ATM)
-  - "200 points OTM CE" → atm=200
-  - "50 points ITM CE"  → atm=-50   (ITM for CE is below ATM), (same ITM logic for both CE and PE, always in Negative)
-  - Use the EXACT number from the user's prompt. Do NOT convert to strike count.
+* atm: SIGNED POINT-BASED OFFSET from ATM. The SIGN encodes OTM/ITM direction:
+  - CE OTM (above ATM) → positive. "100 OTM call" → atm=100
+  - CE ITM (below ATM) → negative. "100 ITM call" → atm=-100
+  - PE OTM (below ATM) → negative. "100 OTM put"  → atm=-100
+  - PE ITM (above ATM) → positive. "100 ITM put"  → atm=100
+  - ATM → atm=0
+  CRITICAL: For CE, OTM=positive / ITM=negative.
+            For PE, OTM=negative / ITM=positive. (OPPOSITE of CE)
+  NEVER use a positive atm for PE OTM or a negative atm for CE OTM.
+  Use the EXACT point value from the user's prompt. Do NOT convert to strike count.
 * For FUT and Stock: optionType = "" (empty string), atm = 0
 * strikePrice: 0 = use ATM offset; set to actual price for fixed strike (e.g., 48000)
 

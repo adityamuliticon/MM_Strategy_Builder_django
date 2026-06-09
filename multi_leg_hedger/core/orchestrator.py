@@ -87,8 +87,16 @@ PER-LEG RULES
 * expiry: "MONTHLY" (default FUT) / "WEEKLY" (default index OPT)
 * DEFAULT SEGMENT: If user says index name without CE/PE/options → FUT. Use OPT only when options explicitly requested.
 
-── ATM TYPE ─────────────────────────────────────────────
-* atm_type: "Fix" → use atm offset. 0=ATM, positive=OTM (CE)/ITM (PE), negative=ITM (CE)/OTM (PE).
+── ATM TYPE & SIGNED OFFSET (MANDATORY) ─────────────────
+* atm_type: "Fix" → use a signed atm offset. The SIGN of `atm` encodes OTM/ITM direction:
+  - CE OTM (above ATM) → `atm: +N` (positive). Example: "150 OTM call" → `atm: 150`
+  - CE ITM (below ATM) → `atm: -N` (negative). Example: "100 ITM call" → `atm: -100`
+  - PE OTM (below ATM) → `atm: -N` (negative). Example: "150 OTM put" → `atm: -150`
+  - PE ITM (above ATM) → `atm: +N` (positive). Example: "100 ITM put" → `atm: 100`
+  - ATM → `atm: 0`
+  CRITICAL: For CE, OTM = positive; ITM = negative.
+            For PE, OTM = negative; ITM = positive.
+  NEVER use a positive atm for PE OTM or a negative atm for CE OTM — the sign would be wrong.
 * atm_type: "Dynamic" → scan chain for premium in [premium_start_range, premium_end_range]. Both must be > 0.
 
 ── QTY / LOT ────────────────────────────────────────────

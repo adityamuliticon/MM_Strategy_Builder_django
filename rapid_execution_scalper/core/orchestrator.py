@@ -81,7 +81,14 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 
 ── OPT SEGMENT RULES ─────────────────────────────────────
 * option_type: "CE" or "PE" — required when main_segment = "OPT"
-* atm: 0 = ATM strike. Positive = OTM for CE / ITM for PE. Negative = ITM for CE / OTM for PE.
+* atm: SIGNED OFFSET from ATM. The SIGN encodes OTM/ITM direction:
+  - CE OTM (above ATM) → positive.  "150 OTM call" → atm: 150
+  - CE ITM (below ATM) → negative.  "150 ITM call" → atm: -150
+  - PE OTM (below ATM) → negative.  "150 OTM put"  → atm: -150
+  - PE ITM (above ATM) → positive.  "150 ITM put"  → atm: 150
+  - ATM → atm: 0
+  CRITICAL: CE OTM=positive / ITM=negative. PE OTM=negative / ITM=positive. (PE is OPPOSITE of CE)
+  NEVER use positive atm for PE OTM or negative atm for CE OTM.
 * For FUT and Stock: option_type = "" (empty), atm = 0, strike_price = 0
 * strike_price: 0 = use ATM-relative selection. Non-zero = fixed absolute strike.
 
