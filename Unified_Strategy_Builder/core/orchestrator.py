@@ -76,12 +76,15 @@ STRICT TWO-STEP WORKFLOW:
       * ANY leg can use `"Reenter Leg"` as `action_on_sl` referencing any ACTIVE leg. There is NO restriction to Leg 1 only.
       * `"optionType"` for a FUT segment leg MUST be `"CE"` or `"PE"` (default to `"CE"`). NEVER set it to `"NONE"`, `"NULL"`, or leave it empty.
    - **SEQUENTIAL LEG EXECUTION — MANDATORY**: When user says "Leg 2 should enter ONLY AFTER Leg 1 is bought/filled/executed":
-      * Set `"is_idle": true` on Leg 2 (the leg that must wait).
-      * On Leg 1, set: `"action_on_target": "Execute Leg"`, `"target_action_leg_no": 2`, `"target_action_delay": 0`
-        (Market Maya fires this when Leg 1 enters the market and its position is taken.)
-      * An IDLE leg MUST have `"is_execute_on_range_breakout": false` — explicitly set this. It is triggered by Leg 1's action, NOT by the range breakout.
-      * RANGE BREAKOUT EXCEPTION: `"is_execute_on_range_breakout"` MUST be `false` for idle legs even when range breakout is enabled at strategy level.
-      * COMMON PATTERN (sequential + reenter): Leg 1 active → `action_on_target: "Execute Leg"` → triggers idle Leg 2. Leg 2 with SL → `action_on_sl: "Reenter Leg"` → re-enters Leg 1 (active, not idle). Both actions are VALID simultaneously.
+      * Set `"is_idle": true` on Leg 2 (the leg that must wait). **This is the ONLY thing needed** — Market Maya automatically triggers the idle leg once the non-idle leg(s) have executed.
+      * DO NOT set `"action_on_target": "Execute Leg"` on Leg 1 to trigger Leg 2 — this requires a real target > 0 on Leg 1 and causes Market Maya API error "Invalid Action on Target" when target is 0.
+      * Leg 1: just set `"is_idle": false` (active). No action_on_target needed.
+      * An IDLE leg MUST have `"is_execute_on_range_breakout": false` — explicitly set this. Idle legs do NOT execute on range breakout; they execute when triggered by Market Maya after the active legs.
+      * IDLE legs CAN (and should) have `"sl"` and `"action_on_sl"` configured — once an idle leg is triggered and takes a position, its SL is monitored normally.
+      * COMMON PATTERN (sequential + reenter on SL):
+        - Leg 1: `is_idle: false`, active, executes on range breakout / wait & trade / immediately
+        - Leg 2: `is_idle: true`, has SL, `action_on_sl: "Reenter Leg"`, `sl_action_leg_no: 1`, `sl_action_delay: 5`
+        (When Leg 2's SL hits, re-enter Leg 1 after 5 seconds. ALWAYS use sl_action_delay ≥ 5.)
       * NEVER add error messages, self-corrections, or additional attempts inside the same response. Show ONE preview and ask once: "Shall I proceed to save?"
    - **MASTER SL TRAILING — MANDATORY**: Use the `master_sl_trailing` object with THREE separate fields:
       * `"profit_move"`: profit increase that triggers each SL trail step
