@@ -121,7 +121,10 @@ STRICT TWO-STEP WORKFLOW:
         - Rule 11: exchange ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform. Never BFO/BSE for equity.
         - Equity F&O legs → `"NFO"`.
       * **MCX commodities** (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange `"MCX"`, segment `"FUT"` or `"OPT"`.
-      * **CDS currencies** (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange `"CDS"`, segment `"FUT"` or `"OPT"`.
+      * **CDS currencies** → exchange `"CDS"`, segment `"FUT"` or `"OPT"`.
+        - Rupee pairs: USDINR, EURINR, GBPINR, JPYINR
+        - Cross currency: EURUSD, GBPUSD, USDJPY
+        - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
       * **Precedence** (first match wins): non-equity conflict → equity hard-rule (NSE/NFO) → explicit exchange → native family → asset-class keyword → default FUT on F&O exchange.
       * **Non-equity conflict** (e.g., NIFTY on BSE, BANKNIFTY equity): ask user to clarify — do NOT auto-correct.
       * **Equity conflict** (e.g., RELIANCE on BSE/BFO): auto-correct to NSE/NFO and inform user.
