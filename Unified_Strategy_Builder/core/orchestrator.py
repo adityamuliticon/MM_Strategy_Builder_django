@@ -115,11 +115,10 @@ STRICT TWO-STEP WORKFLOW:
         - Default / symbol only (no asset-class keyword) → exchange `"BFO"`, segment `"FUT"`. Example: "SENSEX strangle" → BFO/FUT.
         - User explicitly says "index" / "spot" / "use index as underlying" → exchange `"BSE"`, segment `"INDEX"`. Legs remain `"BFO"` / `"OPT"` or `"FUT"`.
         - **CRITICAL — Rule 9**: Do NOT output `"BSE"` + `"INDEX"` for a plain symbol mention. "SENSEX strangle" is BFO/FUT, not BSE/INDEX.
-      * **Equity stocks** (RELIANCE, TCS, INFY, etc.):
-        - ❌ WRONG: "RELIANCE options" → exchange `"NSE"`, segment `"EQ"` — NEVER for F&O strategies.
-        - ✓ CORRECT: "RELIANCE options" → exchange `"NFO"`, segment `"FUT"` (stock futures is the ATM reference).
-        - Default / symbol only (no asset-class keyword) → exchange `"NFO"`, segment `"FUT"`.
-        - ONLY use exchange `"NSE"`, segment `"EQ"` when user explicitly says "equity" / "cash" / "EQ" / "cash market".
+      * **Equity stocks** (RELIANCE, TCS, INFY, etc.) — segment driven by keyword:
+        - No keyword     → NFO/FUT: `"RELIANCE options"` → exchange `"NFO"`, segment `"FUT"`.
+        - Equity keyword → NSE/EQ:  `"equity RELIANCE"` / `"RELIANCE equity"` / `"RELIANCE cash"` → exchange `"NSE"`, segment `"EQ"`.
+        - Keyword list for NSE/EQ: "equity", "cash", "EQ", "cash market" — any of these in the prompt → NSE/EQ. Otherwise → NFO/FUT.
         - Rule 11: exchange ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform.
         - Equity F&O legs → `"NFO"`.
       * **MCX commodities** (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange `"MCX"`, segment `"FUT"` or `"OPT"`.

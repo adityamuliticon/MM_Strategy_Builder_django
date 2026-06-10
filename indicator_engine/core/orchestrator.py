@@ -55,11 +55,10 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
   - Leg exchange: "NFO", segment: "FUT" or "OPT". Default (plain symbol only): "FUT". Use "OPT" only when user explicitly requests options.
 * BSE-only index symbols (SENSEX, BANKEX):
   - Leg exchange: "BFO", segment: "FUT" or "OPT". Default (plain symbol only): "FUT". Use "OPT" only when user explicitly requests options.
-* Equity stocks (RELIANCE, TCS, etc.):
-  - ❌ WRONG: "RELIANCE call" → exchange "NSE", segment "EQ" — NEVER for F&O legs.
-  - ✓ CORRECT: "RELIANCE call" → exchange "NFO", segment "OPT"; "RELIANCE future" → exchange "NFO", segment "FUT".
-  - Default / symbol only → exchange: "NFO", segment: "FUT" (or "OPT" if options explicitly requested).
-  - ONLY use exchange: "NSE", segment: "EQ" when user explicitly says "equity" / "cash" / "EQ".
+* Equity stocks (RELIANCE, TCS, etc.) — segment driven by keyword:
+  - No keyword     → NFO: "RELIANCE call" → exchange "NFO", segment "OPT"; "RELIANCE future" → exchange "NFO", segment "FUT".
+  - Equity keyword → NSE/EQ: "equity RELIANCE" / "RELIANCE equity" / "RELIANCE cash" → exchange "NSE", segment "EQ".
+  - Keyword list for NSE/EQ: "equity", "cash", "EQ", "cash market" — any of these → NSE/EQ. Otherwise → NFO.
   - Rule 11: exchange ALWAYS NSE-family. If user says BSE — auto-correct to NSE/NFO and inform.
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange: "MCX", segment: "FUT" or "OPT"
 * CDS currencies → exchange: "CDS", segment: "FUT" or "OPT"
