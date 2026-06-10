@@ -60,7 +60,10 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
   - User explicitly says "equity" / "cash" / "EQ" → exchange: "NSE", segment: "EQ".
   - Rule 11: exchange ALWAYS NSE-family. If user says BSE — auto-correct to NSE/NFO and inform.
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange: "MCX", segment: "FUT" or "OPT"
-* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT" or "OPT"
+* CDS currencies → exchange: "CDS", segment: "FUT" or "OPT"
+  - Rupee pairs: USDINR, EURINR, GBPINR, JPYINR
+  - Cross currency: EURUSD, GBPUSD, USDJPY
+  - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
 * Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ── CONTRACT & EXPIRY ─────────────────────────────────────

@@ -64,7 +64,10 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
   - User explicitly says "equity" / "cash" / "EQ" → main_exchange: "NSE", main_segment: "EQ".
   - Rule 11: exchange ALWAYS NSE-family. If user says BSE — auto-correct to NSE/NFO and inform.
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → main_exchange: "MCX", main_segment: "FUT"
-* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → main_exchange: "CDS", main_segment: "FUT"
+* CDS currencies → main_exchange: "CDS", main_segment: "FUT" (default) or "OPT"
+  - Rupee pairs: USDINR, EURINR, GBPINR, JPYINR
+  - Cross currency: EURUSD, GBPUSD, USDJPY
+  - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
 * DEFAULT SEGMENT: If user mentions index name without specifying options/CE/PE → main_segment: "FUT".
 * Use main_segment: "OPT" ONLY when user explicitly says "options", "call", "put", "CE", "PE", or a specific strike.
 * Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.

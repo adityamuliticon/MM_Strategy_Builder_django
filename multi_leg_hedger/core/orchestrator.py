@@ -82,7 +82,10 @@ UNDERLYING SYMBOL & EXCHANGE RULES
   - Rule 11: exchange is ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform. Never BFO/BSE for equity.
   - Equity F&O legs → exchange: "NFO".
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → exchange: "MCX", segment: "FUT"
-* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT"
+* CDS currencies → exchange: "CDS", segment: "FUT" (underlying) or "OPT" (options legs)
+  - Rupee pairs: USDINR, EURINR, GBPINR, JPYINR
+  - Cross currency: EURUSD, GBPUSD, USDJPY
+  - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
 * Default: BANKNIFTY, exchange: "NFO", segment: "FUT". underlying display string is built automatically.
 * Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
