@@ -2,6 +2,7 @@ import json
 import os
 import re
 import time
+from services.exchange_resolver import resolve_leg_exchange
 
 # ── Lot sizes per symbol ────────────────────────────────────────────────────
 LOT_SIZES = {
@@ -99,9 +100,9 @@ class ISEPayloadGenerator:
         if symbol == "NIFTY50":
             symbol = "NIFTY"
 
-        segment = str(leg.get("segment", "FUT")).upper()
-        if segment == "STOCK":
-            segment = "Stock"
+        segment_hint = str(leg.get("segment", "FUT"))
+        exchange_hint = str(leg.get("exchange", ""))
+        exchange, segment = resolve_leg_exchange(symbol, segment_hint, exchange_hint)
 
         lot = int(leg.get("lot", 1))
         lot_size = LOT_SIZES.get(symbol, 1)
@@ -133,7 +134,7 @@ class ISEPayloadGenerator:
         return {
             "id": "",
             "callType": "BUY",
-            "exchange": str(leg.get("exchange", "NFO")).upper(),
+            "exchange": exchange,
             "segment": segment,
             "symbol": symbol,
             "contract": str(leg.get("contract", "NEAR")).upper(),

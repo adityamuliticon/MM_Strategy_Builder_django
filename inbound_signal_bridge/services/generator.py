@@ -1,5 +1,6 @@
 import re
 import time
+from services.exchange_resolver import resolve_leg_exchange
 
 LOT_SIZES = {
     "BANKNIFTY": 30, "NIFTY": 25, "FINNIFTY": 40,
@@ -68,15 +69,9 @@ class ISBPayloadGenerator:
         if symbol == "NIFTY50":
             symbol = "NIFTY"
 
-        segment = str(leg.get("segment", "FUT"))
-        # Normalize segment capitalization: "Stock" not "STOCK"
-        if segment.upper() == "STOCK":
-            segment = "Stock"
-        else:
-            segment = segment.upper()
-
-        # Exchange
-        exchange = str(leg.get("exchange", "NFO")).upper()
+        segment_hint = str(leg.get("segment", "FUT"))
+        exchange_hint = str(leg.get("exchange", ""))
+        exchange, segment = resolve_leg_exchange(symbol, segment_hint, exchange_hint)
 
         # Option type: "" for FUT and Stock
         option_type = str(leg.get("optionType", "")).upper()

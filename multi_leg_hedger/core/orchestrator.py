@@ -64,22 +64,30 @@ trading_mode: "BTST/STBT"
 * Trading Cycle NOT used.
 
 ═══════════════════════════════════════════════════════════
-UNDERLYING SYMBOL RULES
+UNDERLYING SYMBOL & EXCHANGE RULES
 ═══════════════════════════════════════════════════════════
-* BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY → exchange: "NFO", segment: "FUT"
-* SENSEX, BANKEX → exchange: "BFO", segment: "FUT"
-* Nifty 50 NSE Index → exchange: "NSE", segment: "INDEX", symbol: "Nifty 50"
-* NSE stocks → exchange: "NSE", segment: "Stock"
-* Default: BANKNIFTY, exchange: "NFO", segment: "FUT"
-* underlying display string is built automatically.
-* CRITICAL: The strategy-level "segment" is ALWAYS "FUT" for all index underlyings (BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY, SENSEX, BANKEX) even when every leg is an OPT (options) leg. Do NOT change the strategy segment to "OPT". Only individual leg entries use segment="OPT".
+* Valid segments — Underlying: "EQ" | "INDEX" | "FUT". Leg: "EQ" | "FUT" | "OPT". "Stock"/"STOCK" is NOT valid — use "EQ". OPT is NEVER valid for an underlying.
+* Exchange families: NSE/EQ → F&O on NFO. NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
+* NSE-only index symbols (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY):
+  - Default / symbol only (no asset-class keyword) → exchange: "NFO", segment: "FUT". Legs → "NFO" / "FUT" or "OPT". Example: "NIFTY straddle" → NFO/FUT.
+  - User explicitly says "index" / "spot" / "use index as underlying" → exchange: "NSE", segment: "INDEX". Legs remain "NFO"/"OPT" or "FUT".
+  - CRITICAL — Rule 9: the native family changes only the EXCHANGE, not the segment. Do NOT output "INDEX" just because the symbol is an index. Segment stays "FUT" unless the user explicitly says "index."
+* BSE-only index symbols (SENSEX, BANKEX):
+  - Default / symbol only (no asset-class keyword) → exchange: "BFO", segment: "FUT". Legs → "BFO" / "FUT" or "OPT". Example: "SENSEX strangle" → BFO/FUT.
+  - User explicitly says "index" / "spot" / "use index as underlying" → exchange: "BSE", segment: "INDEX". Legs remain "BFO"/"OPT" or "FUT".
+  - CRITICAL — Rule 9: Do NOT output "BSE" + "INDEX" for a plain symbol mention. "SENSEX strangle" is BFO/FUT, not BSE/INDEX. Segment stays "FUT" unless user explicitly says "index."
+* Equity stocks (RELIANCE, TCS, etc.) → Rule 11: ALWAYS exchange: "NSE", segment: "EQ". Even if user says BSE — auto-correct to NSE and inform. Equity F&O legs → "NFO".
+* MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → exchange: "MCX", segment: "FUT"
+* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT"
+* Default: BANKNIFTY, exchange: "NFO", segment: "FUT". underlying display string is built automatically.
+* Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ═══════════════════════════════════════════════════════════
 PER-LEG RULES
 ═══════════════════════════════════════════════════════════
 
 ── SYMBOL / SEGMENT ─────────────────────────────────────
-* Each leg has its own Exchange, Segment (FUT/OPT/Stock), Symbol, Contract, Expiry.
+* Each leg has its own Exchange, Segment (FUT/OPT/EQ), Symbol, Contract, Expiry.
 * Leg symbol CAN differ from strategy underlying (e.g. underlying=BANKNIFTY, leg=NIFTY OPT CE).
 * FUT legs: option_type: "" (empty), atm: 0.
 * OPT legs: option_type "CE" or "PE" required.

@@ -1,5 +1,6 @@
 import random
 import string
+from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
 
 STRATEGY_TYPE_ID = "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$"
 
@@ -17,11 +18,17 @@ class MLHPayloadGenerator:
     def _underlying_string(self, exchange, segment, symbol):
         return f"{symbol} {segment} {exchange}"
 
-    def _build_leg(self, leg):
-        symbol = leg.get("symbol", "BANKNIFTY")
+    def _build_leg(self, leg, parent_exchange="NFO"):
+        symbol_raw = leg.get("symbol", "BANKNIFTY")
+        symbol = str(symbol_raw).upper()
+        if symbol == "NIFTY50":
+            symbol = "NIFTY"
         lot = int(leg.get("lot", 1))
         qty = self._qty(symbol, lot)
-        segment = leg.get("segment", "FUT")
+        segment_hint = leg.get("segment", "FUT")
+        # Rule 6: if leg has no explicit exchange, inherit the parent's family
+        exchange_hint = leg.get("exchange", "") or parent_exchange
+        exchange, segment = resolve_leg_exchange(symbol, segment_hint, exchange_hint)
         option_type = leg.get("option_type", "")
         if segment != "OPT":
             option_type = ""
@@ -35,7 +42,7 @@ class MLHPayloadGenerator:
         is_trail_sl = bool(leg.get("is_trail_sl", False)) and sl > 0
         return {
             "id": "",
-            "exchange": leg.get("exchange", "NFO"),
+            "exchange": exchange,
             "segment": segment,
             "symbol": symbol,
             "contract": leg.get("contract", "NEAR"),
@@ -80,15 +87,19 @@ class MLHPayloadGenerator:
         is_btst = (mode == "BTST/STBT")
         is_intraday = (not is_btst) and bool(s.get("is_intraday", True))
         product = s.get("product_type", "MIS" if is_intraday else "NRML")
-        ul_exchange = s.get("exchange", "NFO")
-        ul_segment = s.get("segment", "FUT")
-        ul_symbol = s.get("symbol", "BANKNIFTY")
+        ul_symbol_raw = s.get("symbol", "BANKNIFTY")
+        ul_symbol = str(ul_symbol_raw).upper()
+        if ul_symbol == "NIFTY50":
+            ul_symbol = "NIFTY"
+        ul_segment_hint = s.get("segment", "FUT")
+        ul_exchange_hint = s.get("exchange", "")
+        ul_exchange, ul_segment = resolve_exchange_segment(ul_symbol, ul_segment_hint, ul_exchange_hint)
         underlying_str = self._underlying_string(ul_exchange, ul_segment, ul_symbol)
         working_days = s.get("working_days", {})
         legs_data = s.get("legs", [])
-        sub = [self._build_leg(leg) for leg in legs_data]
+        sub = [self._build_leg(leg, ul_exchange) for leg in legs_data]
         if not sub:
-            sub.append(self._build_leg({"exchange": ul_exchange, "segment": "FUT", "symbol": ul_symbol}))
+            sub.append(self._build_leg({"exchange": ul_exchange, "segment": "FUT", "symbol": ul_symbol}, ul_exchange))
         sqroff_all_legs = bool(s.get("sqroff_all_legs", False))
         return {
             "id": "",

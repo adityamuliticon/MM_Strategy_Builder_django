@@ -1,5 +1,6 @@
 import re
 import time
+from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
 
 LOT_SIZES = {
     "BANKNIFTY": 30, "NIFTY": 65, "FINNIFTY": 40,
@@ -15,15 +16,23 @@ class RESPayloadGenerator:
         raw_name = strategy_json.get("strategy_name", "RES_Strategy")
         strategy_name = re.sub(r'_\d{4}$', '', raw_name) + f"_{int(time.time()) % 10000}"
 
-        exchange = str(strategy_json.get("main_exchange", "NFO")).upper()
-        segment = str(strategy_json.get("main_segment", "FUT"))
         symbol = str(strategy_json.get("main_symbol", "BANKNIFTY")).upper()
         if symbol == "NIFTY50":
             symbol = "NIFTY"
-        if segment.upper() == "STOCK":
-            segment = "Stock"
+        segment_hint = str(strategy_json.get("main_segment", "FUT"))
+        exchange_hint = str(strategy_json.get("main_exchange", ""))
+        # RES trades the instrument directly — segment IS the traded segment (can be OPT).
+        # Use the resolver only for exchange selection, then normalise segment separately.
+        exchange, _ = resolve_exchange_segment(symbol, segment_hint, exchange_hint)
+        _seg = segment_hint.upper()
+        if _seg in ("STOCK", "EQUITY", "CASH"):
+            segment = "EQ"
+        elif _seg == "INDEX":
+            segment = "FUT"   # INDEX is not a valid traded segment
+        elif _seg in ("EQ", "FUT", "OPT"):
+            segment = _seg
         else:
-            segment = segment.upper()
+            segment = "FUT"
 
         contract = str(strategy_json.get("main_contract", "NEAR")).upper()
         expiry = str(strategy_json.get("main_expiry", "MONTHLY")).upper()
@@ -170,21 +179,20 @@ class RESPayloadGenerator:
     def _build_mix_name(self, symbol, segment, contract, expiry, atm, option_type):
         if segment == "OPT":
             return f"{symbol} OPT {contract} {expiry} {atm} {option_type}"
-        elif segment == "Stock":
-            return f"{symbol} Stock"
+        elif segment == "EQ":
+            return f"{symbol} EQ"
         else:
             return f"{symbol} {segment} {contract} {expiry}"
 
     def _build_hedge_leg(self, hl):
-        seg = str(hl.get("segment", "FUT"))
-        if seg.upper() == "STOCK":
-            seg = "Stock"
-        else:
-            seg = seg.upper()
+        sym_hl = str(hl.get("symbol", "BANKNIFTY")).upper()
+        if sym_hl == "NIFTY50":
+            sym_hl = "NIFTY"
+        seg_hint = str(hl.get("segment", "FUT"))
+        exch_hint = str(hl.get("exchange", ""))
+        seg = resolve_leg_exchange(sym_hl, seg_hint, exch_hint)[1]
 
-        sym = str(hl.get("symbol", "BANKNIFTY")).upper()
-        if sym == "NIFTY50":
-            sym = "NIFTY"
+        hl_exch, seg = resolve_leg_exchange(sym_hl, seg_hint, exch_hint)
 
         option_type = str(hl.get("option_type", "")).upper()
         if seg != "OPT":
@@ -197,13 +205,13 @@ class RESPayloadGenerator:
         call_type = str(hl.get("call_type", "BUY")).upper()
 
         hedge_lot = int(hl.get("lot", 1))
-        # OPT legs: send actual qty so MM has it; FUT/Stock legs: MM expects 0
-        hedge_qty = LOT_SIZES.get(sym, 1) * hedge_lot if seg == "OPT" else 0
+        # OPT legs: send actual qty so MM has it; FUT/EQ legs: MM expects 0
+        hedge_qty = LOT_SIZES.get(sym_hl, 1) * hedge_lot if seg == "OPT" else 0
         return {
             "call_type": call_type,
-            "exchange": str(hl.get("exchange", "NFO")).upper(),
+            "exchange": hl_exch,
             "segment": seg,
-            "symbol": sym,
+            "symbol": sym_hl,
             "contract": str(hl.get("contract", "NEAR")).upper(),
             "expiry": str(hl.get("expiry", "MONTHLY")).upper(),
             "atm": atm,

@@ -8,6 +8,12 @@ from Unified_Strategy_Builder.mcp.tools import (
 
 class ToolHandler:
     def handle_tool_call(self, tool_name, arguments):
+        try:
+            return self._dispatch(tool_name, arguments)
+        except ValueError as e:
+            return {"error": str(e), "resolution": "Please clarify the exchange or symbol before I proceed."}
+
+    def _dispatch(self, tool_name, arguments):
         if tool_name == "get_validation_rules":
             return get_validation_rules(arguments.get("parameter_name"))
         elif tool_name == "validate_strategy":

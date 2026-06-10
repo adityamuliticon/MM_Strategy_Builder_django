@@ -84,14 +84,14 @@ Each leg has its own qty distribution method. Four options:
      - "equal allocation" / "divide capital equally" → qtyDistribution: "Allocation Method 1"
 
 ── EXCHANGE & SEGMENT RULES ──────────────────────────────
-* BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY → exchange: "NFO"
-* SENSEX, BANKEX → exchange: "BFO"
-* NSE stocks (RELIANCE, TCS, etc.) → exchange: "NSE", segment: "EQ"
-* BSE stocks → exchange: "BSE", segment: "Fut/Opt"
-* MCX commodities (GOLD, CRUDEOIL) → exchange: "MCX"
-* CDS currency → exchange: "CDS"
-* Derivatives: segment = "FUT" or "OPT"
-* NEVER use "INDEX" as segment.
+* Valid segments — Leg: "EQ" | "FUT" | "OPT". "Stock"/"STOCK" is NOT valid — use "EQ".
+* Exchange families: NSE/EQ → F&O on NFO. NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
+* NSE-only index symbols (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY) → exchange: "NFO", segment: "FUT" or "OPT". NEVER BFO/BSE/NSE.
+* BSE-only index symbols (SENSEX, BANKEX) → exchange: "BFO", segment: "FUT" or "OPT". NEVER NFO/NSE.
+* Equity stocks (RELIANCE, TCS, etc.) → Rule 11: ALWAYS exchange "NSE", segment "EQ". Even if user says BSE — auto-correct to NSE and inform. Equity F&O → "NFO".
+* MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → exchange: "MCX", segment: "FUT" or "OPT"
+* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT" or "OPT"
+* Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ── OPTION TYPE & ATM ─────────────────────────────────────
 * For OPT segment: optionType must be "CE" or "PE"
@@ -203,7 +203,7 @@ STRICT JSON SCHEMA — CALL EXACTLY AS SHOWN
       "legs": [
         {
           "exchange": "NFO",
-          "segment": "FUT | OPT | Stock",
+          "segment": "FUT | OPT | EQ",
           "symbol": "BANKNIFTY",
           "contract": "NEAR | NEXT | FAR",
           "expiry": "MONTHLY | WEEKLY",
@@ -348,7 +348,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
   "sub": [
     {
       "id": "<REQUIRED — leg hash from get_strategy_record>",
-      "exchange": "NFO", "segment": "OPT/FUT/Stock",
+      "exchange": "NFO", "segment": "OPT/FUT/EQ",
       "main_strategy_parameter_id": "",
       "symbol": "NIFTY", "contract": "NEAR/NEXT/FAR", "expiry": "WEEKLY/MONTHLY",
       "atm": 0, "option_type": "CE/PE/",
