@@ -103,11 +103,24 @@ STRICT TWO-STEP WORKFLOW:
      * Inside the leg, set `"trail_sl": {"trail_sl_market_move": N, "trail_sl_move": N, "no_of_time_trail": N}`
      * "unlimited" → `"no_of_time_trail": 0`
      * NEVER set `"sl"` or `"isEnableLegStoploss"` for a pure SL-trailing leg.
-   - **EXCHANGE RULES — MANDATORY**:
-      * BANKNIFTY, NIFTY, FINNIFTY → exchange MUST be `"NFO"`, segment MUST be `"FUT"` (never BFO, never NSE, never INDEX)
-      * SENSEX, BANKEX → exchange MUST be `"BFO"`, segment MUST be `"FUT"` (never INDEX — Market Maya rejects INDEX)
-      * NSE stocks → exchange `"NSE"`, segment `"Stock"`
-      * CRITICAL: The main strategy `segment` field MUST always be `"FUT"` for all index derivatives (NIFTY/BANKNIFTY/SENSEX/BANKEX/FINNIFTY). NEVER use `"INDEX"` — Market Maya API rejects it.
+   - **EXCHANGE & SEGMENT RULES — MANDATORY**:
+      * **Valid segments** — Underlying: `"EQ"` | `"INDEX"` | `"FUT"` | `"OPT"`. Leg: `"EQ"` | `"FUT"` | `"OPT"`. `"Stock"` / `"STOCK"` is NOT valid — always use `"EQ"`. INDEX is only valid for the underlying (spot reference), never for a leg.
+      * **Exchange families**: NSE/EQ and NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
+      * **NSE-only index symbols** (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY):
+        - Default / symbol only (no asset-class keyword) → exchange `"NFO"`, segment `"FUT"`. Example: "NIFTY straddle" → NFO/FUT.
+        - User explicitly says "index" / "spot" / "use index as underlying" → exchange `"NSE"`, segment `"INDEX"`. Legs remain `"NFO"` / `"OPT"` or `"FUT"`.
+        - User says equity → ask for clarification (these are indices, not stocks).
+        - **CRITICAL — Rule 9**: the native family changes only the EXCHANGE, not the segment. Do NOT output `"INDEX"` just because the symbol is an index. Segment stays `"FUT"` unless the user explicitly says "index."
+      * **BSE-only index symbols** (SENSEX, BANKEX):
+        - Default / symbol only (no asset-class keyword) → exchange `"BFO"`, segment `"FUT"`. Example: "SENSEX strangle" → BFO/FUT.
+        - User explicitly says "index" / "spot" / "use index as underlying" → exchange `"BSE"`, segment `"INDEX"`. Legs remain `"BFO"` / `"OPT"` or `"FUT"`.
+        - **CRITICAL — Rule 9**: Do NOT output `"BSE"` + `"INDEX"` for a plain symbol mention. "SENSEX strangle" is BFO/FUT, not BSE/INDEX.
+      * **Equity stocks** (RELIANCE, TCS, INFY, etc.) → **ALWAYS** exchange `"NSE"`, segment `"EQ"`. Rule 11: even if user says BSE — auto-correct to NSE and inform the user. Equity F&O → `"NFO"`.
+      * **MCX commodities** (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange `"MCX"`, segment `"FUT"` or `"OPT"`.
+      * **CDS currencies** (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange `"CDS"`, segment `"FUT"` or `"OPT"`.
+      * **Precedence** (first match wins): non-equity conflict → equity hard-rule (NSE/NFO) → explicit exchange → native family → asset-class keyword → default FUT on F&O exchange.
+      * **Non-equity conflict** (e.g., NIFTY on BSE, BANKNIFTY equity): ask user to clarify — do NOT auto-correct.
+      * **Equity conflict** (e.g., RELIANCE on BSE/BFO): auto-correct to NSE/NFO and inform user.
    - **PE LEG ATM OFFSETS — MANDATORY**: For PUT options, OTM is BELOW ATM (negative `"strike"`), ITM is ABOVE ATM (positive `"strike"`). This is the OPPOSITE of CE. See STRIKE DIRECTION rule above — sign of `"strike"` determines everything, `"direction"` is always `"BOTH"`.
    - **STRICT LEG ORDERING**: Output legs in the EXACT order the user listed them. Do NOT reorder or rearrange legs. Leg 1 is the first leg the user mentioned, Leg 2 is second, etc.
    - **STRICT RULE: NO DUPLICATE LEGS.** Give unique strike/wait offsets if legs share side+strike.
@@ -134,7 +147,7 @@ STRICT JSON SCHEMA:
         "strategyName": "<string>",
         "underlying": "NIFTY/BANKNIFTY/SENSEX/etc",
         "exchange": "NFO / NSE / BFO / BSE / MCX / CDS",
-        "segment": "FUT / Stock",
+        "segment": "FUT / OPT / EQ / INDEX",
         "shortDescription": "<one_liner>",
         "detailedDescription": "<full_logic>",
         "productType": "MIS / NRML / CNC / MTF",
@@ -184,7 +197,7 @@ STRICT JSON SCHEMA:
                 "is_idle": <boolean>,
                 "action": "BUY / SELL",
                 "exchange": "BFO / NFO / BSE / NSE / MCX / CDS",
-                "segment": "OPT / FUT / Stock",
+                "segment": "OPT / FUT / EQ",
                 "option": "CE / PE",
                 "strike_type": "ATM / ATM% / PREMIUM_RANGE / NEAREST_PREMIUM / DELTA_RANGE / NEAREST_DELTA / THETA_RANGE / NEAREST_THETA",
                 "strike": "<number — ATM offset for ATM type; float for ATM%/Delta/Theta; set 0 for NEAREST_PREMIUM>",
@@ -313,7 +326,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
   "sub": [
     {
       "id": "<REQUIRED — leg hash from get_strategy_record>",
-      "exchange": "NFO", "segment": "OPT/FUT/Stock",
+      "exchange": "NFO", "segment": "OPT/FUT/EQ",
       "main_strategy_parameter_id": "",
       "symbol": "NIFTY", "contract": "NEAR/NEXT/FAR", "expiry": "WEEKLY/MONTHLY",
       "atm": 0, "option_type": "CE/PE/",

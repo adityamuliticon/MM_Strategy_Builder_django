@@ -49,11 +49,16 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 * User specifies a time → use EXACT value given. Never substitute a default.
 
 ── EXCHANGE & SEGMENT RULES ──────────────────────────────
-* BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY → exchange: "NFO"
-* SENSEX, BANKEX → exchange: "BFO"
-* NSE stocks → exchange: "NSE", segment: "EQ"
-* segment for derivatives: "FUT" or "OPT"
-* NEVER use "INDEX" as segment.
+* Valid segments — Leg: "EQ" | "FUT" | "OPT". "Stock"/"STOCK" is NOT valid — use "EQ".
+* Exchange families: NSE/EQ → F&O on NFO. NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
+* NSE-only index symbols (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY):
+  - Leg exchange: "NFO", segment: "FUT" or "OPT". Default (plain symbol only): "FUT". Use "OPT" only when user explicitly requests options.
+* BSE-only index symbols (SENSEX, BANKEX):
+  - Leg exchange: "BFO", segment: "FUT" or "OPT". Default (plain symbol only): "FUT". Use "OPT" only when user explicitly requests options.
+* Equity stocks (RELIANCE, TCS, etc.) → Rule 11: ALWAYS exchange "NSE", segment "EQ". Even if user says BSE — auto-correct to NSE and inform. Equity F&O legs → "NFO".
+* MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange: "MCX", segment: "FUT" or "OPT"
+* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT" or "OPT"
+* Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ── CONTRACT & EXPIRY ─────────────────────────────────────
 * contract: "NEAR" (current), "NEXT" (next), "FAR" (far)
@@ -208,7 +213,7 @@ STRICT JSON SCHEMA — CALL EXACTLY AS SHOWN
       "legs": [
         {
           "exchange": "NFO",
-          "segment": "FUT | OPT | Stock",
+          "segment": "FUT | OPT | EQ",
           "symbol": "BANKNIFTY",
           "contract": "NEAR | NEXT | FAR",
           "expiry": "MONTHLY | WEEKLY",
@@ -364,7 +369,7 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
   "sub": [
     {
       "id": "<REQUIRED — leg hash from get_strategy_record>",
-      "exchange": "NFO", "segment": "OPT/FUT/Stock",
+      "exchange": "NFO", "segment": "OPT/FUT/EQ",
       "main_strategy_parameter_id": "",
       "symbol": "NIFTY", "contract": "NEAR/NEXT/FAR", "expiry": "WEEKLY/MONTHLY",
       "atm": 0, "option_type": "CE/PE/",

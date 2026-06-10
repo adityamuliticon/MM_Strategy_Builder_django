@@ -2,27 +2,22 @@ import json
 import math
 import re
 from config import Config
+from services.exchange_resolver import resolve_exchange_segment
 
 class PayloadGenerator:
     def __init__(self):
         self.strategy_type_id = "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$"
 
     def generate_v3_payload(self, main_params, legs):
-        exchange = main_params.get("exchange", main_params.get("mainExchange", "NFO")).upper()
-        segment_raw = main_params.get("segment", main_params.get("mainSegment", "FUT"))
-        segment = segment_raw.upper()
-        if segment == "STOCK":
-            segment = "Stock"
-        symbol = main_params.get("symbol", main_params.get("mainSymbol", main_params.get("underlying", "NIFTY"))).upper()
-
-        if " " in symbol:
-            symbol = symbol.split()[0]
+        symbol_raw = main_params.get("symbol", main_params.get("mainSymbol", main_params.get("underlying", "NIFTY")))
+        symbol = symbol_raw.upper().split()[0] if symbol_raw else "NIFTY"
         if symbol == "NIFTY50":
             symbol = "NIFTY"
 
-        # Market Maya never accepts "INDEX" as a segment — always use FUT for index derivatives
-        if segment == "INDEX":
-            segment = "FUT"
+        segment_hint = main_params.get("segment", main_params.get("mainSegment", "FUT"))
+        exchange_hint = main_params.get("exchange", main_params.get("mainExchange", ""))
+
+        exchange, segment = resolve_exchange_segment(symbol, segment_hint, exchange_hint)
 
         underlying = f"{symbol} {segment} {exchange}"
 
@@ -319,8 +314,15 @@ class PayloadGenerator:
         if wait_and_trade and wait_value == 0:
             wait_value = 1   # API rejects 0 when isWaitAndTrade=True
 
-        leg_seg_raw = str(leg.get("segment", "OPT"))
-        leg_segment = leg_seg_raw.upper() if leg_seg_raw.upper() != "STOCK" else "Stock"
+        leg_seg_raw = str(leg.get("segment", "OPT")).upper()
+        if leg_seg_raw in ("STOCK", "EQUITY", "CASH"):
+            leg_segment = "EQ"
+        elif leg_seg_raw == "INDEX":
+            leg_segment = "FUT"   # INDEX is not valid for legs
+        elif leg_seg_raw in ("EQ", "FUT", "OPT"):
+            leg_segment = leg_seg_raw
+        else:
+            leg_segment = "OPT"
 
         return {
             "id": "",

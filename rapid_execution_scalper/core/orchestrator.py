@@ -55,15 +55,16 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 * intraday_exit_time MUST be after intraday_entry_time.
 
 ── EXCHANGE & SEGMENT RULES ──────────────────────────────
-* BANKNIFTY, NIFTY, FINNIFTY, MIDCPNIFTY → main_exchange: "NFO"
-* SENSEX, BANKEX → main_exchange: "BFO"
-* NSE stocks → main_exchange: "NSE", main_segment: "Stock"
-* MCX commodities (SILVER, GOLD, etc.) → main_exchange: "MCX"
-* CDS currencies (USDINR, etc.) → main_exchange: "CDS"
-* Segment values: "FUT", "OPT", "Stock"
-* NEVER use "INDEX" as segment.
-* DEFAULT SEGMENT: If user mentions index name (BANKNIFTY, NIFTY, etc.) without specifying OPT/options/CE/PE → ALWAYS use main_segment: "FUT".
-* Use main_segment: "OPT" ONLY when user explicitly says "options", "call", "put", "CE", "PE", or a specific strike price.
+* Valid segment values: "FUT" | "OPT" | "EQ". "Stock"/"STOCK" is NOT valid — use "EQ".
+* Exchange families: NSE/EQ → F&O on NFO. NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
+* NSE-only index symbols (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY) → main_exchange: "NFO", main_segment: "FUT" (default) or "OPT". NEVER BFO/BSE/NSE.
+* BSE-only index symbols (SENSEX, BANKEX) → main_exchange: "BFO", main_segment: "FUT" (default) or "OPT". NEVER NFO/NSE.
+* Equity stocks → Rule 11: ALWAYS main_exchange: "NSE", main_segment: "EQ". Even if user says BSE — auto-correct to NSE and inform. Equity F&O → "NFO".
+* MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → main_exchange: "MCX", main_segment: "FUT"
+* CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → main_exchange: "CDS", main_segment: "FUT"
+* DEFAULT SEGMENT: If user mentions index name without specifying options/CE/PE → main_segment: "FUT".
+* Use main_segment: "OPT" ONLY when user explicitly says "options", "call", "put", "CE", "PE", or a specific strike.
+* Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ── CONTRACT & EXPIRY ─────────────────────────────────────
 * main_contract: "NEAR" (default), "NEXT", "FAR"
@@ -320,7 +321,7 @@ STRICT JSON SCHEMA FOR create_and_save_res_strategy
       "hedge_legs": [
         {
           "exchange": "NFO",
-          "segment": "FUT / OPT / Stock",
+          "segment": "FUT / OPT / EQ",
           "symbol": "BANKNIFTY",
           "contract": "NEAR",
           "expiry": "MONTHLY / WEEKLY",

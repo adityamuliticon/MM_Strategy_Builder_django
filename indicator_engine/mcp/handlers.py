@@ -20,6 +20,12 @@ from indicator_engine.mcp.tools import (
 
 class ISEToolHandler:
     def handle_tool_call(self, tool_name, arguments):
+        try:
+            return self._dispatch(tool_name, arguments)
+        except ValueError as e:
+            return {"error": str(e), "resolution": "Please clarify the exchange or symbol before I proceed."}
+
+    def _dispatch(self, tool_name, arguments):
         if tool_name == "ise_get_validation_rules":
             return ise_get_validation_rules(arguments.get("parameter_name"))
         elif tool_name == "ise_validate_strategy":
