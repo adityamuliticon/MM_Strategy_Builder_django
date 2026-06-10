@@ -59,11 +59,10 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 * Exchange families: NSE/EQ → F&O on NFO. NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
 * NSE-only index symbols (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY) → main_exchange: "NFO", main_segment: "FUT" (default) or "OPT". NEVER BFO/BSE/NSE.
 * BSE-only index symbols (SENSEX, BANKEX) → main_exchange: "BFO", main_segment: "FUT" (default) or "OPT". NEVER NFO/NSE.
-* Equity stocks (RELIANCE, TCS, etc.):
-  - ❌ WRONG: "RELIANCE scalper" → main_exchange "NSE", main_segment "EQ" — NEVER for F&O strategies.
-  - ✓ CORRECT: "RELIANCE scalper" → main_exchange "NFO", main_segment "FUT".
-  - Default / symbol only → main_exchange: "NFO", main_segment: "FUT".
-  - ONLY use main_exchange: "NSE", main_segment: "EQ" when user explicitly says "equity" / "cash" / "EQ".
+* Equity stocks (RELIANCE, TCS, etc.) — segment driven by keyword:
+  - No keyword     → NFO/FUT: "RELIANCE scalper" → main_exchange "NFO", main_segment "FUT".
+  - Equity keyword → NSE/EQ:  "equity RELIANCE" / "RELIANCE equity" / "RELIANCE cash" → main_exchange "NSE", main_segment "EQ".
+  - Keyword list for NSE/EQ: "equity", "cash", "EQ", "cash market" — any of these → NSE/EQ. Otherwise → NFO/FUT.
   - Rule 11: exchange ALWAYS NSE-family. If user says BSE — auto-correct to NSE/NFO and inform.
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → main_exchange: "MCX", main_segment: "FUT"
 * CDS currencies → main_exchange: "CDS", main_segment: "FUT" (default) or "OPT"
