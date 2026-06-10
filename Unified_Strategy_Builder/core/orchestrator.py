@@ -115,7 +115,11 @@ STRICT TWO-STEP WORKFLOW:
         - Default / symbol only (no asset-class keyword) → exchange `"BFO"`, segment `"FUT"`. Example: "SENSEX strangle" → BFO/FUT.
         - User explicitly says "index" / "spot" / "use index as underlying" → exchange `"BSE"`, segment `"INDEX"`. Legs remain `"BFO"` / `"OPT"` or `"FUT"`.
         - **CRITICAL — Rule 9**: Do NOT output `"BSE"` + `"INDEX"` for a plain symbol mention. "SENSEX strangle" is BFO/FUT, not BSE/INDEX.
-      * **Equity stocks** (RELIANCE, TCS, INFY, etc.) → **ALWAYS** exchange `"NSE"`, segment `"EQ"`. Rule 11: even if user says BSE — auto-correct to NSE and inform the user. Equity F&O → `"NFO"`.
+      * **Equity stocks** (RELIANCE, TCS, INFY, etc.):
+        - Default / symbol only (no asset-class keyword) → exchange `"NFO"`, segment `"FUT"`. Example: "RELIANCE call option" → underlying NFO/FUT.
+        - User explicitly says "equity" / "cash" / "stock" / "EQ" → exchange `"NSE"`, segment `"EQ"`.
+        - Rule 11: exchange ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform. Never BFO/BSE for equity.
+        - Equity F&O legs → `"NFO"`.
       * **MCX commodities** (CRUDEOIL, GOLD, SILVER, NATURALGAS, etc.) → exchange `"MCX"`, segment `"FUT"` or `"OPT"`.
       * **CDS currencies** (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange `"CDS"`, segment `"FUT"` or `"OPT"`.
       * **Precedence** (first match wins): non-equity conflict → equity hard-rule (NSE/NFO) → explicit exchange → native family → asset-class keyword → default FUT on F&O exchange.

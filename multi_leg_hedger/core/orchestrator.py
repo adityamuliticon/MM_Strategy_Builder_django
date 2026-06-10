@@ -76,7 +76,11 @@ UNDERLYING SYMBOL & EXCHANGE RULES
   - Default / symbol only (no asset-class keyword) → exchange: "BFO", segment: "FUT". Legs → "BFO" / "FUT" or "OPT". Example: "SENSEX strangle" → BFO/FUT.
   - User explicitly says "index" / "spot" / "use index as underlying" → exchange: "BSE", segment: "INDEX". Legs remain "BFO"/"OPT" or "FUT".
   - CRITICAL — Rule 9: Do NOT output "BSE" + "INDEX" for a plain symbol mention. "SENSEX strangle" is BFO/FUT, not BSE/INDEX. Segment stays "FUT" unless user explicitly says "index."
-* Equity stocks (RELIANCE, TCS, etc.) → Rule 11: ALWAYS exchange: "NSE", segment: "EQ". Even if user says BSE — auto-correct to NSE and inform. Equity F&O legs → "NFO".
+* Equity stocks (RELIANCE, TCS, etc.):
+  - Default / symbol only (no asset-class keyword) → exchange: "NFO", segment: "FUT". Example: "RELIANCE strangle" or "RELIANCE call option" → underlying NFO/FUT.
+  - User explicitly says "equity" / "cash" / "stock" / "EQ" → exchange: "NSE", segment: "EQ".
+  - Rule 11: exchange is ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform. Never BFO/BSE for equity.
+  - Equity F&O legs → exchange: "NFO".
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → exchange: "MCX", segment: "FUT"
 * CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT"
 * Default: BANKNIFTY, exchange: "NFO", segment: "FUT". underlying display string is built automatically.

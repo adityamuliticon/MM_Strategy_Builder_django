@@ -88,7 +88,10 @@ Each leg has its own qty distribution method. Four options:
 * Exchange families: NSE/EQ → F&O on NFO. NSE/INDEX → F&O on NFO. BSE/INDEX → F&O on BFO. MCX self-contained. CDS self-contained.
 * NSE-only index symbols (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY) → exchange: "NFO", segment: "FUT" or "OPT". NEVER BFO/BSE/NSE.
 * BSE-only index symbols (SENSEX, BANKEX) → exchange: "BFO", segment: "FUT" or "OPT". NEVER NFO/NSE.
-* Equity stocks (RELIANCE, TCS, etc.) → Rule 11: ALWAYS exchange "NSE", segment "EQ". Even if user says BSE — auto-correct to NSE and inform. Equity F&O → "NFO".
+* Equity stocks (RELIANCE, TCS, etc.):
+  - Default / symbol only (no asset-class keyword) → exchange: "NFO", segment: "FUT". Example: "RELIANCE future" or "RELIANCE options" → NFO/FUT or NFO/OPT.
+  - User explicitly says "equity" / "cash" / "EQ" → exchange: "NSE", segment: "EQ".
+  - Rule 11: exchange ALWAYS NSE-family. If user says BSE — auto-correct to NSE/NFO and inform.
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → exchange: "MCX", segment: "FUT" or "OPT"
 * CDS currencies (USDINR, EURINR, GBPINR, JPYINR, etc.) → exchange: "CDS", segment: "FUT" or "OPT"
 * Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
