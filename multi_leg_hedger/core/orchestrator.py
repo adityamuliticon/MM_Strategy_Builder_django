@@ -76,10 +76,12 @@ UNDERLYING SYMBOL & EXCHANGE RULES
   - Default / symbol only (no asset-class keyword) → exchange: "BFO", segment: "FUT". Legs → "BFO" / "FUT" or "OPT". Example: "SENSEX strangle" → BFO/FUT.
   - User explicitly says "index" / "spot" / "use index as underlying" → exchange: "BSE", segment: "INDEX". Legs remain "BFO"/"OPT" or "FUT".
   - CRITICAL — Rule 9: Do NOT output "BSE" + "INDEX" for a plain symbol mention. "SENSEX strangle" is BFO/FUT, not BSE/INDEX. Segment stays "FUT" unless user explicitly says "index."
-* Equity stocks (RELIANCE, TCS, etc.):
-  - Default / symbol only (no asset-class keyword) → exchange: "NFO", segment: "FUT". Example: "RELIANCE strangle" or "RELIANCE call option" → underlying NFO/FUT.
-  - User explicitly says "equity" / "cash" / "stock" / "EQ" → exchange: "NSE", segment: "EQ".
-  - Rule 11: exchange is ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform. Never BFO/BSE for equity.
+* Equity stocks (RELIANCE, TCS, INFY, etc.):
+  - ❌ WRONG: "RELIANCE options" → underlying exchange "NSE", segment "EQ" — NEVER do this for F&O strategies.
+  - ✓ CORRECT: "RELIANCE options" → underlying exchange "NFO", segment "FUT" (stock futures is the ATM reference for options).
+  - Default / symbol only (no asset-class keyword) → exchange: "NFO", segment: "FUT".
+  - ONLY use exchange: "NSE", segment: "EQ" when user explicitly says "equity" / "cash" / "EQ" / "cash market".
+  - Rule 11: exchange ALWAYS NSE-family. If user says BSE/BFO — auto-correct to NSE/NFO and inform.
   - Equity F&O legs → exchange: "NFO".
 * MCX commodities (CRUDEOIL, GOLD, SILVER, NATURALGAS, COPPER, ZINC, etc.) → exchange: "MCX", segment: "FUT"
 * CDS currencies → exchange: "CDS", segment: "FUT" (underlying) or "OPT" (options legs)
@@ -257,6 +259,7 @@ WHAT COPILOT MUST NEVER DO
 ❌ Never use Dynamic ATM without both premium_start_range > 0 and premium_end_range > 0
 ❌ Never use OPT segment without specifying option_type CE or PE
 ❌ Never use FUT/Stock segment with option_type set (must be empty "")
+❌ Never set the underlying segment to "EQ" for a stock (RELIANCE, TCS, etc.) unless the user explicitly says "equity" / "cash" / "EQ". For any stock options or futures strategy, the underlying is ALWAYS NFO/FUT.
 ❌ NEVER misspell the key — it is cosider_closed_pnl (one 'n'), not consider_closed_pnl
 
 ═══════════════════════════════════════════════════════════
