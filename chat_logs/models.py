@@ -29,3 +29,18 @@ class ChatLog(models.Model):
 
     def __str__(self):
         return f"[{self.module}] {self.session_id} @ {self.timestamp:%Y-%m-%d %H:%M:%S}"
+
+
+class BearerToken(models.Model):
+    """Stores the active Market Maya JWT. Only one row is ever used (latest by updated_at)."""
+
+    token      = models.TextField()
+    expires_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Bearer Token"
+
+    def __str__(self):
+        exp = self.expires_at.strftime('%Y-%m-%d %H:%M IST') if self.expires_at else 'unknown'
+        return f"BearerToken (expires {exp})"

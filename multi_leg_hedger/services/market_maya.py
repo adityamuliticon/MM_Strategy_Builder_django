@@ -12,9 +12,10 @@ LOG_FILE = "logs/saved_strategies.log"
 
 class MLHMarketMayaService:
     def deploy(self, payload):
+        from services.token_service import get_auth_header
         url = Config.CREATE_MULTI_LEG_HEDGER_URL
         headers = {
-            "Authorization": f"Bearer {Config.MARKET_MAYA_BEARER_TOKEN}",
+            "Authorization": get_auth_header(),
             "Content-Type": "application/json",
         }
         try:
