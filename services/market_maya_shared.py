@@ -1,3 +1,5 @@
+"""Shared Market Maya API helpers used by all five plugins."""
+
 import requests
 from config import Config
 
@@ -124,7 +126,7 @@ def delete_strategy(strategy_id="", strategy_name=""):
     """
     sid = strategy_id
 
-    # If only name given (or ID looks like a plain name, not a hash), search first
+    # Market Maya hash IDs always contain "$" and are ≥20 chars; anything shorter is a plain name.
     if not sid or ("$" not in sid and len(sid) < 20):
         search_term = strategy_name or sid
         if not search_term:

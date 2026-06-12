@@ -1,3 +1,5 @@
+"""ISB strategy validator — checks required fields and ISB-specific leg constraints."""
+
 VALID_SEGMENTS = {"FUT", "OPT", "Stock"}
 VALID_EXCHANGES = {"NSE", "NFO", "BFO", "BSE", "MCX", "CDS"}
 VALID_CONTRACTS = {"NEAR", "NEXT", "FAR"}

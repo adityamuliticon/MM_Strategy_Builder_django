@@ -1,3 +1,5 @@
+"""MLH MCP ToolHandler — routes LLM tool-call names to the correct MLH tool function."""
+
 from multi_leg_hedger.mcp.tools import (
     create_and_save_mlh_strategy, mlh_validate_strategy,
     mlh_generate_payload, mlh_save,

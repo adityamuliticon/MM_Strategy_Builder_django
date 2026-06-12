@@ -1,7 +1,10 @@
+"""Central configuration — all API keys, endpoint URLs, and cost-tracking constants for the entire project."""
+
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 class Config:
     # API Keys

@@ -1,3 +1,5 @@
+"""Chat log model — records every AI interaction with token counts and INR cost."""
+
 from django.db import models
 
 

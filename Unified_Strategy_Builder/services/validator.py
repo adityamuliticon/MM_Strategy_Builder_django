@@ -1,5 +1,8 @@
+"""USB strategy validator — checks required fields and allowed values before payload generation."""
+
 import json
 from config import Config
+
 
 class StrategyValidator:
     def __init__(self):
@@ -60,6 +63,7 @@ class StrategyValidator:
             errors.append(f"Invalid Strike Selection. Must be one of: {', '.join(allowed_strike_types)}")
             
         return errors
+
 
 # Singleton instance
 validator = StrategyValidator()

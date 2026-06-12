@@ -1,3 +1,5 @@
+"""RES MCP tool functions — thin wrappers that expose RES capabilities to the LLM via tool calls."""
+
 from rapid_execution_scalper.services.validator import res_validator
 from rapid_execution_scalper.services.generator import res_generator
 from rapid_execution_scalper.services.market_maya import res_market_maya

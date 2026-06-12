@@ -1,3 +1,5 @@
+"""MLH payload generator — converts LLM-structured multi-leg hedger JSON into the Market Maya CreateMultiLegCallPutStrategy schema."""
+
 import random
 import string
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange

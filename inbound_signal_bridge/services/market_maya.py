@@ -1,5 +1,8 @@
+"""ISB Market Maya API client — posts inbound signal bridge strategies to createCustomTradeStrategy and logs results."""
+
 import requests
 import json
+from datetime import datetime
 from config import Config
 
 
@@ -8,11 +11,10 @@ class ISBMarketMayaService:
         self.token = Config.MARKET_MAYA_BEARER_TOKEN
         if self.token and not self.token.startswith("Bearer "):
             self.token = f"Bearer {self.token}"
-        self.url = "https://api.marketmaya.com/api/mainStrategy/createCustomTradeStrategy"
+        # ISB uses createCustomTradeStrategy for both create and modify operations
+        self.url = Config.MODIFY_STRATEGY_URL
 
     def save_strategy(self, payload):
-        from datetime import datetime
-
         headers = {
             "Authorization": self.token,
             "Content-Type": "application/json",
@@ -64,4 +66,5 @@ class ISBMarketMayaService:
         return result
 
 
+# Singleton instance
 isb_market_maya = ISBMarketMayaService()

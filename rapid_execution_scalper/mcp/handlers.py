@@ -1,3 +1,5 @@
+"""RES MCP ToolHandler — routes LLM tool-call names to the correct RES tool function."""
+
 from rapid_execution_scalper.mcp.tools import (
     res_get_validation_rules,
     res_validate_strategy,

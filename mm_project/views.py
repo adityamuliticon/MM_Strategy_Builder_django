@@ -1,3 +1,5 @@
+"""Cross-plugin views: strategy counts badge API and other project-level endpoints."""
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.http import JsonResponse
 from services.market_maya_shared import get_strategies

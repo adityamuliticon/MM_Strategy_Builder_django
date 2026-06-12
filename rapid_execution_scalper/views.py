@@ -1,3 +1,5 @@
+"""RES views: chat (blocking + SSE streaming) for the Rapid Execution Scalper plugin."""
+
 import json
 from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
@@ -7,6 +9,7 @@ from rapid_execution_scalper.core.orchestrator import res_orchestrator
 from chat_logs.models import ChatLog
 from config import Config
 
+# In-process session store keyed by session_id. Intentionally simple: single server process only.
 res_memory = {}
 
 
@@ -87,7 +90,10 @@ def chat_stream(request):
         finally:
             res_memory[session_id].append({"role": "user", "content": user_message})
             res_memory[session_id].append({"role": "assistant", "content": full_response})
-            cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD + out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
+            cost_usd = (
+                in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD +
+                out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD
+            ) / 1_000_000
             cost_inr = cost_usd * Config.USD_TO_INR_RATE
             try:
                 ChatLog.objects.create(

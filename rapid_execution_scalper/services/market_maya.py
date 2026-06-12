@@ -1,5 +1,8 @@
+"""RES Market Maya API client — posts scalping strategies to createScalpingStrategy and logs results."""
+
 import requests
 import json
+from datetime import datetime
 from config import Config
 
 
@@ -11,8 +14,6 @@ class RESMarketMayaService:
         self.url = Config.CREATE_SCALPING_STRATEGY_URL
 
     def save_strategy(self, payload):
-        from datetime import datetime
-
         headers = {
             "Authorization": self.token,
             "Content-Type": "application/json",

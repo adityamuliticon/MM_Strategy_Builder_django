@@ -1,6 +1,10 @@
+"""USB Market Maya API client — posts strategies to the CreateUnifiedStrategy endpoint and logs results."""
+
 import requests
 import json
+from datetime import datetime
 from config import Config
+
 
 class MarketMayaService:
     def __init__(self):
@@ -9,11 +13,7 @@ class MarketMayaService:
             self.token = f"Bearer {self.token}"
 
     def save_strategy(self, payload):
-        """
-        Deploys a strategy to Market Maya. Logs payload + API response together AFTER the call.
-        """
-        from datetime import datetime
-
+        """Deploys a strategy to Market Maya. Logs payload + API response together AFTER the call."""
         headers = {
             "Authorization": self.token,
             "Content-Type": "application/json",
@@ -64,6 +64,7 @@ class MarketMayaService:
             print(f"Logging error: {e}")
 
         return result
+
 
 # Singleton instance
 market_maya = MarketMayaService()

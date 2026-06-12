@@ -1,3 +1,6 @@
+"""MLH strategy validator — checks required fields and mode constraints for multi-leg hedger strategies."""
+
+
 class MLHValidator:
     def validate(self, s):
         errors = []

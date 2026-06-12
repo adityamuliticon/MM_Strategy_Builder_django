@@ -1,3 +1,5 @@
+"""ISEOrchestrator — agentic loop, system prompt, and SSE streaming for the indicator engine plugin."""
+
 import json
 import re
 from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError

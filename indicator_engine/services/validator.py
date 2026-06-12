@@ -1,3 +1,5 @@
+"""ISE strategy validator — checks required fields, allowed values, and indicator configuration."""
+
 VALID_EXCHANGES = ["NSE", "NFO", "BFO", "BSE", "MCX", "CDS"]
 VALID_SEGMENTS = ["FUT", "OPT", "Stock"]
 VALID_CONTRACTS = ["NEAR", "NEXT", "FAR"]

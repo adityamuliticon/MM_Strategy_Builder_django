@@ -1,3 +1,5 @@
+"""ISB MCP ToolHandler — routes LLM tool-call names to the correct ISB tool function."""
+
 from inbound_signal_bridge.mcp.tools import (
     isb_get_validation_rules,
     isb_validate_strategy,
@@ -59,4 +61,6 @@ class ISBToolHandler:
             return {"status": "error", "message": str(e)}
 
 
+
+# Singleton instance
 isb_handler = ISBToolHandler()

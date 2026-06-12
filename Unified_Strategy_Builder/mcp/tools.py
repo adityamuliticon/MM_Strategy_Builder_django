@@ -1,3 +1,5 @@
+"""USB MCP tool functions — thin wrappers that expose USB capabilities to the LLM via tool calls."""
+
 from Unified_Strategy_Builder.services.validator import validator
 from Unified_Strategy_Builder.services.generator import generator
 from Unified_Strategy_Builder.services.market_maya import market_maya
