@@ -1,3 +1,5 @@
+"""Strategy deployment service: fetches charges, resolves strategy ID, posts to Market Maya deploy endpoint."""
+
 import requests
 from config import Config
 from services.market_maya_shared import get_strategies

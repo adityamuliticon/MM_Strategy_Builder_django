@@ -1,3 +1,5 @@
+"""ISB payload generator — converts LLM-structured inbound signal strategy JSON into the Market Maya createCustomTradeStrategy schema."""
+
 import re
 import time
 from services.exchange_resolver import resolve_leg_exchange

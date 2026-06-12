@@ -1,3 +1,5 @@
+"""ISBOrchestrator — agentic loop, system prompt, and SSE streaming for the inbound signal bridge plugin."""
+
 import json
 import re
 from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError

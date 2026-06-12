@@ -1,3 +1,5 @@
+"""MLH Market Maya API client — posts multi-leg hedger strategies to CreateMultiLegCallPutStrategy and logs results."""
+
 import json
 import requests
 import logging

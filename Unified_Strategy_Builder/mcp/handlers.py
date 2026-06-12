@@ -1,3 +1,5 @@
+"""USB MCP ToolHandler — routes LLM tool-call names to the correct USB tool function."""
+
 import json
 from Unified_Strategy_Builder.mcp.tools import (
     get_validation_rules, validate_strategy, generate_payload, deploy,
@@ -5,6 +7,7 @@ from Unified_Strategy_Builder.mcp.tools import (
     get_strategy_record, modify_strategy, rename_strategy, get_balance,
     get_deploy_options, deploy_strategy,
 )
+
 
 class ToolHandler:
     def handle_tool_call(self, tool_name, arguments):
@@ -74,6 +77,7 @@ class ToolHandler:
                 exit_market_order_after_retry=arguments.get("exit_market_order_after_retry", False),
             )
         return f"Error: Unknown tool '{tool_name}'."
+
 
 # Singleton instance
 handler = ToolHandler()

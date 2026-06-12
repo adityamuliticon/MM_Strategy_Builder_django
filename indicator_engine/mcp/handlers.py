@@ -1,3 +1,5 @@
+"""ISE MCP ToolHandler — routes LLM tool-call names to the correct ISE tool function."""
+
 from indicator_engine.mcp.tools import (
     ise_get_validation_rules,
     ise_validate_strategy,

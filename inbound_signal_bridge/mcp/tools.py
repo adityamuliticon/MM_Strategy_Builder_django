@@ -1,3 +1,5 @@
+"""ISB MCP tool functions — thin wrappers that expose ISB capabilities to the LLM via tool calls."""
+
 from inbound_signal_bridge.services.validator import isb_validator
 from inbound_signal_bridge.services.generator import isb_generator
 from inbound_signal_bridge.services.market_maya import isb_market_maya

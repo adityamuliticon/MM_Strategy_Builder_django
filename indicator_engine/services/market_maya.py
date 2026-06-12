@@ -1,5 +1,8 @@
+"""ISE Market Maya API client — posts indicator strategies to createIndicatorStrategy and logs results."""
+
 import requests
 import json
+from datetime import datetime
 from config import Config
 
 
@@ -11,8 +14,6 @@ class ISEMarketMayaService:
         self.url = f"{Config.MARKET_MAYA_BASE_URL}/mainStrategy/createIndicatorStrategy"
 
     def save_strategy(self, payload):
-        from datetime import datetime
-
         headers = {
             "Authorization": self.token,
             "Content-Type": "application/json",

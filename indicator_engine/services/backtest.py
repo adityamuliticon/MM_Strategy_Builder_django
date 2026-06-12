@@ -1,3 +1,5 @@
+"""ISE backtest service — fetches options, deducts points, polls for completion, and formats result tables."""
+
 import json
 import time
 import threading

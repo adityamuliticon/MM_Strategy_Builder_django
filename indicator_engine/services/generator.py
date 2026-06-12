@@ -1,3 +1,5 @@
+"""ISE payload generator — converts LLM-structured indicator strategy JSON into the Market Maya createIndicatorStrategy schema."""
+
 import json
 import os
 import re

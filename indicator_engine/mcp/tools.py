@@ -1,3 +1,5 @@
+"""ISE MCP tool functions — thin wrappers that expose ISE capabilities (including backtest) to the LLM via tool calls."""
+
 from indicator_engine.services.validator import ise_validator
 from indicator_engine.services.generator import ise_generator
 from indicator_engine.services.market_maya import ise_market_maya

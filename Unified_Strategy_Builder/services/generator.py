@@ -1,8 +1,12 @@
+"""USB payload generator — converts LLM-structured strategy JSON into the Market Maya V3 API schema."""
+
 import json
 import math
 import re
+import time
 from config import Config
 from services.exchange_resolver import resolve_exchange_segment
+
 
 class PayloadGenerator:
     def __init__(self):
@@ -54,7 +58,7 @@ class PayloadGenerator:
             else:
                 try:
                     profit_move = sl_move = int(trail_input)
-                except:
+                except Exception:
                     profit_move = sl_move = 0
             no_of_trail_sl = self._parse_trail_count(main_params.get("no_of_trail_sl", 0))
 
@@ -112,7 +116,8 @@ class PayloadGenerator:
 
         payload = {
             "id": "",
-            "strategyName": re.sub(r'_\d{4}$', '', main_params.get("strategyName", main_params.get("strategy_name", "Strategy"))) + f"_{int(__import__('time').time()) % 10000}",
+            # 4-digit suffix from epoch ensures uniqueness without overwriting prior saves
+            "strategyName": re.sub(r'_\d{4}$', '', main_params.get("strategyName", main_params.get("strategy_name", "Strategy"))) + f"_{int(time.time()) % 10000}",
             "underlying": underlying,
             "mainExchange": exchange,
             "mainSegment": segment,
@@ -388,7 +393,7 @@ class PayloadGenerator:
             if numeric_part:
                 return int(float(numeric_part[0]) * multiplier)
             return 1
-        except:
+        except Exception:
             return 1
 
     def _parse_trail_count(self, value):
@@ -400,7 +405,7 @@ class PayloadGenerator:
             if val == 0:
                 return 9999
             return val
-        except:
+        except Exception:
             return 9999
 
     def _resolve_expiry(self, expiry, symbol):
@@ -466,6 +471,7 @@ class PayloadGenerator:
             "down pts": "Down pts", "down points": "Down pts", "downward points": "Down pts", "down_pts": "Down pts",
         }
         return mapping.get(val, value)
+
 
 # Singleton instance
 generator = PayloadGenerator()

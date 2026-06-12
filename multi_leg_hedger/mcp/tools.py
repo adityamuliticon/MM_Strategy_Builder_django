@@ -1,3 +1,5 @@
+"""MLH MCP tool functions — thin wrappers that expose MLH capabilities (including backtest and deploy) to the LLM via tool calls."""
+
 from multi_leg_hedger.services.generator import mlh_generator
 from multi_leg_hedger.services.validator import mlh_validator
 from multi_leg_hedger.services.market_maya import mlh_market_maya

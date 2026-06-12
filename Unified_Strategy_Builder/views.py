@@ -1,3 +1,5 @@
+"""USB views: chat (blocking + SSE streaming) and cross-plugin sidebar helpers."""
+
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.shortcuts import render
@@ -41,6 +43,7 @@ def balance_view(request):
         return JsonResponse({"point_balance": result["point_balance"]})
     return JsonResponse({"point_balance": None})
 
+# In-process session store keyed by session_id. Intentionally simple: single server process only.
 memory = {}
 
 
@@ -121,7 +124,10 @@ def chat_stream(request):
         finally:
             memory[session_id].append({"role": "user", "content": user_message})
             memory[session_id].append({"role": "assistant", "content": full_response})
-            cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD + out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
+            cost_usd = (
+                in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD +
+                out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD
+            ) / 1_000_000
             cost_inr = cost_usd * Config.USD_TO_INR_RATE
             try:
                 ChatLog.objects.create(
