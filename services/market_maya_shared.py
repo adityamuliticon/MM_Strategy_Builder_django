@@ -1,7 +1,9 @@
 """Shared Market Maya API helpers used by all five plugins."""
 
+import time
 import requests
 from config import Config
+from services.session_context import log_api_call
 
 
 def _record_to_modify_payload(data):
@@ -88,6 +90,7 @@ def get_strategies(search="", skip=0, take=50, trading_type="All", strategy_mast
         "AuthorIds": [],
         "sortBy": "newest",
     }
+    start = time.time()
     try:
         resp = requests.post(
             Config.GET_STRATEGIES_URL,
@@ -95,6 +98,7 @@ def get_strategies(search="", skip=0, take=50, trading_type="All", strategy_mast
             headers=_auth_headers(),
             timeout=30,
         )
+        duration_ms = (time.time() - start) * 1000
         print(f"[SharedAPI] GET_STRATEGIES HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
             data = resp.json()
@@ -111,9 +115,13 @@ def get_strategies(search="", skip=0, take=50, trading_type="All", strategy_mast
                 }
                 for s in data.get("data", [])
             ]
+            log_api_call('SHARED', 'get_strategies', Config.GET_STRATEGIES_URL, payload, resp.status_code, data, duration_ms, 'success')
             return {"status": "success", "total": data.get("total", 0), "strategies": strategies}
+        log_api_call('SHARED', 'get_strategies', Config.GET_STRATEGIES_URL, payload, resp.status_code, resp.text, duration_ms, 'error')
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'get_strategies', Config.GET_STRATEGIES_URL, payload, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}
 
 
@@ -141,18 +149,25 @@ def delete_strategy(strategy_id="", strategy_name=""):
         sid = chosen["id"]
         print(f"[SharedAPI] Resolved '{search_term}' → id={sid} (name={chosen['name']})")
 
+    req_payload = {"id": sid}
+    start = time.time()
     try:
         resp = requests.post(
             Config.DELETE_STRATEGY_URL,
-            json={"id": sid},
+            json=req_payload,
             headers=_auth_headers(),
             timeout=30,
         )
+        duration_ms = (time.time() - start) * 1000
         print(f"[SharedAPI] DELETE HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
+            log_api_call('SHARED', 'delete_strategy', Config.DELETE_STRATEGY_URL, req_payload, resp.status_code, resp.text, duration_ms, 'success')
             return {"status": "success", "message": "Strategy deleted successfully."}
+        log_api_call('SHARED', 'delete_strategy', Config.DELETE_STRATEGY_URL, req_payload, resp.status_code, resp.text, duration_ms, 'error')
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'delete_strategy', Config.DELETE_STRATEGY_URL, req_payload, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}
 
 
@@ -174,22 +189,30 @@ def get_strategy_record(strategy_id="", strategy_name=""):
         sid = chosen["id"]
         print(f"[SharedAPI] Resolved '{search_term}' → id={sid}")
 
+    req_params = {"strategyId": sid}
+    start = time.time()
     try:
         resp = requests.get(
             Config.GET_STRATEGY_RECORD_URL,
-            params={"strategyId": sid},
+            params=req_params,
             headers=_auth_headers(),
             timeout=30,
         )
+        duration_ms = (time.time() - start) * 1000
         print(f"[SharedAPI] GET_RECORD HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
             body = resp.json()
             if body.get("statusCode") == 200:
+                log_api_call('SHARED', 'get_strategy_record', Config.GET_STRATEGY_RECORD_URL, req_params, resp.status_code, body, duration_ms, 'success')
                 payload = _record_to_modify_payload(body["data"])
                 return {"status": "success", "strategy": payload}
+            log_api_call('SHARED', 'get_strategy_record', Config.GET_STRATEGY_RECORD_URL, req_params, resp.status_code, body, duration_ms, 'error')
             return {"status": "error", "message": body.get("message", "Failed to fetch record.")}
+        log_api_call('SHARED', 'get_strategy_record', Config.GET_STRATEGY_RECORD_URL, req_params, resp.status_code, resp.text, duration_ms, 'error')
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'get_strategy_record', Config.GET_STRATEGY_RECORD_URL, req_params, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}
 
 
@@ -197,6 +220,7 @@ def modify_strategy(payload):
     """Save a modified ISB strategy. Payload must be in modify-payload format with 'id' field."""
     if not payload.get("id"):
         return {"status": "error", "message": "Payload must include the strategy 'id' field."}
+    start = time.time()
     try:
         resp = requests.post(
             Config.MODIFY_STRATEGY_URL,
@@ -204,19 +228,26 @@ def modify_strategy(payload):
             headers=_auth_headers(),
             timeout=30,
         )
+        duration_ms = (time.time() - start) * 1000
         print(f"[SharedAPI] MODIFY HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
             body = resp.json()
             if body.get("success"):
+                log_api_call('SHARED', 'modify_strategy', Config.MODIFY_STRATEGY_URL, payload, resp.status_code, body, duration_ms, 'success')
                 return {"status": "success", "message": "Strategy modified successfully."}
+            log_api_call('SHARED', 'modify_strategy', Config.MODIFY_STRATEGY_URL, payload, resp.status_code, body, duration_ms, 'error')
             return {"status": "error", "message": body.get("message", "Modification failed.")}
+        log_api_call('SHARED', 'modify_strategy', Config.MODIFY_STRATEGY_URL, payload, resp.status_code, resp.text, duration_ms, 'error')
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'modify_strategy', Config.MODIFY_STRATEGY_URL, payload, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}
 
 
 def get_balance():
     """Fetch account balance: point_balance, hold_balance, balance."""
+    start = time.time()
     try:
         resp = requests.post(
             Config.GET_BALANCE_URL,
@@ -224,17 +255,22 @@ def get_balance():
             headers=_auth_headers(),
             timeout=30,
         )
+        duration_ms = (time.time() - start) * 1000
         print(f"[SharedAPI] GET_BALANCE HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
             data = resp.json()
+            log_api_call('SHARED', 'get_balance', Config.GET_BALANCE_URL, {}, resp.status_code, data, duration_ms, 'success')
             return {
                 "status": "success",
                 "balance": data.get("balance", 0.0),
                 "hold_balance": data.get("hold_balance", 0.0),
                 "point_balance": data.get("point_balance", 0.0),
             }
+        log_api_call('SHARED', 'get_balance', Config.GET_BALANCE_URL, {}, resp.status_code, resp.text, duration_ms, 'error')
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'get_balance', Config.GET_BALANCE_URL, {}, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}
 
 
@@ -259,21 +295,48 @@ def rename_strategy(strategy_id="", strategy_name="", new_name=""):
         sid = chosen["id"]
         print(f"[SharedAPI] Resolved '{search_term}' → id={sid}")
 
+    req_payload = {"id": sid, "name": new_name}
+    start = time.time()
     try:
         resp = requests.post(
             Config.RENAME_STRATEGY_URL,
-            json={"id": sid, "name": new_name},
+            json=req_payload,
             headers=_auth_headers(),
             timeout=30,
         )
+        duration_ms = (time.time() - start) * 1000
         print(f"[SharedAPI] RENAME HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
             data = resp.json()
+            log_api_call('SHARED', 'rename_strategy', Config.RENAME_STRATEGY_URL, req_payload, resp.status_code, data, duration_ms, 'success')
             return {
                 "status": "success",
                 "strategy_name": data.get("strategy_name"),
                 "message": f"Strategy renamed to '{new_name}' successfully.",
             }
+        log_api_call('SHARED', 'rename_strategy', Config.RENAME_STRATEGY_URL, req_payload, resp.status_code, resp.text, duration_ms, 'error')
         return {"status": "error", "code": resp.status_code, "message": resp.text}
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'rename_strategy', Config.RENAME_STRATEGY_URL, req_payload, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}
+
+
+def get_my_strategies(search="", take=50):
+    """Wrapper used by MLH and other handlers. Returns pre-formatted text so the LLM response passes through the brace filter cleanly."""
+    result = get_strategies(search=search, take=take)
+    if result.get("status") != "success":
+        return result
+    strategies = result.get("strategies", [])
+    total = result.get("total", 0)
+    lines = [f"Total: {total} strategies (showing {len(strategies)}):"]
+    for i, s in enumerate(strategies, 1):
+        deployed = "Deployed" if s.get("deployed") else "Not deployed"
+        created = (s.get("created") or "")[:10] or "—"
+        lines.append(f"{i}. {s['name']} | {s['plugin']} | {deployed} | Created: {created}")
+    return {
+        "status": "success",
+        "total": total,
+        "formatted_list": "\n".join(lines),
+        "strategies": [{"name": s["name"], "id": s["id"]} for s in strategies],
+    }

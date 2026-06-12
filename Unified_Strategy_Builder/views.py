@@ -10,6 +10,7 @@ from Unified_Strategy_Builder.core.orchestrator import orchestrator
 from chat_logs.models import ChatLog
 from config import Config
 from services.market_maya_shared import get_strategies, get_balance
+from services.session_context import set_session_id
 
 _STRATEGY_TYPE_IDS = {
     "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
@@ -56,6 +57,7 @@ def chat(request):
     data = json.loads(request.body)
     user_message = data.get('message')
     session_id = data.get('session_id', 'default')
+    set_session_id(session_id)
 
     if session_id not in memory:
         memory[session_id] = []
@@ -96,6 +98,7 @@ def chat_stream(request):
     data = json.loads(request.body)
     user_message = data.get('message')
     session_id = data.get('session_id', 'default')
+    set_session_id(session_id)
 
     if session_id not in memory:
         memory[session_id] = []

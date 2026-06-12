@@ -560,7 +560,7 @@ On error: show the error message clearly. Common errors:
 
                 if tool_called:
                     continue
-            except Exception:
+            except Exception as e:
                 print(f"Tool parsing error: {e}")
 
             # If confirmation but no tool call, retry once with explicit JSON format instruction
@@ -591,7 +591,7 @@ On error: show the error message clearly. Common errors:
                 _in_tok += final.usage.prompt_tokens
                 _out_tok += final.usage.completion_tokens
             return {"message": final.choices[0].message.content, "input_tokens": _in_tok, "output_tokens": _out_tok}
-        except Exception:
+        except Exception as e:
             return {"message": f"⚠️ **AI service error**: {e}", "input_tokens": _in_tok, "output_tokens": _out_tok}
 
     def stream_message(self, user_message, history=None):
@@ -677,7 +677,7 @@ On error: show the error message clearly. Common errors:
 
                     if text_part and brace_depth == 0:
                         yield {"t": "chunk", "v": text_part}
-            except Exception:
+            except Exception as e:
                 print(f"[RES] Stream error on turn {turn+1}: {e}")
 
             if not full_content.strip():
@@ -770,6 +770,22 @@ On error: show the error message clearly. Common errors:
                             messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
                             tool_called = True
 
+                            _DIRECT_YIELD = {"get_my_strategies", "get_balance", "delete_strategy",
+                                             "rename_strategy", "modify_strategy"}
+                            if tool_name in _DIRECT_YIELD:
+                                ok = tool_result.get("status") == "success"
+                                if ok and tool_result.get("formatted_list"):
+                                    yield {"t": "chunk", "v": tool_result["formatted_list"]}
+                                elif ok and tool_result.get("balance") is not None:
+                                    b = tool_result
+                                    yield {"t": "chunk", "v": f"Balance: ₹{b['balance']} | Hold: ₹{b['hold_balance']} | Points: {b['point_balance']}"}
+                                elif ok and tool_result.get("message"):
+                                    yield {"t": "chunk", "v": tool_result["message"]}
+                                else:
+                                    yield {"t": "chunk", "v": f"⚠️ {tool_result.get('message', 'An error occurred.')}"}
+                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                                return
+
                             if tool_name == "create_and_save_res_strategy" and tool_result.get("status") == "success":
                                 strategy_name = args.get("strategy_json", {}).get("strategy_name", "Unknown")
                                 api_data = tool_result.get("data", [])
@@ -795,7 +811,7 @@ On error: show the error message clearly. Common errors:
                 print(f"Tool parsing error: {e}")
                 pass
 
-            if not tool_called and not full_content.strip():
+            if not tool_called and not full_content.strip() and _is_confirm:
                 yield {"t": "chunk", "v": "⚠️ I'm sorry, I encountered an error while generating the strategy payload. Please try saying 'yes' again."}
 
             if tool_called:

@@ -54,11 +54,9 @@ def _get_client_id_from_token(token):
 
 
 def _auth_headers():
-    token = Config.MARKET_MAYA_BEARER_TOKEN or ""
-    if token and not token.startswith("Bearer "):
-        token = f"Bearer {token}"
+    from services.token_service import get_auth_header
     return {
-        "Authorization": token,
+        "Authorization": get_auth_header(),
         "Content-Type": "application/json",
         "Accept": "application/json",
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
@@ -254,7 +252,8 @@ def run_backtest(strategy_id="", strategy_name="", start_date="", end_date=""):
     )
 
     # ── Step 2: Get client_id from JWT ────────────────────────────────────────
-    token_str = Config.MARKET_MAYA_BEARER_TOKEN or ""
+    from services.token_service import get_valid_token
+    token_str = get_valid_token()
     client_id = _get_client_id_from_token(token_str)
     if not client_id:
         return {"status": "error", "message": "Could not extract client_id from token for WebSocket."}

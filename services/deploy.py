@@ -1,8 +1,10 @@
 """Strategy deployment service: fetches charges, resolves strategy ID, posts to Market Maya deploy endpoint."""
 
+import time
 import requests
 from config import Config
 from services.market_maya_shared import get_strategies
+from services.session_context import log_api_call
 
 
 def _resolve_strategy_id(strategy_id="", strategy_name=""):
@@ -49,16 +51,22 @@ def get_deploy_options(strategy_id="", strategy_name=""):
         return {"status": "error", "message": err}
 
     headers = _auth_headers()
-
     balance = _fetch_point_balance(headers)
 
     charges = {}
+    start = time.time()
     try:
         r = requests.post(Config.GET_CHARGES_URL, json={}, headers=headers, timeout=15)
+        duration_ms = (time.time() - start) * 1000
         print(f"[Deploy] GET_CHARGES HTTP {r.status_code}: {r.text[:200]}")
         if r.status_code == 200:
             charges = r.json()
+            log_api_call('SHARED', 'get_charges', Config.GET_CHARGES_URL, {}, r.status_code, charges, duration_ms, 'success')
+        else:
+            log_api_call('SHARED', 'get_charges', Config.GET_CHARGES_URL, {}, r.status_code, r.text, duration_ms, 'error')
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'get_charges', Config.GET_CHARGES_URL, {}, None, str(e), duration_ms, 'connection_error')
         print(f"[Deploy] Charges fetch error: {e}")
 
     return {
@@ -137,14 +145,17 @@ def deploy_strategy(
     }
 
     print(f"[Deploy] POST deploy payload: {payload}")
+    start = time.time()
 
     try:
         r = requests.post(Config.DEPLOY_STRATEGY_URL, json=payload, headers=headers, timeout=30)
+        duration_ms = (time.time() - start) * 1000
         print(f"[Deploy] HTTP {r.status_code}: {r.text[:300]}")
 
         if r.status_code == 200:
             resp_data = r.json()
             if resp_data.get("statusCode") == 200:
+                log_api_call('SHARED', 'deploy_strategy', Config.DEPLOY_STRATEGY_URL, payload, r.status_code, resp_data, duration_ms, 'success')
                 updated_balance = _fetch_point_balance(headers)
                 return {
                     "status": "success",
@@ -154,6 +165,7 @@ def deploy_strategy(
                     "updated_point_balance": updated_balance,
                 }
             else:
+                log_api_call('SHARED', 'deploy_strategy', Config.DEPLOY_STRATEGY_URL, payload, r.status_code, resp_data, duration_ms, 'error')
                 return {
                     "status": "error",
                     "message": resp_data.get("message", "Deploy failed. Strategy may already be deployed or account may not have live trading enabled."),
@@ -164,8 +176,12 @@ def deploy_strategy(
                 err_body = r.json()
                 err_msg = err_body.get("message") or err_body.get("error") or r.text
             except Exception:
+                err_body = r.text
                 err_msg = r.text
+            log_api_call('SHARED', 'deploy_strategy', Config.DEPLOY_STRATEGY_URL, payload, r.status_code, err_body, duration_ms, 'error')
             return {"status": "error", "code": r.status_code, "message": err_msg}
 
     except Exception as e:
+        duration_ms = (time.time() - start) * 1000
+        log_api_call('SHARED', 'deploy_strategy', Config.DEPLOY_STRATEGY_URL, payload, None, str(e), duration_ms, 'connection_error')
         return {"status": "error", "message": str(e)}

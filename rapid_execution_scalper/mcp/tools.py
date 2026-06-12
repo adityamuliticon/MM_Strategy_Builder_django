@@ -44,7 +44,22 @@ def create_and_save_res_strategy(strategy_json):
 
 
 def get_my_strategies(search="", take=50):
-    return _get_strategies(search=search, take=take)
+    result = _get_strategies(search=search, take=take)
+    if result.get("status") != "success":
+        return result
+    strategies = result.get("strategies", [])
+    total = result.get("total", 0)
+    lines = [f"Total: {total} strategies (showing {len(strategies)}):"]
+    for i, s in enumerate(strategies, 1):
+        deployed = "Deployed" if s.get("deployed") else "Not deployed"
+        created = (s.get("created") or "")[:10] or "—"
+        lines.append(f"{i}. {s['name']} | {s['plugin']} | {deployed} | Created: {created}")
+    return {
+        "status": "success",
+        "total": total,
+        "formatted_list": "\n".join(lines),
+        "strategies": [{"name": s["name"], "id": s["id"]} for s in strategies],
+    }
 
 
 def delete_strategy(strategy_id="", strategy_name=""):

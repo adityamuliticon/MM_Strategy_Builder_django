@@ -2,6 +2,7 @@
 
 import json
 from django.shortcuts import render
+from services.session_context import set_session_id
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -22,6 +23,7 @@ def chat(request):
     data = json.loads(request.body)
     user_message = data.get('message')
     session_id = data.get('session_id', 'default')
+    set_session_id(session_id)
 
     if session_id not in res_memory:
         res_memory[session_id] = []
@@ -62,6 +64,7 @@ def chat_stream(request):
     data = json.loads(request.body)
     user_message = data.get('message')
     session_id = data.get('session_id', 'default')
+    set_session_id(session_id)
 
     if session_id not in res_memory:
         res_memory[session_id] = []

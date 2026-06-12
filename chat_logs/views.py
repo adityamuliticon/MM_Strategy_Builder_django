@@ -2,11 +2,11 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from datetime import datetime, timedelta, date
-from .models import ChatLog
+from .models import ChatLog, APICallLog
 
 
 def _apply_filters(qs, module_filter, date_from, date_to):
@@ -139,3 +139,117 @@ def logs_api(request):
     totals = {k: float(v) if v else 0 for k, v in totals.items()}
 
     return JsonResponse({'logs': data, 'totals': totals})
+
+
+def _apply_api_filters(qs, module, call_type, status, session_id, date_from, date_to):
+    if module:
+        qs = qs.filter(module=module)
+    if call_type:
+        qs = qs.filter(call_type=call_type)
+    if status:
+        qs = qs.filter(status=status)
+    if session_id:
+        qs = qs.filter(session_id__icontains=session_id)
+    if date_from:
+        try:
+            dt = make_aware(datetime.strptime(date_from, '%Y-%m-%d'))
+            qs = qs.filter(timestamp__gte=dt)
+        except ValueError:
+            pass
+    if date_to:
+        try:
+            dt = make_aware(datetime.strptime(date_to, '%Y-%m-%d')) + timedelta(days=1)
+            qs = qs.filter(timestamp__lt=dt)
+        except ValueError:
+            pass
+    return qs
+
+
+def api_logs_index(request):
+    module     = request.GET.get('module', '')
+    call_type  = request.GET.get('call_type', '')
+    status     = request.GET.get('status', '')
+    session_id = request.GET.get('session_id', '')
+    date_from  = request.GET.get('date_from', '')
+    date_to    = request.GET.get('date_to', '')
+    quick      = request.GET.get('quick', '')
+
+    today = date.today()
+    if quick == 'today':
+        date_from = date_to = today.strftime('%Y-%m-%d')
+    elif quick == 'yesterday':
+        y = today - timedelta(days=1)
+        date_from = date_to = y.strftime('%Y-%m-%d')
+    elif quick == 'last7':
+        date_from = (today - timedelta(days=6)).strftime('%Y-%m-%d')
+        date_to   = today.strftime('%Y-%m-%d')
+    elif quick == 'thismonth':
+        date_from = today.replace(day=1).strftime('%Y-%m-%d')
+        date_to   = today.strftime('%Y-%m-%d')
+
+    qs = _apply_api_filters(APICallLog.objects.all(), module, call_type, status, session_id, date_from, date_to)
+
+    # Summary stats
+    stats = qs.aggregate(
+        total=Count('id'),
+        success=Count('id', filter=Q(status='success')),
+        errors=Count('id', filter=Q(status__in=['error', 'connection_error'])),
+        avg_duration=Avg('duration_ms'),
+    )
+
+    # Per-call-type breakdown
+    call_type_stats = (
+        qs.values('call_type', 'module')
+        .annotate(count=Count('id'), avg_ms=Avg('duration_ms'))
+        .order_by('-count')[:20]
+    )
+
+    # Distinct values for filter dropdowns
+    all_call_types = APICallLog.objects.values_list('call_type', flat=True).distinct().order_by('call_type')
+
+    logs = qs[:300]
+
+    return render(request, 'api_logs.html', {
+        'logs': logs,
+        'stats': stats,
+        'call_type_stats': call_type_stats,
+        'all_call_types': all_call_types,
+        'active_module': module,
+        'active_call_type': call_type,
+        'active_status': status,
+        'active_session': session_id,
+        'date_from': date_from,
+        'date_to': date_to,
+        'quick': quick,
+    })
+
+
+def api_logs_api(request):
+    module     = request.GET.get('module', '')
+    call_type  = request.GET.get('call_type', '')
+    status     = request.GET.get('status', '')
+    session_id = request.GET.get('session_id', '')
+    date_from  = request.GET.get('date_from', '')
+    date_to    = request.GET.get('date_to', '')
+
+    qs = _apply_api_filters(APICallLog.objects.all(), module, call_type, status, session_id, date_from, date_to)
+
+    data = [
+        {
+            'id':               log.id,
+            'timestamp':        log.timestamp.isoformat(),
+            'module':           log.module,
+            'call_type':        log.call_type,
+            'endpoint':         log.endpoint,
+            'method':           log.method,
+            'response_status':  log.response_status,
+            'duration_ms':      log.duration_ms,
+            'status':           log.status,
+            'session_id':       log.session_id,
+            'request_payload':  log.request_payload,
+            'response_body':    log.response_body,
+        }
+        for log in qs[:500]
+    ]
+
+    return JsonResponse({'logs': data, 'total': qs.count()})
