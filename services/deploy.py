@@ -21,11 +21,9 @@ def _resolve_strategy_id(strategy_id="", strategy_name=""):
 
 
 def _auth_headers():
-    token = Config.MARKET_MAYA_BEARER_TOKEN or ""
-    if token and not token.startswith("Bearer "):
-        token = f"Bearer {token}"
+    from services.token_service import get_auth_header
     return {
-        "Authorization": token,
+        "Authorization": get_auth_header(),
         "Content-Type": "application/json",
         "Accept": "application/json",
     }

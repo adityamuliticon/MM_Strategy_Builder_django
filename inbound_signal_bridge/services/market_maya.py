@@ -8,17 +8,15 @@ from config import Config
 
 class ISBMarketMayaService:
     def __init__(self):
-        self.token = Config.MARKET_MAYA_BEARER_TOKEN
-        if self.token and not self.token.startswith("Bearer "):
-            self.token = f"Bearer {self.token}"
         # ISB uses createCustomTradeStrategy for both create and modify operations
         self.url = Config.MODIFY_STRATEGY_URL
 
     def save_strategy(self, payload):
+        from services.token_service import get_auth_header
         headers = {
-            "Authorization": self.token,
+            "Authorization": get_auth_header(),
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
         }
 
         api_status = None

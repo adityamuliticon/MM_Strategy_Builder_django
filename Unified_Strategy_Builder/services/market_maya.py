@@ -7,17 +7,13 @@ from config import Config
 
 
 class MarketMayaService:
-    def __init__(self):
-        self.token = Config.MARKET_MAYA_BEARER_TOKEN
-        if self.token and not self.token.startswith("Bearer "):
-            self.token = f"Bearer {self.token}"
-
     def save_strategy(self, payload):
         """Deploys a strategy to Market Maya. Logs payload + API response together AFTER the call."""
+        from services.token_service import get_auth_header
         headers = {
-            "Authorization": self.token,
+            "Authorization": get_auth_header(),
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
         }
 
         api_status = None

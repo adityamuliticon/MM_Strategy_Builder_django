@@ -10,7 +10,12 @@ class Config:
     # API Keys
     RUNWARE_API_KEY = os.getenv("RUNWARE_API_KEY")
     RUNWARE_MODEL_ID = os.getenv("RUNWARE_MODEL_ID")
-    MARKET_MAYA_BEARER_TOKEN = os.getenv("MARKET_MAYA_BEARER_TOKEN")
+    MARKET_MAYA_BEARER_TOKEN = os.getenv("MARKET_MAYA_BEARER_TOKEN")  # fallback if auto-login fails
+
+    # Market Maya login credentials for auto token refresh
+    MARKET_MAYA_EMAIL    = os.getenv("MARKET_MAYA_EMAIL", "")
+    MARKET_MAYA_PASSWORD = os.getenv("MARKET_MAYA_PASSWORD", "")
+    MM_LOGIN_URL = "https://webapi.marketmaya.com/api/auth/clientLogin"
     
     # Runware usually uses OpenAI-compatible endpoints
     RUNWARE_BASE_URL = "https://api.runware.ai/v1" # Adjust if different
