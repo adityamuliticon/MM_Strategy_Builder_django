@@ -31,7 +31,7 @@ class Config:
     GET_CHARGES_URL = "https://api.marketmaya.com/api/transaction/getCharges"
     DEPLOY_STRATEGY_URL = "https://webapi.marketmaya.com/api/mainStrategy/deploy"
 
-    # Backtest (ISE only)
+    # Backtest (ISE and MIH)
     BACKTEST_OPTIONS_URL = "https://api.marketmaya.com/api/subscription/getBacktestOptions"
     DEDUCT_BACKTEST_POINTS_URL = "https://api.marketmaya.com/api/subscription/deductBacktestPoints"
     GET_BACKTEST_RESULT_URL = "https://webapi.marketmaya.com/api/mainStrategy/getBackTestResult"
