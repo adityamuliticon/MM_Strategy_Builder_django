@@ -904,6 +904,21 @@ On error: show the error message clearly. Common errors:
                                 yield {"t": "chunk", "v": "\n\n**Strategy Saved Successfully.**"}
                                 yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
                                 return
+                            _DIRECT_YIELD = {"get_my_strategies", "get_balance", "delete_strategy",
+                                             "rename_strategy", "modify_strategy"}
+                            if tool_name in _DIRECT_YIELD:
+                                ok = tool_result.get("status") == "success"
+                                if ok and tool_result.get("formatted_list"):
+                                    yield {"t": "chunk", "v": tool_result["formatted_list"]}
+                                elif ok and tool_result.get("balance") is not None:
+                                    b = tool_result
+                                    yield {"t": "chunk", "v": f"Balance: ₹{b['balance']} | Hold: ₹{b['hold_balance']} | Points: {b['point_balance']}"}
+                                elif ok and tool_result.get("message"):
+                                    yield {"t": "chunk", "v": tool_result["message"]}
+                                else:
+                                    yield {"t": "chunk", "v": f"⚠️ {tool_result.get('message', 'An error occurred.')}"}
+                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                                return
                             break
                     except Exception:
                         continue

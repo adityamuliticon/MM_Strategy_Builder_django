@@ -1,0 +1,411 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | API Call Logs</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=17">
+    <script src="{% static 'js/theme.js' %}?v=16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .logs-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .stats-row {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 10px; padding: 16px 24px 0;
+        }
+        .stat-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 12px 14px;
+            box-shadow: var(--shadow-premium);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .stat-card.highlight { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.07); }
+        .stat-card.success-card { border-color: rgba(52,199,89,0.3); background: rgba(52,199,89,0.05); }
+        .stat-card.error-card { border-color: rgba(255,69,58,0.3); background: rgba(255,69,58,0.05); }
+        .stat-card .label { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+        .stat-card .value { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; }
+        .stat-card .value.green { color: #34c759; }
+        .stat-card .value.red { color: #ff453a; }
+
+        .filter-bar {
+            display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap;
+            padding: 14px 24px 0;
+        }
+        .filter-bar select, .filter-bar input[type=text], .filter-bar input[type=date] {
+            background: var(--input-bg); border: 1px solid var(--border-color);
+            color: var(--text-main); border-radius: 7px;
+            padding: 7px 10px; font-size: .82rem; outline: none;
+            transition: border-color 0.2s;
+        }
+        .filter-bar select:focus, .filter-bar input:focus { border-color: #f0c040; }
+        .filter-bar label { font-size: .72rem; color: var(--text-muted); display: block; margin-bottom: 3px; }
+        .filter-group { display: flex; flex-direction: column; }
+        .quick-btns { display: flex; gap: 6px; flex-wrap: wrap; align-items: flex-end; }
+        .quick-btn {
+            padding: 7px 12px; border-radius: 7px; font-size: .78rem; cursor: pointer;
+            border: 1px solid var(--border-color); background: var(--card-bg);
+            color: var(--text-muted); transition: all .15s;
+        }
+        .quick-btn:hover, .quick-btn.active { background: #f0c040; color: #000; border-color: #f0c040; }
+        .apply-btn {
+            padding: 7px 18px; border-radius: 7px; background: #f0c040;
+            color: #000; font-weight: 600; font-size: .82rem;
+            border: none; cursor: pointer; align-self: flex-end;
+        }
+        .apply-btn:hover { background: #e0b030; }
+
+        .table-wrap {
+            flex: 1; overflow-y: auto; padding: 14px 24px 24px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+        thead th {
+            background: var(--card-bg); color: var(--text-muted);
+            font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+            padding: 9px 10px; border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 2; white-space: nowrap;
+        }
+        tbody tr { border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background .12s; }
+        tbody tr:hover { background: rgba(240,192,64,0.06); }
+        tbody td { padding: 8px 10px; color: var(--text-main); vertical-align: middle; }
+        tbody td.mono { font-family: monospace; font-size: .78rem; }
+
+        .badge {
+            display: inline-block; padding: 2px 8px; border-radius: 20px;
+            font-size: .72rem; font-weight: 600; white-space: nowrap;
+        }
+        .badge-usb { background: rgba(0,122,255,.15); color: #007aff; }
+        .badge-ise { background: rgba(52,199,89,.15); color: #34c759; }
+        .badge-isb { background: rgba(255,159,10,.15); color: #ff9f0a; }
+        .badge-res { background: rgba(191,90,242,.15); color: #bf5af2; }
+        .badge-mlh { background: rgba(255,69,58,.15); color: #ff453a; }
+        .badge-shared { background: rgba(142,142,147,.15); color: #8e8e93; }
+        .badge-success { background: rgba(52,199,89,.15); color: #34c759; }
+        .badge-error { background: rgba(255,69,58,.15); color: #ff453a; }
+        .badge-connection_error { background: rgba(255,159,10,.15); color: #ff9f0a; }
+
+        .dur { color: var(--text-muted); font-size: .78rem; }
+        .dur.slow { color: #ff9f0a; }
+        .dur.very-slow { color: #ff453a; }
+
+        /* Expanded detail panel */
+        .detail-row { display: none; }
+        .detail-row.open { display: table-row; }
+        .detail-row td {
+            background: var(--input-bg); padding: 0 !important;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .detail-inner {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 0; padding: 16px 20px;
+        }
+        .detail-panel { padding: 0 12px; }
+        .detail-panel:first-child { border-right: 1px solid var(--border-color); padding-left: 0; }
+        .detail-panel h4 {
+            font-size: .72rem; text-transform: uppercase; letter-spacing: .05em;
+            color: var(--text-muted); margin: 0 0 8px;
+        }
+        .detail-panel pre {
+            font-family: monospace; font-size: .78rem; color: var(--text-main);
+            white-space: pre-wrap; word-break: break-all;
+            max-height: 280px; overflow-y: auto;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 6px; padding: 10px; margin: 0;
+        }
+        .detail-meta {
+            grid-column: 1 / -1; margin-bottom: 10px;
+            display: flex; gap: 20px; flex-wrap: wrap;
+        }
+        .detail-meta span { font-size: .78rem; color: var(--text-muted); }
+        .detail-meta span strong { color: var(--text-main); }
+
+        .session-link {
+            color: #f0c040; text-decoration: none; font-size: .78rem;
+        }
+        .session-link:hover { text-decoration: underline; }
+
+        .breakdown-section {
+            padding: 10px 24px 0;
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .breakdown-pill {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 5px 12px; font-size: .75rem;
+            color: var(--text-muted); cursor: pointer; transition: all .15s;
+        }
+        .breakdown-pill:hover { border-color: #f0c040; color: var(--text-main); }
+        .breakdown-pill strong { color: var(--text-main); }
+
+        .empty-state {
+            text-align: center; padding: 60px 20px;
+            color: var(--text-muted); font-size: .9rem;
+        }
+        .endpoint-cell {
+            max-width: 260px; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap;
+            color: var(--text-muted); font-size: .75rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Market Maya</h2>
+        <div style="margin-top:40px;">
+            <h3 style="font-size:.9rem;color:var(--text-muted);margin-bottom:5px;">Switch Strategy</h3>
+            <div class="sidebar-nav">
+                <a href="/" class="sidebar-btn">
+                    <span class="btn-text">Unified Builder</span>
+                    <span class="strategy-count" id="count-usb">—</span>
+                </a>
+                <a href="/indicator/" class="sidebar-btn">
+                    <span class="btn-text">Indicator Engine</span>
+                    <span class="strategy-count" id="count-ise">—</span>
+                </a>
+                <a href="/hedger/" class="sidebar-btn">
+                    <span class="btn-text">Multi-Leg Hedger</span>
+                    <span class="strategy-count" id="count-mlh">—</span>
+                </a>
+                <a href="/bridge/" class="sidebar-btn">
+                    <span class="btn-text">Signal Bridge</span>
+                    <span class="strategy-count" id="count-isb">—</span>
+                </a>
+                <a href="/scalper/" class="sidebar-btn">
+                    <span class="btn-text">RES Scalper</span>
+                    <span class="strategy-count" id="count-res">—</span>
+                </a>
+                <a href="/logs/" class="sidebar-btn">
+                    <span class="btn-text">Chat Logs</span>
+                    <span class="btn-icon">📋</span>
+                </a>
+                <a href="/logs/api-calls/" class="sidebar-btn active">
+                    <span class="btn-text">API Calls</span>
+                    <span class="btn-icon">📡</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main-chat logs-main">
+        <div class="chat-header" style="padding: 14px 24px; border-bottom: 1px solid var(--border-color); flex-shrink:0;">
+            <h2 style="margin:0; font-size:1rem; font-weight:600;">API Call Logs</h2>
+            <span style="font-size:.8rem; color:var(--text-muted);">Every Market Maya HTTP call — payload, response, timing</span>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stats-row">
+            <div class="stat-card highlight">
+                <div class="label">Total Calls</div>
+                <div class="value">{{ stats.total|default:0 }}</div>
+            </div>
+            <div class="stat-card success-card">
+                <div class="label">Success</div>
+                <div class="value green">{{ stats.success|default:0 }}</div>
+            </div>
+            <div class="stat-card error-card">
+                <div class="label">Errors</div>
+                <div class="value red">{{ stats.errors|default:0 }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Avg Duration</div>
+                <div class="value">
+                    {% if stats.avg_duration %}{{ stats.avg_duration|floatformat:0 }} ms{% else %}—{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Call-type breakdown pills -->
+        {% if call_type_stats %}
+        <div class="breakdown-section">
+            {% for ct in call_type_stats %}
+            <div class="breakdown-pill" onclick="filterByCallType('{{ ct.call_type }}')">
+                <strong>{{ ct.call_type }}</strong>
+                &nbsp;{{ ct.count }}
+                {% if ct.avg_ms %}<span style="opacity:.6">· {{ ct.avg_ms|floatformat:0 }}ms</span>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Filters -->
+        <form method="get" class="filter-bar" id="filter-form">
+            <div class="filter-group">
+                <label>Module</label>
+                <select name="module">
+                    <option value="">All Modules</option>
+                    <option value="USB" {% if active_module == 'USB' %}selected{% endif %}>USB</option>
+                    <option value="ISE" {% if active_module == 'ISE' %}selected{% endif %}>ISE</option>
+                    <option value="ISB" {% if active_module == 'ISB' %}selected{% endif %}>ISB</option>
+                    <option value="RES" {% if active_module == 'RES' %}selected{% endif %}>RES</option>
+                    <option value="MLH" {% if active_module == 'MLH' %}selected{% endif %}>MLH</option>
+                    <option value="SHARED" {% if active_module == 'SHARED' %}selected{% endif %}>SHARED</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Call Type</label>
+                <select name="call_type" id="call-type-select">
+                    <option value="">All Types</option>
+                    {% for ct in all_call_types %}
+                    <option value="{{ ct }}" {% if active_call_type == ct %}selected{% endif %}>{{ ct }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status</label>
+                <select name="status">
+                    <option value="">All</option>
+                    <option value="success" {% if active_status == 'success' %}selected{% endif %}>Success</option>
+                    <option value="error" {% if active_status == 'error' %}selected{% endif %}>Error</option>
+                    <option value="connection_error" {% if active_status == 'connection_error' %}selected{% endif %}>Connection Error</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Session ID</label>
+                <input type="text" name="session_id" value="{{ active_session }}" placeholder="search session…" style="width:130px;">
+            </div>
+            <div class="filter-group">
+                <label>From</label>
+                <input type="date" name="date_from" value="{{ date_from }}">
+            </div>
+            <div class="filter-group">
+                <label>To</label>
+                <input type="date" name="date_to" value="{{ date_to }}">
+            </div>
+            <div class="quick-btns">
+                <button type="submit" name="quick" value="today" class="quick-btn {% if quick == 'today' %}active{% endif %}">Today</button>
+                <button type="submit" name="quick" value="yesterday" class="quick-btn {% if quick == 'yesterday' %}active{% endif %}">Yesterday</button>
+                <button type="submit" name="quick" value="last7" class="quick-btn {% if quick == 'last7' %}active{% endif %}">Last 7d</button>
+                <button type="submit" name="quick" value="thismonth" class="quick-btn {% if quick == 'thismonth' %}active{% endif %}">This Month</button>
+            </div>
+            <button type="submit" class="apply-btn">Apply</button>
+            {% if active_module or active_call_type or active_status or active_session or date_from or date_to %}
+            <a href="/logs/api-calls/" style="align-self:flex-end; font-size:.8rem; color:var(--text-muted); padding:7px 10px;">✕ Clear</a>
+            {% endif %}
+        </form>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            {% if logs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Module</th>
+                        <th>Call Type</th>
+                        <th>Status</th>
+                        <th>HTTP</th>
+                        <th>Duration</th>
+                        <th>Endpoint</th>
+                        <th>Session</th>
+                    </tr>
+                </thead>
+                <tbody id="log-tbody">
+                {% for log in logs %}
+                <tr class="data-row" onclick="toggleDetail({{ log.id }})">
+                    <td class="mono" style="white-space:nowrap;">{{ log.timestamp|date:"d M H:i:s" }}</td>
+                    <td>
+                        <span class="badge badge-{{ log.module|lower }}">{{ log.module }}</span>
+                    </td>
+                    <td style="font-weight:500;">{{ log.call_type }}</td>
+                    <td>
+                        <span class="badge badge-{{ log.status }}">{{ log.status }}</span>
+                    </td>
+                    <td class="mono">
+                        {% if log.response_status %}
+                            <span style="color:{% if log.response_status == 200 %}#34c759{% else %}#ff453a{% endif %}">
+                                {{ log.response_status }}
+                            </span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if log.duration_ms %}
+                        <span class="dur {% if log.duration_ms > 5000 %}very-slow{% elif log.duration_ms > 2000 %}slow{% endif %}">
+                            {{ log.duration_ms|floatformat:0 }}ms
+                        </span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td class="endpoint-cell" title="{{ log.endpoint }}">{{ log.endpoint }}</td>
+                    <td>
+                        {% if log.session_id %}
+                        <a class="session-link" href="/logs/?module=&date_from=&date_to=" onclick="event.stopPropagation();"
+                           title="View chat logs for this session">{{ log.session_id }}</a>
+                        {% else %}—{% endif %}
+                    </td>
+                </tr>
+                <tr class="detail-row" id="detail-{{ log.id }}">
+                    <td colspan="8">
+                        <div class="detail-inner">
+                            <div class="detail-meta">
+                                <span><strong>Endpoint:</strong> {{ log.endpoint }}</span>
+                                <span><strong>Method:</strong> {{ log.method }}</span>
+                                <span><strong>HTTP:</strong> {{ log.response_status|default:"—" }}</span>
+                                <span><strong>Duration:</strong> {% if log.duration_ms %}{{ log.duration_ms|floatformat:1 }}ms{% else %}—{% endif %}</span>
+                                <span><strong>Session:</strong> {{ log.session_id|default:"—" }}</span>
+                                <span><strong>Time:</strong> {{ log.timestamp|date:"d M Y H:i:s" }} IST</span>
+                            </div>
+                            <div class="detail-panel">
+                                <h4>Request Payload</h4>
+                                <pre id="req-{{ log.id }}">{{ log.request_payload|default:"—" }}</pre>
+                            </div>
+                            <div class="detail-panel">
+                                <h4>Response Body</h4>
+                                <pre id="res-{{ log.id }}">{{ log.response_body|default:"—" }}</pre>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                No API calls recorded yet.<br>
+                <span style="font-size:.8rem;">Calls will appear here after the first chat interaction.</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+<script>
+function toggleDetail(id) {
+    const row = document.getElementById('detail-' + id);
+    if (!row) return;
+    const isOpen = row.classList.contains('open');
+    // Close all open detail rows
+    document.querySelectorAll('.detail-row.open').forEach(r => r.classList.remove('open'));
+    if (!isOpen) {
+        row.classList.add('open');
+        // Pretty-print JSON in pre tags
+        ['req-' + id, 'res-' + id].forEach(pid => {
+            const el = document.getElementById(pid);
+            if (!el || el.dataset.formatted) return;
+            try {
+                const text = el.textContent.trim();
+                // Django renders dicts as Python repr — try JSON parse first
+                let obj;
+                try { obj = JSON.parse(text); } catch(e) {
+                    // Try Python dict → JSON conversion
+                    try { obj = JSON.parse(text.replace(/'/g, '"').replace(/True/g, 'true').replace(/False/g, 'false').replace(/None/g, 'null')); } catch(e2) { return; }
+                }
+                el.textContent = JSON.stringify(obj, null, 2);
+                el.dataset.formatted = '1';
+            } catch(e) {}
+        });
+    }
+}
+
+function filterByCallType(ct) {
+    const sel = document.getElementById('call-type-select');
+    if (sel) {
+        sel.value = ct;
+        document.getElementById('filter-form').submit();
+    }
+}
+</script>
+
+</body>
+</html>

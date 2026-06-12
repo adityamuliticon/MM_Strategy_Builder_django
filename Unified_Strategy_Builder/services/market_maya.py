@@ -1,14 +1,15 @@
 """USB Market Maya API client — posts strategies to the CreateUnifiedStrategy endpoint and logs results."""
 
+import time
 import requests
 import json
 from datetime import datetime
 from config import Config
+from services.session_context import log_api_call
 
 
 class MarketMayaService:
     def save_strategy(self, payload):
-        """Deploys a strategy to Market Maya. Logs payload + API response together AFTER the call."""
         from services.token_service import get_auth_header
         headers = {
             "Authorization": get_auth_header(),
@@ -19,10 +20,12 @@ class MarketMayaService:
         api_status = None
         api_code = None
         api_response = None
+        url = Config.CREATE_STRATEGY_URL
+        start = time.time()
 
         try:
-            url = Config.CREATE_STRATEGY_URL
             response = requests.post(url, json=payload, headers=headers, timeout=30)
+            duration_ms = (time.time() - start) * 1000
             api_code = response.status_code
             print(f"\n[MarketMaya] HTTP {api_code}: {response.text[:300]}")
 
@@ -39,12 +42,23 @@ class MarketMayaService:
                 result = {"status": "error", "code": api_code, "message": api_response}
 
         except Exception as e:
+            duration_ms = (time.time() - start) * 1000
             api_status = "connection_error"
             api_response = str(e)
             print(f"[MarketMaya] Connection error: {e}")
             result = {"status": "error", "message": api_response}
 
-        # Log payload + actual API result together AFTER the call
+        log_api_call(
+            module='USB',
+            call_type='save_strategy',
+            endpoint=url,
+            request_payload=payload,
+            response_status=api_code,
+            response_body=api_response,
+            duration_ms=duration_ms,
+            status=api_status,
+        )
+
         try:
             with open("logs/saved_strategies.log", "a") as f:
                 log_entry = {
