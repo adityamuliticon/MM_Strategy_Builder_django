@@ -23,6 +23,7 @@ class ChatLog(models.Model):
     cost_usd        = models.DecimalField(max_digits=12, decimal_places=8, default=0)
     cost_inr        = models.DecimalField(max_digits=12, decimal_places=4, default=0)
     model_used      = models.CharField(max_length=100, default='')
+    runware_task_id = models.CharField(max_length=100, blank=True, default='')
 
     class Meta:
         ordering = ['-timestamp']

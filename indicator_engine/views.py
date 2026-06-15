@@ -29,10 +29,11 @@ def chat(request):
         ise_memory[session_id] = []
 
     result = ise_orchestrator.process_message(user_message, ise_memory[session_id])
-    response_text  = result.get("message", "") if isinstance(result, dict) else result
-    input_tokens   = result.get("input_tokens", 0) if isinstance(result, dict) else 0
-    output_tokens  = result.get("output_tokens", 0) if isinstance(result, dict) else 0
-    total_tokens   = input_tokens + output_tokens
+    response_text    = result.get("message", "") if isinstance(result, dict) else result
+    input_tokens     = result.get("input_tokens", 0) if isinstance(result, dict) else 0
+    output_tokens    = result.get("output_tokens", 0) if isinstance(result, dict) else 0
+    runware_task_id  = result.get("runware_task_id", "") if isinstance(result, dict) else ""
+    total_tokens     = input_tokens + output_tokens
 
     cost_usd = (
         input_tokens  * Config.COST_PER_1M_INPUT_TOKENS_USD +
@@ -51,6 +52,7 @@ def chat(request):
         cost_usd=round(cost_usd, 8),
         cost_inr=round(cost_inr, 4),
         model_used=Config.RUNWARE_MODEL_ID or 'unknown',
+        runware_task_id=runware_task_id,
     )
 
     ise_memory[session_id].append({"role": "user", "content": user_message})
@@ -74,6 +76,7 @@ def chat_stream(request):
     def event_stream():
         full_response = ""
         in_tok = out_tok = 0
+        runware_task_id = ""
         try:
             for event in ise_orchestrator.stream_message(user_message, history):
                 t = event.get('t')
@@ -82,6 +85,7 @@ def chat_stream(request):
                 elif t == 'done':
                     in_tok = event.get('in_tok', 0)
                     out_tok = event.get('out_tok', 0)
+                    runware_task_id = event.get('task_id', '')
 
                 yield f"data: {json.dumps(event)}\n\n"
 
@@ -106,6 +110,7 @@ def chat_stream(request):
                     total_tokens=in_tok + out_tok,
                     cost_usd=round(cost_usd, 8), cost_inr=round(cost_inr, 4),
                     model_used=Config.RUNWARE_MODEL_ID or 'unknown',
+                    runware_task_id=runware_task_id,
                 )
             except Exception:
                 pass

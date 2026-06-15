@@ -185,7 +185,7 @@
                                 msgDiv.innerHTML = marked.parse(accumulated) +
                                     `<p class="deploy-status"><em>${event.v}</em> <span class="streaming-cursor">▌</span></p>`;
                             } else if (event.t === 'done') {
-                                msgDiv.innerHTML = marked.parse(accumulated);
+                                msgDiv.innerHTML = marked.parse(accumulated) || '<em style="color:#888">No response received. Please try again.</em>';
                                 chatContainer.scrollTop = chatContainer.scrollHeight;
                             } else if (event.t === 'error') {
                                 msgDiv.innerHTML = marked.parse(event.v || 'An error occurred.');
