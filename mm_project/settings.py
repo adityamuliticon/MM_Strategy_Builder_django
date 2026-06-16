@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from config import Config
 
@@ -8,7 +9,7 @@ SECRET_KEY = Config.SECRET_KEY
 
 DEBUG = Config.DEBUG
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',

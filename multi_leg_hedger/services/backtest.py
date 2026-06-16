@@ -194,6 +194,8 @@ def run_backtest(strategy_id="", strategy_name="", start_date="", end_date=""):
     hash_id, numeric_sid, plugin_name, err = _resolve_strategy_info(strategy_id, strategy_name)
     if err:
         return {"status": "error", "message": err}
+    if not numeric_sid:
+        return {"status": "error", "message": "Strategy numeric ID (sid) is missing — cannot trigger backtest. The strategy may not have been fully indexed yet."}
     if not start_date or not end_date:
         return {"status": "error", "message": "start_date and end_date are required (YYYY-MM-DD)."}
 

@@ -1,20 +1,13 @@
-"""ISBOrchestrator — agentic loop, system prompt, and SSE streaming for the inbound signal bridge plugin."""
+"""ISBOrchestrator — system prompt and module hooks for the inbound signal bridge plugin."""
 
-import json
-import re
-from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError
-from config import Config
+from services.base_orchestrator import BaseOrchestrator
 from inbound_signal_bridge.rag.retriever import isb_retriever
 from inbound_signal_bridge.mcp.handlers import isb_handler
 
 
-class ISBOrchestrator:
+class ISBOrchestrator(BaseOrchestrator):
     def __init__(self):
-        self.client = OpenAI(
-            api_key=Config.RUNWARE_API_KEY,
-            base_url=Config.RUNWARE_BASE_URL
-        )
-        self.model = Config.RUNWARE_MODEL_ID or "runware-latest"
+        super().__init__()
         self.system_prompt = """
 You are an AI assistant for the Market Maya Inbound Signal Bridge (ISB) strategy builder.
 You help users create externally-triggered automated trading strategies.
@@ -370,329 +363,52 @@ MODIFY PAYLOAD SCHEMA (snake_case — from get_strategy_record, apply changes):
 }
 """
 
-    def process_message(self, user_message, history=None):
-        if history is None:
-            history = []
+    # ── Hook implementations ───────────────────────────────────────────────
+    def _retriever(self):            return isb_retriever
+    def _handler(self):              return isb_handler
+    def _context_label(self):        return "Relevant ISB Documentation"
+    def _save_tool_name(self):       return "create_and_save_isb_strategy"
+    def _module_prefix(self):        return "ISB"
 
-        context = isb_retriever.get_context(user_message)
+    def _tool_whitelist(self):
+        return [
+            "create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload",
+            "get_my_strategies", "delete_strategy", "get_strategy_record",
+            "modify_strategy", "rename_strategy", "get_balance",
+        ]
 
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "system", "content": f"Relevant ISB Documentation:\n{context}"}
-        ] + history + [{"role": "user", "content": user_message}]
+    def _strategy_json_wrap_keys(self):
+        return {"create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"}
 
-        max_turns = 10
-        executed_tools = set()
-        _in_tok = 0
-        _out_tok = 0
+    def _status_messages(self):
+        return {
+            "create_and_save_isb_strategy": "Saving strategy to Market Maya...",
+            "get_my_strategies":            "Fetching your strategies...",
+            "delete_strategy":              "Deleting strategy...",
+            "get_strategy_record":          "Fetching strategy record...",
+            "modify_strategy":              "Saving changes...",
+            "rename_strategy":              "Renaming strategy...",
+            "get_balance":                  "Fetching balance...",
+        }
 
-        for turn in range(max_turns):
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages
-                )
-            except BadRequestError as e:
-                msg = str(e)
-                if "credits" in msg.lower():
-                    return {"message": "⚠️ **AI service unavailable**: Insufficient credits. Please top up at app.runware.ai.", "input_tokens": _in_tok, "output_tokens": _out_tok}
-                return {"message": f"⚠️ **AI service error**: {msg}", "input_tokens": _in_tok, "output_tokens": _out_tok}
-            except AuthenticationError:
-                return {"message": "⚠️ **Authentication error**: Invalid Runware API key. Check your RUNWARE_API_KEY in .env.", "input_tokens": _in_tok, "output_tokens": _out_tok}
-            except RateLimitError:
-                return {"message": "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
-            except APIConnectionError:
-                return {"message": "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection.", "input_tokens": _in_tok, "output_tokens": _out_tok}
+    def _max_turns_msg(self):
+        return "Summarise the strategy and ask for save confirmation now."
 
-            if hasattr(response, 'usage') and response.usage:
-                _in_tok += response.usage.prompt_tokens
-                _out_tok += response.usage.completion_tokens
+    def _confirm_save_instruction(self):
+        return (
+            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_isb_strategy. "
+            "Use ALL field values from the preview tables above. "
+            "Format exactly: {\"tool\": \"create_and_save_isb_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+        )
 
-            content = response.choices[0].message.content
-
-            tool_called = False
-            try:
-                start_indices = [m.start() for m in re.finditer(r'\{', content)]
-
-                for start_idx in start_indices:
-                    brace_count = 0
-                    end_idx = -1
-                    for i in range(start_idx, len(content)):
-                        if content[i] == '{':
-                            brace_count += 1
-                        elif content[i] == '}':
-                            brace_count -= 1
-                            if brace_count == 0:
-                                end_idx = i + 1
-                                break
-
-                    if end_idx != -1:
-                        json_str = content[start_idx:end_idx]
-                        try:
-                            clean_json = json_str.strip('`').strip()
-                            if clean_json.startswith('json'):
-                                clean_json = clean_json[4:].strip()
-
-                            data = json.loads(clean_json)
-                            tool_name = None
-                            args = None
-
-                            if isinstance(data, dict):
-                                if "tool" in data and "arguments" in data:
-                                    tool_name = data["tool"]
-                                    args = data["arguments"]
-                                else:
-                                    for key in ["create_and_save_isb_strategy",
-                                                "isb_validate_strategy",
-                                                "isb_generate_payload",
-                                                "get_my_strategies",
-                                                "delete_strategy",
-                                                "get_strategy_record",
-                                                "modify_strategy",
-                                                "rename_strategy",
-                                                "get_balance"]:
-                                        if key in data:
-                                            tool_name = key
-                                            val = data[key]
-                                            if key in ("create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"):
-                                                if "strategy_json" in val:
-                                                    args = val
-                                                else:
-                                                    args = {"strategy_json": val}
-                                            else:
-                                                args = val
-                                            break
-
-                            if tool_name and args is not None:
-                                args_str = json.dumps(args, sort_keys=True)
-                                tool_key = f"{tool_name}:{args_str}"
-
-                                if tool_key in executed_tools:
-                                    print(f"!! [ISB Turn {turn+1}] Skipping redundant tool: {tool_name}")
-                                    continue
-
-                                executed_tools.add(tool_key)
-                                print(f"> [ISB Turn {turn+1}] Executing tool: {tool_name}")
-                                tool_result = isb_handler.handle_tool_call(tool_name, args)
-
-                                messages.append({"role": "assistant", "content": content})
-                                messages.append({
-                                    "role": "user",
-                                    "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"
-                                })
-                                tool_called = True
-
-                                if tool_name == "create_and_save_isb_strategy" and tool_result.get("status") == "success":
-                                    clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
-                                    if not clean_summary:
-                                        clean_summary = content
-                                    return {"message": clean_summary + "\n\n**Strategy Saved Successfully.**", "input_tokens": _in_tok, "output_tokens": _out_tok}
-
-                                break
-                        except Exception as e:
-                            print(f"ISB JSON parsing error: {e}")
-                            continue
-
-                if tool_called:
-                    continue
-            except Exception as e:
-                print(f"ISB tool execution error: {e}")
-
-            ui_content = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
-            if not ui_content:
-                ui_content = content
-
-            return {"message": ui_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
-
-        messages.append({
-            "role": "user",
-            "content": "Summarise the strategy and ask for save confirmation now."
-        })
-        try:
-            final = self.client.chat.completions.create(model=self.model, messages=messages)
-            if hasattr(final, 'usage') and final.usage:
-                _in_tok += final.usage.prompt_tokens
-                _out_tok += final.usage.completion_tokens
-            final_content = final.choices[0].message.content
-            return {"message": final_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
-        except Exception as e:
-            return {"message": f"⚠️ **AI service error**: {e}", "input_tokens": _in_tok, "output_tokens": _out_tok}
+    def _process_error_msgs(self):
+        return {
+            "credits": "⚠️ **AI service unavailable**: Insufficient credits. Please top up at app.runware.ai.",
+            "auth":    "⚠️ **Authentication error**: Invalid Runware API key. Check your RUNWARE_API_KEY in .env.",
+            "rate":    "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.",
+            "conn":    "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection.",
+        }
 
 
-    def stream_message(self, user_message, history=None):
-        """Streaming variant — yields dicts {t, v/in_tok/out_tok} for SSE."""
-        if history is None:
-            history = []
-
-        context = isb_retriever.get_context(user_message)
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "system", "content": f"Relevant ISB Documentation:\n{context}"}
-        ] + history + [{"role": "user", "content": user_message}]
-
-        max_turns = 10
-        executed_tools = set()
-        _in_tok = 0
-        _out_tok = 0
-
-        for turn in range(max_turns):
-            try:
-                stream = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    stream=True,
-                    stream_options={"include_usage": True}
-                )
-            except BadRequestError as e:
-                msg = str(e)
-                err = "⚠️ **AI service unavailable**: Insufficient credits." if "credits" in msg.lower() else f"⚠️ **AI error**: {msg}"
-                yield {"t": "error", "v": err}
-                return
-            except AuthenticationError:
-                yield {"t": "error", "v": "⚠️ **Authentication error**: Invalid Runware API key."}
-                return
-            except RateLimitError:
-                yield {"t": "error", "v": "⚠️ **Rate limit reached**: Please wait a moment."}
-                return
-            except APIConnectionError:
-                yield {"t": "error", "v": "⚠️ **Connection error**: Could not reach the AI service."}
-                return
-
-            full_content = ""
-            brace_depth = 0
-
-            try:
-                for chunk in stream:
-                    if not chunk.choices:
-                        if hasattr(chunk, 'usage') and chunk.usage:
-                            _in_tok += getattr(chunk.usage, 'prompt_tokens', 0) or 0
-                            _out_tok += getattr(chunk.usage, 'completion_tokens', 0) or 0
-                        continue
-
-                    delta = chunk.choices[0].delta.content or ""
-                    full_content += delta
-
-                    text_part = ""
-                    for char in delta:
-                        if char == '{':
-                            if brace_depth == 0 and text_part:
-                                yield {"t": "chunk", "v": text_part}
-                                text_part = ""
-                            brace_depth += 1
-                        elif char == '}':
-                            brace_depth = max(0, brace_depth - 1)
-                        elif brace_depth == 0:
-                            text_part += char
-
-                    if text_part and brace_depth == 0:
-                        yield {"t": "chunk", "v": text_part}
-            except Exception as e:
-                print(f"[ISB] Stream error on turn {turn+1}: {e}")
-
-            # If stream returned empty content, fall back to non-streaming
-            if not full_content.strip():
-                try:
-                    fb = self.client.chat.completions.create(model=self.model, messages=messages)
-                    if hasattr(fb, 'usage') and fb.usage:
-                        _in_tok += fb.usage.prompt_tokens or 0
-                        _out_tok += fb.usage.completion_tokens or 0
-                    full_content = fb.choices[0].message.content or ""
-                    ui_text = re.sub(r'\{.*?\}', '', full_content, flags=re.DOTALL).strip()
-                    if ui_text:
-                        yield {"t": "chunk", "v": ui_text}
-                except Exception as e2:
-                    print(f"[ISB] Fallback error on turn {turn+1}: {e2}")
-                    if turn == 0:
-                        yield {"t": "error", "v": "⚠️ No response from AI service. Please try again."}
-                        yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-                        return
-
-            tool_called = False
-            try:
-                start_indices = [m.start() for m in re.finditer(r'\{', full_content)]
-                for start_idx in start_indices:
-                    brace_count = 0
-                    end_idx = -1
-                    for i in range(start_idx, len(full_content)):
-                        if full_content[i] == '{':
-                            brace_count += 1
-                        elif full_content[i] == '}':
-                            brace_count -= 1
-                            if brace_count == 0:
-                                end_idx = i + 1
-                                break
-
-                    if end_idx == -1:
-                        continue
-
-                    json_str = full_content[start_idx:end_idx]
-                    try:
-                        clean_json = json_str.strip('`').strip()
-                        if clean_json.startswith('json'):
-                            clean_json = clean_json[4:].strip()
-
-                        data = json.loads(clean_json)
-                        tool_name = None
-                        args = None
-
-                        if isinstance(data, dict):
-                            if "tool" in data and "arguments" in data:
-                                tool_name = data["tool"]
-                                args = data["arguments"]
-                            else:
-                                for key in ["create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload", "get_my_strategies", "delete_strategy", "get_strategy_record", "modify_strategy", "rename_strategy", "get_balance"]:
-                                    if key in data:
-                                        tool_name = key
-                                        val = data[key]
-                                        if key in ("create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"):
-                                            if "strategy_json" in val:
-                                                args = val
-                                            else:
-                                                args = {"strategy_json": val}
-                                        else:
-                                            args = val
-                                        break
-
-                        if tool_name and args is not None:
-                            args_str = json.dumps(args, sort_keys=True)
-                            tool_key = f"{tool_name}:{args_str}"
-                            if tool_key in executed_tools:
-                                continue
-                            executed_tools.add(tool_key)
-
-                            _status_msgs = {
-                                "create_and_save_isb_strategy": "Saving strategy to Market Maya...",
-                                "get_my_strategies": "Fetching your strategies...",
-                                "delete_strategy": "Deleting strategy...",
-                                "get_strategy_record": "Fetching strategy record...",
-                                "modify_strategy": "Saving changes...",
-                                "rename_strategy": "Renaming strategy...",
-                                "get_balance": "Fetching balance...",
-                            }
-                            yield {"t": "status", "v": _status_msgs.get(tool_name, "Processing...")}
-                            tool_result = isb_handler.handle_tool_call(tool_name, args)
-
-                            messages.append({"role": "assistant", "content": full_content})
-                            messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
-                            tool_called = True
-
-                            if tool_name == "create_and_save_isb_strategy" and tool_result.get("status") == "success":
-                                yield {"t": "chunk", "v": "\n\n**Strategy Saved Successfully.**"}
-                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-                                return
-                            break
-                    except Exception:
-                        continue
-            except Exception:
-                pass
-
-            if tool_called:
-                continue
-
-            yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-            return
-
-        yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-
-
+# Singleton instance
 isb_orchestrator = ISBOrchestrator()

@@ -91,6 +91,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
     <script>
         function loadBalance() {
             fetch('/api/balance/')
@@ -179,23 +180,23 @@
                             const event = JSON.parse(part.slice(6));
                             if (event.t === 'chunk') {
                                 accumulated += event.v;
-                                msgDiv.innerHTML = marked.parse(accumulated) + '<span class="streaming-cursor">▌</span>';
+                                msgDiv.innerHTML = DOMPurify.sanitize(marked.parse(accumulated)) + '<span class="streaming-cursor">▌</span>';
                                 chatContainer.scrollTop = chatContainer.scrollHeight;
                             } else if (event.t === 'status') {
-                                msgDiv.innerHTML = marked.parse(accumulated) +
+                                msgDiv.innerHTML = DOMPurify.sanitize(marked.parse(accumulated)) +
                                     `<p class="deploy-status"><em>${event.v}</em> <span class="streaming-cursor">▌</span></p>`;
                             } else if (event.t === 'done') {
-                                msgDiv.innerHTML = marked.parse(accumulated) || '<em style="color:#888">No response received. Please try again.</em>';
+                                msgDiv.innerHTML = DOMPurify.sanitize(marked.parse(accumulated)) || '<em style="color:#888">No response received. Please try again.</em>';
                                 chatContainer.scrollTop = chatContainer.scrollHeight;
                             } else if (event.t === 'error') {
-                                msgDiv.innerHTML = marked.parse(event.v || 'An error occurred.');
+                                msgDiv.innerHTML = DOMPurify.sanitize(marked.parse(event.v || 'An error occurred.'));
                             }
                         } catch (_) {}
                     }
                 }
 
                 if (msgDiv.innerHTML.includes('streaming-cursor')) {
-                    msgDiv.innerHTML = marked.parse(accumulated) || 'No response.';
+                    msgDiv.innerHTML = DOMPurify.sanitize(marked.parse(accumulated)) || 'No response.';
                 }
 
                 if (accumulated.includes('Strategy Saved Successfully')) {

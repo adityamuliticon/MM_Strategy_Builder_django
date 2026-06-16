@@ -56,6 +56,12 @@ class Config:
     # USD → INR conversion rate
     USD_TO_INR_RATE = float(os.getenv("USD_TO_INR_RATE", "95.71"))
 
-    # Django
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-    DEBUG = True
+    # Django — H-2: SECRET_KEY must be set; DEBUG must be explicitly enabled in .env
+    _secret = os.getenv("SECRET_KEY", "")
+    if not _secret:
+        raise RuntimeError(
+            "SECRET_KEY is not set. Add SECRET_KEY=<random-string> to your .env file. "
+            "Generate one with: python -c \"import secrets; print(secrets.token_hex(50))\""
+        )
+    SECRET_KEY = _secret
+    DEBUG = os.getenv("DEBUG", "False") == "True"

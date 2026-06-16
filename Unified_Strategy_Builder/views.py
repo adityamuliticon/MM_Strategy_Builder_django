@@ -1,7 +1,6 @@
 """USB views: chat (blocking + SSE streaming) and cross-plugin sidebar helpers."""
 
 import json
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -21,20 +20,38 @@ _STRATEGY_TYPE_IDS = {
 }
 
 
-def _fetch_count(key, type_id):
-    result = get_strategies(take=1, strategy_master_ids=[type_id])
-    if result.get("status") == "success":
-        return key, result["total"]
-    return key, None
+_ID_TO_KEY = {v: k for k, v in _STRATEGY_TYPE_IDS.items()}
 
 
 def strategy_counts_view(request):
-    counts = {}
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = {executor.submit(_fetch_count, k, v): k for k, v in _STRATEGY_TYPE_IDS.items()}
-        for future in as_completed(futures):
-            key, count = future.result()
-            counts[key] = count
+    result = get_strategies(take=1000)
+    if result.get("status") != "success":
+        return JsonResponse({k: None for k in _STRATEGY_TYPE_IDS})
+
+    counts = {k: 0 for k in _STRATEGY_TYPE_IDS}
+    strategies = result.get("strategies", [])
+    for s in strategies:
+        key = _ID_TO_KEY.get(s.get("master_id", ""))
+        if key:
+            counts[key] += 1
+
+    # If master_id field wasn't recognised (all zeros but strategies exist),
+    # fall back to counting by plugin name so the sidebar still shows correct numbers.
+    if strategies and not any(counts.values()):
+        plugin_to_key = {
+            s.get("plugin", ""): _ID_TO_KEY.get(
+                next((tid for k, tid in _STRATEGY_TYPE_IDS.items()), ""), ""
+            )
+            for s in strategies
+        }
+        # Simpler: group by plugin field and log for debugging
+        plugin_counts = {}
+        for s in strategies:
+            p = s.get("plugin", "unknown")
+            plugin_counts[p] = plugin_counts.get(p, 0) + 1
+        print(f"[strategy_counts] master_id unrecognised. Plugin breakdown: {plugin_counts}")
+        print(f"[strategy_counts] Sample master_id values: {[s.get('master_id') for s in strategies[:3]]}")
+
     return JsonResponse(counts)
 
 
@@ -54,8 +71,15 @@ def index(request):
 
 @csrf_exempt
 def chat(request):
-    data = json.loads(request.body)
-    user_message = data.get('message')
+    if request.method != 'POST':  # H-19
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    try:  # H-16
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+    user_message = (data.get('message') or '').strip()
+    if not user_message:
+        return JsonResponse({'error': 'Message is required'}, status=400)
     session_id = data.get('session_id', 'default')
     set_session_id(session_id)
 
@@ -97,8 +121,15 @@ def chat(request):
 
 @csrf_exempt
 def chat_stream(request):
-    data = json.loads(request.body)
-    user_message = data.get('message')
+    if request.method != 'POST':  # H-19
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    try:  # H-16
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+    user_message = (data.get('message') or '').strip()
+    if not user_message:
+        return JsonResponse({'error': 'Message is required'}, status=400)
     session_id = data.get('session_id', 'default')
     set_session_id(session_id)
 
@@ -126,7 +157,8 @@ def chat_stream(request):
                 if t in ('done', 'error'):
                     break
         except Exception as e:
-            err = {"t": "error", "v": f"⚠️ Connection error. Please try again. ({e})"}
+            print(f"[USB stream error] {e}")  # H-17: log detail server-side only
+            err = {"t": "error", "v": "⚠️ Connection error. Please try again."}
             yield f"data: {json.dumps(err)}\n\n"
         finally:
             memory[session_id].append({"role": "user", "content": user_message})

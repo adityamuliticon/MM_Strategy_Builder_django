@@ -1,20 +1,14 @@
-"""RESOrchestrator — agentic loop, system prompt, and SSE streaming for the rapid execution scalper plugin."""
+"""RESOrchestrator — system prompt and module hooks for the rapid execution scalper plugin."""
 
-import json
 import re
-from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError
-from config import Config
+from services.base_orchestrator import BaseOrchestrator
 from rapid_execution_scalper.rag.retriever import res_retriever
 from rapid_execution_scalper.mcp.handlers import res_handler
 
 
-class RESOrchestrator:
+class RESOrchestrator(BaseOrchestrator):
     def __init__(self):
-        self.client = OpenAI(
-            api_key=Config.RUNWARE_API_KEY,
-            base_url=Config.RUNWARE_BASE_URL
-        )
-        self.model = Config.RUNWARE_MODEL_ID or "runware-latest"
+        super().__init__()
         self.system_prompt = """
 You are an AI assistant for the Market Maya Rapid Execution Scalper (RES) plugin.
 You help traders create automated step-based averaging and jobbing strategies.
@@ -410,417 +404,113 @@ On error: show the error message clearly. Common errors:
 - "insufficient balance" → tell user to top up their point balance
 """
 
-    def process_message(self, user_message, history=None):
-        if history is None:
-            history = []
+    # ── Hook implementations ───────────────────────────────────────────────
+    def _retriever(self):            return res_retriever
+    def _handler(self):              return res_handler
+    def _context_label(self):        return "Relevant Documentation Context"
+    def _save_tool_name(self):       return "create_and_save_res_strategy"
+    def _module_prefix(self):        return "RES"
 
-        # Detect confirmation messages to force save tool call
-        _confirm_words = {'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok', 'sure', 'approve', 'approved', 'continue', 'do it', 'submit'}
-        _is_confirm = bool(history) and any(w in user_message.lower() for w in _confirm_words)
+    def _temperature(self):          return 0.1
+    def _final_temperature(self):    return None   # final call uses no temperature
+    def _null_content_check(self):   return False
+    def _has_direct_yield(self):     return True
+    def _debug_json_str(self):       return True
 
-        context = res_retriever.get_context(user_message)
+    def _tool_whitelist(self):
+        return [
+            "create_and_save_res_strategy", "res_validate_strategy", "res_get_validation_rules",
+            "get_my_strategies", "delete_strategy", "get_strategy_record",
+            "modify_strategy", "rename_strategy", "get_balance",
+            "get_deploy_options", "deploy_strategy",
+        ]
 
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "system", "content": f"Relevant Documentation Context:\n{context}"}
-        ] + history + [{"role": "user", "content": user_message}]
+    def _strategy_json_wrap_keys(self):
+        return {"create_and_save_res_strategy", "res_validate_strategy"}
 
-        # Augment confirmation messages with explicit save instruction
-        if _is_confirm:
-            messages[-1] = {
-                "role": "user",
-                "content": (
-                    user_message +
-                    "\n\n[SAVE NOW: Output ONLY a JSON block calling create_and_save_res_strategy. "
-                    "Use ALL field values from the preview tables above. "
-                    "Format exactly: {\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
-                )
-            }
+    def _status_messages(self):
+        return {
+            "create_and_save_res_strategy": "Deploying scalping strategy to Market Maya...",
+            "get_my_strategies":            "Fetching your strategies...",
+            "delete_strategy":              "Deleting strategy...",
+            "get_strategy_record":          "Fetching strategy record...",
+            "modify_strategy":              "Saving changes...",
+            "rename_strategy":              "Renaming strategy...",
+            "get_balance":                  "Fetching balance...",
+            "get_deploy_options":           "Fetching deploy options...",
+            "deploy_strategy":              "Deploying strategy to Market Maya...",
+        }
 
-        max_turns = 10
-        executed_tools = set()
-        _in_tok = 0
-        _out_tok = 0
-        _confirm_retry_done = False
+    def _max_turns_msg(self):
+        return "Please provide the final strategy summary and ask for save confirmation."
 
-        for turn in range(max_turns):
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    temperature=0.1
-                )
-            except BadRequestError as e:
-                msg = str(e)
-                if "credits" in msg.lower():
-                    return {"message": "⚠️ **AI service unavailable**: Insufficient credits. Please top up and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
-                return {"message": f"⚠️ **AI service error**: {msg}", "input_tokens": _in_tok, "output_tokens": _out_tok}
-            except AuthenticationError:
-                return {"message": "⚠️ **Authentication error**: Invalid Runware API key.", "input_tokens": _in_tok, "output_tokens": _out_tok}
-            except RateLimitError:
-                return {"message": "⚠️ **Rate limit reached**: Please wait a moment and try again.", "input_tokens": _in_tok, "output_tokens": _out_tok}
-            except APIConnectionError:
-                return {"message": "⚠️ **Connection error**: Could not reach the AI service.", "input_tokens": _in_tok, "output_tokens": _out_tok}
+    def _confirm_save_instruction(self):
+        return (
+            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_res_strategy. "
+            "Use ALL field values from the preview tables above. "
+            "Format exactly: {\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+        )
 
-            if hasattr(response, 'usage') and response.usage:
-                _in_tok += response.usage.prompt_tokens
-                _out_tok += response.usage.completion_tokens
+    def _process_error_msgs(self):
+        return {
+            "credits": "⚠️ **AI service unavailable**: Insufficient credits. Please top up and try again.",
+            "auth":    "⚠️ **Authentication error**: Invalid Runware API key.",
+            "rate":    "⚠️ **Rate limit reached**: Please wait a moment and try again.",
+            "conn":    "⚠️ **Connection error**: Could not reach the AI service.",
+        }
 
-            content = response.choices[0].message.content
-            tool_called = False
+    def _stream_error_msgs(self):
+        return {
+            "credits": "⚠️ **AI service unavailable**: Insufficient credits.",
+            "auth":    "⚠️ **Authentication error**: Invalid Runware API key.",
+            "rate":    "⚠️ **Rate limit reached**: Please wait a moment.",
+            "conn":    "⚠️ **Connection error**: Could not reach the AI service.",
+        }
 
-            try:
-                start_indices = [m.start() for m in re.finditer(r'\{', content)]
+    def _confirm_retry_msg_process(self):
+        return (
+            "You must output the JSON tool call block now. No explanations. Just this:\n"
+            "{\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": "
+            "{\"strategy_name\": \"...\", \"main_exchange\": \"...\", \"main_segment\": \"...\", "
+            "\"main_symbol\": \"...\", ... all other fields from the preview ...}}}"
+        )
 
-                for start_idx in start_indices:
-                    brace_count = 0
-                    end_idx = -1
-                    for i in range(start_idx, len(content)):
-                        if content[i] == '{':
-                            brace_count += 1
-                        elif content[i] == '}':
-                            brace_count -= 1
-                            if brace_count == 0:
-                                end_idx = i + 1
-                                break
+    def _stream_empty_confirm_msg(self):
+        return "⚠️ I'm sorry, I encountered an error while generating the strategy payload. Please try saying 'yes' again."
 
-                    if end_idx == -1:
-                        continue
+    def _save_success_process(self, content, json_str, args, tool_result):
+        clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
+        if not clean_summary:
+            clean_summary = content
+        strategy_name = args.get("strategy_json", {}).get("strategy_name", "Unknown")
+        api_data = tool_result.get("data", [])
+        deploy_id = api_data[0].get("id", "N/A") if isinstance(api_data, list) and api_data else "N/A"
+        return (
+            f"{clean_summary}\n\n✅ **Strategy Saved Successfully!**\n\n"
+            f"| Detail | Value |\n"
+            f"| :--- | :--- |\n"
+            f"| **Strategy Name** | {strategy_name} |\n"
+            f"| **Deployment ID** | {deploy_id} |\n"
+            f"| **Status** | Created (Not yet active) |\n\n"
+            f"Your strategy has been saved to Market Maya. "
+            f"You can now activate it from the Market Maya terminal."
+        )
 
-                    json_str = content[start_idx:end_idx]
-                    try:
-                        clean_json = json_str.strip('`').strip()
-                        if clean_json.startswith('json'):
-                            clean_json = clean_json[4:].strip()
-
-                        data = json.loads(clean_json)
-                        tool_name = None
-                        args = None
-
-                        if isinstance(data, dict):
-                            if "tool" in data and "arguments" in data:
-                                tool_name = data["tool"]
-                                args = data["arguments"]
-                            else:
-                                for key in ["create_and_save_res_strategy", "res_validate_strategy",
-                                            "res_get_validation_rules", "get_my_strategies",
-                                            "delete_strategy", "get_strategy_record",
-                                            "modify_strategy", "rename_strategy", "get_balance",
-                                            "get_deploy_options", "deploy_strategy"]:
-                                    if key in data:
-                                        tool_name = key
-                                        val = data[key]
-                                        if tool_name in ["create_and_save_res_strategy", "res_validate_strategy"]:
-                                            args = val if "strategy_json" in val else {"strategy_json": val}
-                                        else:
-                                            args = val
-                                        break
-
-                        if tool_name and args is not None:
-                            args_str = json.dumps(args, sort_keys=True)
-                            tool_key = f"{tool_name}:{args_str}"
-
-                            if tool_key in executed_tools:
-                                continue
-
-                            executed_tools.add(tool_key)
-                            print(f"> [RES Turn {turn+1}] Executing tool: {tool_name}")
-                            tool_result = res_handler.handle_tool_call(tool_name, args)
-
-                            messages.append({"role": "assistant", "content": content})
-                            messages.append({
-                                "role": "user",
-                                "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"
-                            })
-                            tool_called = True
-
-                            if tool_name == "create_and_save_res_strategy" and tool_result.get("status") == "success":
-                                clean_summary = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
-                                if not clean_summary:
-                                    clean_summary = content
-                                strategy_name = args.get("strategy_json", {}).get("strategy_name", "Unknown")
-                                api_data = tool_result.get("data", [])
-                                deploy_id = api_data[0].get("id", "N/A") if isinstance(api_data, list) and api_data else "N/A"
-                                deploy_msg = (
-                                    f"{clean_summary}\n\n✅ **Strategy Saved Successfully!**\n\n"
-                                    f"| Detail | Value |\n"
-                                    f"| :--- | :--- |\n"
-                                    f"| **Strategy Name** | {strategy_name} |\n"
-                                    f"| **Deployment ID** | {deploy_id} |\n"
-                                    f"| **Status** | Created (Not yet active) |\n\n"
-                                    f"Your strategy has been saved to Market Maya. "
-                                    f"You can now activate it from the Market Maya terminal."
-                                )
-                                return {"message": deploy_msg, "input_tokens": _in_tok, "output_tokens": _out_tok}
-
-                            break
-                    except Exception as e:
-                        print(f"Error handling tool call: {e}")
-                        continue
-
-                if tool_called:
-                    continue
-            except Exception as e:
-                print(f"Tool parsing error: {e}")
-
-            # If confirmation but no tool call, retry once with explicit JSON format instruction
-            if _is_confirm and not tool_called and not _confirm_retry_done:
-                _confirm_retry_done = True
-                messages.append({"role": "assistant", "content": content})
-                messages.append({
-                    "role": "user",
-                    "content": (
-                        "You must output the JSON tool call block now. No explanations. Just this:\n"
-                        "{\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": "
-                        "{\"strategy_name\": \"...\", \"main_exchange\": \"...\", \"main_segment\": \"...\", "
-                        "\"main_symbol\": \"...\", ... all other fields from the preview ...}}}"
-                    )
-                })
-                continue
-
-            ui_content = re.sub(r'\{.*\}', '', content, flags=re.DOTALL).strip()
-            if not ui_content:
-                ui_content = content
-
-            return {"message": ui_content, "input_tokens": _in_tok, "output_tokens": _out_tok}
-
-        messages.append({"role": "user", "content": "Please provide the final strategy summary and ask for save confirmation."})
-        try:
-            final = self.client.chat.completions.create(model=self.model, messages=messages)
-            if hasattr(final, 'usage') and final.usage:
-                _in_tok += final.usage.prompt_tokens
-                _out_tok += final.usage.completion_tokens
-            return {"message": final.choices[0].message.content, "input_tokens": _in_tok, "output_tokens": _out_tok}
-        except Exception as e:
-            return {"message": f"⚠️ **AI service error**: {e}", "input_tokens": _in_tok, "output_tokens": _out_tok}
-
-    def stream_message(self, user_message, history=None):
-        if history is None:
-            history = []
-
-        context = res_retriever.get_context(user_message)
-        
-        # Detect confirmation messages to force save tool call
-        _confirm_words = {'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok', 'sure', 'approve', 'approved', 'continue', 'do it', 'submit'}
-        _is_confirm = bool(history) and any(w in user_message.lower() for w in _confirm_words)
-
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "system", "content": f"Relevant Documentation Context:\n{context}"}
-        ] + history + [{"role": "user", "content": user_message}]
-
-        # Augment confirmation messages with explicit save instruction
-        if _is_confirm:
-            messages[-1] = {
-                "role": "user",
-                "content": (
-                    user_message +
-                    "\n\n[SAVE NOW: Output ONLY a JSON block calling create_and_save_res_strategy. "
-                    "Use ALL field values from the preview tables above. "
-                    "Format exactly: {\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
-                )
-            }
-
-        max_turns = 10
-        executed_tools = set()
-        _in_tok = 0
-        _out_tok = 0
-
-        for turn in range(max_turns):
-            try:
-                stream = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    stream=True,
-                    stream_options={"include_usage": True}
-                )
-            except BadRequestError as e:
-                msg = str(e)
-                err = "⚠️ **AI service unavailable**: Insufficient credits." if "credits" in msg.lower() else f"⚠️ **AI error**: {msg}"
-                yield {"t": "error", "v": err}
-                return
-            except AuthenticationError:
-                yield {"t": "error", "v": "⚠️ **Authentication error**: Invalid Runware API key."}
-                return
-            except RateLimitError:
-                yield {"t": "error", "v": "⚠️ **Rate limit reached**: Please wait a moment."}
-                return
-            except APIConnectionError:
-                yield {"t": "error", "v": "⚠️ **Connection error**: Could not reach the AI service."}
-                return
-
-            full_content = ""
-            brace_depth = 0
-
-            try:
-                for chunk in stream:
-                    if not chunk.choices:
-                        if hasattr(chunk, 'usage') and chunk.usage:
-                            _in_tok += getattr(chunk.usage, 'prompt_tokens', 0) or 0
-                            _out_tok += getattr(chunk.usage, 'completion_tokens', 0) or 0
-                        continue
-
-                    delta = chunk.choices[0].delta.content or ""
-                    full_content += delta
-
-                    text_part = ""
-                    for char in delta:
-                        if char == '{':
-                            if brace_depth == 0 and text_part:
-                                yield {"t": "chunk", "v": text_part}
-                                text_part = ""
-                            brace_depth += 1
-                        elif char == '}':
-                            brace_depth = max(0, brace_depth - 1)
-                        elif brace_depth == 0:
-                            text_part += char
-
-                    if text_part and brace_depth == 0:
-                        yield {"t": "chunk", "v": text_part}
-            except Exception as e:
-                print(f"[RES] Stream error on turn {turn+1}: {e}")
-
-            if not full_content.strip():
-                try:
-                    fb = self.client.chat.completions.create(model=self.model, messages=messages)
-                    if hasattr(fb, 'usage') and fb.usage:
-                        _in_tok += fb.usage.prompt_tokens or 0
-                        _out_tok += fb.usage.completion_tokens or 0
-                    full_content = fb.choices[0].message.content or ""
-                    ui_text = re.sub(r'\{.*?\}', '', full_content, flags=re.DOTALL).strip()
-                    if ui_text:
-                        yield {"t": "chunk", "v": ui_text}
-                except Exception as e2:
-                    print(f"[RES] Fallback error on turn {turn+1}: {e2}")
-                    if turn == 0:
-                        yield {"t": "error", "v": "⚠️ No response from AI service. Please try again."}
-                        yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-                        return
-
-            tool_called = False
-            try:
-                start_indices = [m.start() for m in re.finditer(r'\{', full_content)]
-                for start_idx in start_indices:
-                    brace_count = 0
-                    end_idx = -1
-                    for i in range(start_idx, len(full_content)):
-                        if full_content[i] == '{':
-                            brace_count += 1
-                        elif full_content[i] == '}':
-                            brace_count -= 1
-                            if brace_count == 0:
-                                end_idx = i + 1
-                                break
-
-                    if end_idx == -1:
-                        continue
-
-                    json_str = full_content[start_idx:end_idx]
-                    print("\n--- JSON STR ---\n" + json_str + "\n------\n")
-                    try:
-                        clean_json = json_str.strip('`').strip()
-                        if clean_json.startswith('json'):
-                            clean_json = clean_json[4:].strip()
-
-                        data = json.loads(clean_json)
-                        tool_name = None
-                        args = None
-
-                        if isinstance(data, dict):
-                            if "tool" in data and "arguments" in data:
-                                tool_name = data["tool"]
-                                args = data["arguments"]
-                            else:
-                                for key in ["create_and_save_res_strategy", "res_validate_strategy",
-                                            "res_get_validation_rules", "get_my_strategies",
-                                            "delete_strategy", "get_strategy_record",
-                                            "modify_strategy", "rename_strategy", "get_balance",
-                                            "get_deploy_options", "deploy_strategy"]:
-                                    if key in data:
-                                        tool_name = key
-                                        val = data[key]
-                                        if tool_name in ["create_and_save_res_strategy", "res_validate_strategy"]:
-                                            args = val if "strategy_json" in val else {"strategy_json": val}
-                                        else:
-                                            args = val
-                                        break
-
-                        if tool_name and args is not None:
-                            args_str = json.dumps(args, sort_keys=True)
-                            tool_key = f"{tool_name}:{args_str}"
-                            if tool_key in executed_tools:
-                                continue
-                            executed_tools.add(tool_key)
-
-                            _status_msgs = {
-                                "create_and_save_res_strategy": "Deploying scalping strategy to Market Maya...",
-                                "get_my_strategies": "Fetching your strategies...",
-                                "delete_strategy": "Deleting strategy...",
-                                "get_strategy_record": "Fetching strategy record...",
-                                "modify_strategy": "Saving changes...",
-                                "rename_strategy": "Renaming strategy...",
-                                "get_balance": "Fetching balance...",
-                                "get_deploy_options": "Fetching deploy options...",
-                                "deploy_strategy": "Deploying strategy to Market Maya...",
-                            }
-                            yield {"t": "status", "v": _status_msgs.get(tool_name, "Processing...")}
-                            tool_result = res_handler.handle_tool_call(tool_name, args)
-
-                            messages.append({"role": "assistant", "content": full_content})
-                            messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
-                            tool_called = True
-
-                            _DIRECT_YIELD = {"get_my_strategies", "get_balance", "delete_strategy",
-                                             "rename_strategy", "modify_strategy"}
-                            if tool_name in _DIRECT_YIELD:
-                                ok = tool_result.get("status") == "success"
-                                if ok and tool_result.get("formatted_list"):
-                                    yield {"t": "chunk", "v": tool_result["formatted_list"]}
-                                elif ok and tool_result.get("balance") is not None:
-                                    b = tool_result
-                                    yield {"t": "chunk", "v": f"Balance: ₹{b['balance']} | Hold: ₹{b['hold_balance']} | Points: {b['point_balance']}"}
-                                elif ok and tool_result.get("message"):
-                                    yield {"t": "chunk", "v": tool_result["message"]}
-                                else:
-                                    yield {"t": "chunk", "v": f"⚠️ {tool_result.get('message', 'An error occurred.')}"}
-                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-                                return
-
-                            if tool_name == "create_and_save_res_strategy" and tool_result.get("status") == "success":
-                                strategy_name = args.get("strategy_json", {}).get("strategy_name", "Unknown")
-                                api_data = tool_result.get("data", [])
-                                deploy_id = api_data[0].get("id", "N/A") if isinstance(api_data, list) and api_data else "N/A"
-                                deploy_msg = (
-                                    f"\n\n✅ **Strategy Saved Successfully!**\n\n"
-                                    f"| Detail | Value |\n"
-                                    f"| :--- | :--- |\n"
-                                    f"| **Strategy Name** | {strategy_name} |\n"
-                                    f"| **Deployment ID** | {deploy_id} |\n"
-                                    f"| **Status** | Created (Not yet active) |\n\n"
-                                    f"Your strategy has been saved to Market Maya. "
-                                    f"You can now activate it from the Market Maya terminal."
-                                )
-                                yield {"t": "chunk", "v": deploy_msg}
-                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-                                return
-                            break
-                    except Exception as e:
-                        print(f"Error handling tool call: {e}")
-                        continue
-            except Exception as e:
-                print(f"Tool parsing error: {e}")
-                pass
-
-            if not tool_called and not full_content.strip() and _is_confirm:
-                yield {"t": "chunk", "v": "⚠️ I'm sorry, I encountered an error while generating the strategy payload. Please try saying 'yes' again."}
-
-            if tool_called:
-                continue
-
-            yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
-            return
-
-        yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+    def _save_success_stream(self, args, tool_result):
+        strategy_name = args.get("strategy_json", {}).get("strategy_name", "Unknown")
+        api_data = tool_result.get("data", [])
+        deploy_id = api_data[0].get("id", "N/A") if isinstance(api_data, list) and api_data else "N/A"
+        return (
+            f"\n\n✅ **Strategy Saved Successfully!**\n\n"
+            f"| Detail | Value |\n"
+            f"| :--- | :--- |\n"
+            f"| **Strategy Name** | {strategy_name} |\n"
+            f"| **Deployment ID** | {deploy_id} |\n"
+            f"| **Status** | Created (Not yet active) |\n\n"
+            f"Your strategy has been saved to Market Maya. "
+            f"You can now activate it from the Market Maya terminal."
+        )
 
 
+# Singleton instance
 res_orchestrator = RESOrchestrator()

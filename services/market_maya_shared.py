@@ -112,6 +112,12 @@ def get_strategies(search="", skip=0, take=50, trading_type="All", strategy_mast
                     "created": s.get("created_on"),
                     "deployed": s.get("is_deployed"),
                     "legs": s.get("sub_count"),
+                    "master_id": (
+                        s.get("strategy_master_id") or
+                        s.get("strategyMasterId") or
+                        s.get("plugin_id") or
+                        s.get("pluginId") or ""
+                    ),
                 }
                 for s in data.get("data", [])
             ]
@@ -143,9 +149,22 @@ def delete_strategy(strategy_id="", strategy_name=""):
         strategies = search_result.get("strategies", [])
         if not strategies:
             return {"status": "error", "message": f"No strategy found matching '{search_term}'."}
-        # Prefer exact name match, fall back to first result
+        # Prefer exact name match
         exact = [s for s in strategies if s["name"].lower() == search_term.lower()]
-        chosen = exact[0] if exact else strategies[0]
+        if exact:
+            chosen = exact[0]
+        elif len(strategies) == 1:
+            chosen = strategies[0]
+        else:
+            # H-9: multiple non-exact matches — require the user to be specific
+            names = "\n".join(f"• {s['name']}" for s in strategies[:8])
+            return {
+                "status": "error",
+                "message": (
+                    f"Found {len(strategies)} strategies matching '{search_term}'. "
+                    f"Please provide the exact strategy name to avoid deleting the wrong one:\n{names}"
+                )
+            }
         sid = chosen["id"]
         print(f"[SharedAPI] Resolved '{search_term}' → id={sid} (name={chosen['name']})")
 
@@ -232,7 +251,8 @@ def modify_strategy(payload):
         print(f"[SharedAPI] MODIFY HTTP {resp.status_code}: {resp.text[:200]}")
         if resp.status_code == 200:
             body = resp.json()
-            if body.get("success"):
+            # H-6 (modify): use statusCode like every other function in this file
+            if body.get("statusCode") == 200 or body.get("success"):
                 log_api_call('SHARED', 'modify_strategy', Config.MODIFY_STRATEGY_URL, payload, resp.status_code, body, duration_ms, 'success')
                 return {"status": "success", "message": "Strategy modified successfully."}
             log_api_call('SHARED', 'modify_strategy', Config.MODIFY_STRATEGY_URL, payload, resp.status_code, body, duration_ms, 'error')

@@ -99,6 +99,7 @@ def get_deploy_options(strategy_id="", strategy_name=""):
 def deploy_strategy(
     strategy_id="", strategy_name="",
     trading_mode="Live",
+    charges_acknowledged=False,
     qty_multiply=1,
     entry_execution_type="PSUEDO",
     entry_psuedo_value=0,
@@ -120,6 +121,20 @@ def deploy_strategy(
     hash_id, resolved_name, err = _resolve_strategy_id(strategy_id, strategy_name)
     if err:
         return {"status": "error", "message": err}
+
+    # H-8: require explicit charges acknowledgement before live deployment
+    if not charges_acknowledged:
+        charges_result = get_deploy_options(strategy_id=hash_id)
+        if charges_result.get("status") == "success":
+            charges_result["requires_confirmation"] = True
+            charges_result["message"] = (
+                f"Please confirm deployment for '{resolved_name}'. "
+                f"Live charge: {charges_result.get('live_trade_charge_per_order')} pts/order, "
+                f"Paper charge: {charges_result.get('paper_trade_charge_per_order')} pts/order, "
+                f"Balance: {charges_result.get('point_balance')} pts. "
+                "Call deploy_strategy again with charges_acknowledged=True to proceed."
+            )
+        return charges_result
 
     headers = _auth_headers()
     paper_trading = str(trading_mode).lower() in ("paper", "paper trading", "papertrading")

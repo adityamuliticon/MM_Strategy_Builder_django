@@ -10,12 +10,27 @@ VALID_CHART_TYPES = ["Candlestick", "Heikin-Ashi"]
 VALID_SIGNALS = ["BUY", "SELL", "Both"]
 VALID_UNDERLYING_TYPES = ["Future", "Spot/Index"]
 VALID_PRODUCTS = ["MIS", "NRML", "CNC", "MTF"]
-VALID_INDICATOR_CODES = [
-    "supertrend", "ma-cross-over", "rsi", "macd", "stochastic", "bollinger-bands",
-    "hammer", "morning-star", "evening-star",
-    "rising-three-methods", "falling-three-methods",
-    "three-black-crows", "three-white-soldiers"
-]
+
+
+def _get_valid_indicator_codes():
+    # H-12: derive valid codes from the same master JSON the generator uses,
+    # so adding a new indicator to indicator_master.json automatically unlocks it here too.
+    try:
+        from indicator_engine.services.generator import _MASTER_LIST
+        codes = {entry.get("indicatorCode") or entry.get("indicator_code") or entry.get("code")
+                 for entry in _MASTER_LIST if entry}
+        codes.discard(None)
+        if codes:
+            return codes
+    except Exception:
+        pass
+    # Fallback list (used only if master JSON is unavailable)
+    return {
+        "supertrend", "ma-cross-over", "rsi", "macd", "stochastic", "bollinger-bands",
+        "hammer", "morning-star", "evening-star",
+        "rising-three-methods", "falling-three-methods",
+        "three-black-crows", "three-white-soldiers",
+    }
 
 
 class ISEValidator:
@@ -96,7 +111,7 @@ class ISEValidator:
         errors = []
         prefix = f"Indicator {idx}: "
 
-        if ind.get("indicator_code") not in VALID_INDICATOR_CODES:
+        if ind.get("indicator_code") not in _get_valid_indicator_codes():
             errors.append(f"{prefix}indicator_code '{ind.get('indicator_code')}' is not valid.")
 
         if not isinstance(ind.get("index", None), int) or ind.get("index", 0) < 1:

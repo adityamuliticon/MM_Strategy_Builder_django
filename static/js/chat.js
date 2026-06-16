@@ -2,11 +2,15 @@ const chatContainer = document.getElementById('chat-container');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 
+function safeMarkdown(text) {
+    return DOMPurify.sanitize(marked.parse(text || ''));
+}
+
 function appendMessage(role, text) {
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${role}-message`;
     if (role === 'ai') {
-        msgDiv.innerHTML = marked.parse(text);
+        msgDiv.innerHTML = safeMarkdown(text);
     } else {
         msgDiv.textContent = text;
     }
@@ -64,16 +68,16 @@ async function handleSend() {
 
                     if (event.t === 'chunk') {
                         accumulated += event.v;
-                        msgDiv.innerHTML = marked.parse(accumulated) + '<span class="streaming-cursor">▌</span>';
+                        msgDiv.innerHTML = safeMarkdown(accumulated) + '<span class="streaming-cursor">▌</span>';
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                     } else if (event.t === 'status') {
-                        msgDiv.innerHTML = marked.parse(accumulated) +
+                        msgDiv.innerHTML = safeMarkdown(accumulated) +
                             `<p class="deploy-status"><em>${event.v}</em> <span class="streaming-cursor">▌</span></p>`;
                     } else if (event.t === 'done') {
-                        msgDiv.innerHTML = marked.parse(accumulated);
+                        msgDiv.innerHTML = safeMarkdown(accumulated);
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                     } else if (event.t === 'error') {
-                        msgDiv.innerHTML = marked.parse(event.v || 'An error occurred.');
+                        msgDiv.innerHTML = safeMarkdown(event.v || 'An error occurred.');
                     }
                 } catch (_) {}
             }
@@ -81,7 +85,11 @@ async function handleSend() {
 
         // Safety: remove cursor if stream closed without a done event
         if (msgDiv.innerHTML.includes('streaming-cursor')) {
-            msgDiv.innerHTML = marked.parse(accumulated) || 'No response.';
+            try {
+                msgDiv.innerHTML = safeMarkdown(accumulated) || accumulated || 'No response.';
+            } catch (_) {
+                msgDiv.innerHTML = accumulated || 'No response.';
+            }
         }
 
         if (accumulated.includes('Strategy Saved Successfully') && typeof window.loadStrategyCounts === 'function') {
@@ -93,7 +101,8 @@ async function handleSend() {
         }
 
     } catch (error) {
-        msgDiv.innerHTML = 'Error: Could not connect to the backend.';
+        console.error('[Chat stream error]', error);
+        msgDiv.innerHTML = `Error: ${error.message || 'Could not connect to the backend.'}`;
     } finally {
         setInputLocked(false);
         userInput.focus();

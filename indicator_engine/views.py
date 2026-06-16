@@ -20,8 +20,15 @@ def index(request):
 
 @csrf_exempt
 def chat(request):
-    data = json.loads(request.body)
-    user_message = data.get('message')
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+    user_message = (data.get('message') or '').strip()
+    if not user_message:
+        return JsonResponse({'error': 'Message is required'}, status=400)
     session_id = data.get('session_id', 'default')
     set_session_id(session_id)
 
@@ -63,8 +70,15 @@ def chat(request):
 
 @csrf_exempt
 def chat_stream(request):
-    data = json.loads(request.body)
-    user_message = data.get('message')
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+    user_message = (data.get('message') or '').strip()
+    if not user_message:
+        return JsonResponse({'error': 'Message is required'}, status=400)
     session_id = data.get('session_id', 'default')
     set_session_id(session_id)
 
@@ -92,7 +106,8 @@ def chat_stream(request):
                 if t in ('done', 'error'):
                     break
         except Exception as e:
-            err = {"t": "error", "v": f"⚠️ Connection error. Please try again. ({e})"}
+            print(f"[ISE stream error] {e}")
+            err = {"t": "error", "v": "⚠️ Connection error. Please try again."}
             yield f"data: {json.dumps(err)}\n\n"
         finally:
             ise_memory[session_id].append({"role": "user", "content": user_message})

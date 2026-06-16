@@ -1,14 +1,10 @@
 """USB strategy validator — checks required fields and allowed values before payload generation."""
 
-import json
-from config import Config
-
 
 class StrategyValidator:
     def __init__(self):
-        with open("docs/swagger.json", "r") as f:
-            self.swagger = json.load(f)
-            
+        pass  # H-11: removed unused swagger.json load (it crashed server if file was missing)
+
     def validate_main_parameters(self, params):
         errors = []
         

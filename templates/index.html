@@ -84,7 +84,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{% static 'js/marked.min.js' %}"></script>
+    <script src="{% static 'js/purify.min.js' %}"></script>
     <script>
     function loadBalance() {
         fetch('/api/balance/')
@@ -118,6 +119,6 @@
     }
     loadStrategyCounts();
     </script>
-    <script src="{% static 'js/chat.js' %}?v=2"></script>
+    <script src="{% static 'js/chat.js' %}?v=4"></script>
 </body>
 </html>
