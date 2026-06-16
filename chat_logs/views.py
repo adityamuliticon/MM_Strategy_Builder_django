@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone
 from django.utils.timezone import make_aware
+from django.core.paginator import Paginator
 from datetime import datetime, timedelta, date
 from .models import ChatLog, APICallLog
 
@@ -62,7 +63,14 @@ def logs_index(request):
     base_qs = ChatLog.objects.all()
     filtered_qs = _apply_filters(base_qs, module_filter, date_from, date_to)
 
-    logs = filtered_qs[:200]
+    paginator = Paginator(filtered_qs, 50)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    # Build base query string without 'page' for pagination links
+    params = request.GET.copy()
+    params.pop('page', None)
+    base_query = params.urlencode()
 
     # Stats for current filter
     stats = _aggregate(filtered_qs)
@@ -97,7 +105,7 @@ def logs_index(request):
     ]
 
     return render(request, 'chat_logs.html', {
-        'logs': logs,
+        'page_obj': page_obj,
         'stats': stats,
         'all_stats': all_stats,
         'module_stats': module_stats,
@@ -107,6 +115,7 @@ def logs_index(request):
         'quick': quick,
         'daily_chart': daily_chart,
         'is_filtered': bool(date_from or date_to),
+        'base_query': base_query,
     })
 
 
@@ -207,10 +216,16 @@ def api_logs_index(request):
     # Distinct values for filter dropdowns
     all_call_types = APICallLog.objects.values_list('call_type', flat=True).distinct().order_by('call_type')
 
-    logs = qs[:300]
+    paginator = Paginator(qs, 100)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    params = request.GET.copy()
+    params.pop('page', None)
+    base_query = params.urlencode()
 
     return render(request, 'api_logs.html', {
-        'logs': logs,
+        'page_obj': page_obj,
         'stats': stats,
         'call_type_stats': call_type_stats,
         'all_call_types': all_call_types,
@@ -221,6 +236,7 @@ def api_logs_index(request):
         'date_from': date_from,
         'date_to': date_to,
         'quick': quick,
+        'base_query': base_query,
     })
 
 
