@@ -9,6 +9,7 @@ from multi_leg_hedger.services.backtest import (
     get_backtest_result as _get_backtest_result,
 )
 import services.market_maya_shared as shared
+from services.market_maya_shared import delete_strategy as _delete_strategy
 from services.deploy import (
     get_deploy_options as _get_deploy_options,
     deploy_strategy as _deploy_strategy,
@@ -37,6 +38,17 @@ def mlh_generate_payload(strategy_json):
 
 def mlh_save(payload):
     return mlh_market_maya.deploy(payload)
+
+
+def delete_strategy(strategy_id="", strategy_name="", confirmed=False):
+    if not confirmed:
+        search = strategy_name or strategy_id
+        return {
+            "status": "requires_confirmation",
+            "message": f"Are you sure you want to permanently delete '{search}'? "
+                       "This cannot be undone. Call delete_strategy again with confirmed=True to proceed."
+        }
+    return _delete_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
 
 
 def get_backtest_options(strategy_id="", strategy_name=""):

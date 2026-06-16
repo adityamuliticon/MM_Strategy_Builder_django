@@ -52,6 +52,25 @@ class BaseMarketMayaService(ABC):
                 except Exception:
                     api_response = response.text
                 result = {"status": "success", "data": api_response}
+            elif response.status_code == 401:
+                from services.token_service import force_refresh, get_auth_header
+                force_refresh()
+                headers["Authorization"] = get_auth_header()
+                response = requests.post(url, json=payload, headers=headers, timeout=30)
+                duration_ms = (time.time() - start) * 1000
+                api_code = response.status_code
+                print(f"\n[{self._log_prefix}] 401 retry HTTP {api_code}: {response.text[:300]}")
+                if response.status_code == 200:
+                    api_status = "success"
+                    try:
+                        api_response = response.json()
+                    except Exception:
+                        api_response = response.text
+                    result = {"status": "success", "data": api_response}
+                else:
+                    api_status = "error"
+                    api_response = response.text
+                    result = {"status": "error", "code": api_code, "message": api_response}
             else:
                 api_status = "error"
                 api_response = response.text

@@ -62,7 +62,14 @@ def get_my_strategies(search="", take=50):
     }
 
 
-def delete_strategy(strategy_id="", strategy_name=""):
+def delete_strategy(strategy_id="", strategy_name="", confirmed=False):
+    if not confirmed:
+        search = strategy_name or strategy_id
+        return {
+            "status": "requires_confirmation",
+            "message": f"Are you sure you want to permanently delete '{search}'? "
+                       "This cannot be undone. Call delete_strategy again with confirmed=True to proceed."
+        }
     return _delete_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
 
 

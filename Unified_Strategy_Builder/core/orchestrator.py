@@ -122,6 +122,7 @@ STRICT TWO-STEP WORKFLOW:
         - Rupee pairs: USDINR, EURINR, GBPINR, JPYINR
         - Cross currency: EURUSD, GBPUSD, USDJPY
         - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
+      * **No F&O available — Rule 4**: If a symbol has no F&O contract (e.g., a small-cap stock not listed on NFO), default the underlying to `"NSE"` / `"EQ"`. If the user explicitly requested futures or options on that symbol, inform them no F&O is available and that you are defaulting to the cash equity — do NOT switch silently.
       * **Precedence** (first match wins): non-equity conflict → equity hard-rule (NSE/NFO) → explicit exchange → native family → asset-class keyword → default FUT on F&O exchange.
       * **Non-equity conflict** (e.g., NIFTY on BSE, BANKNIFTY equity): ask user to clarify — do NOT auto-correct.
       * **Equity conflict** (e.g., RELIANCE on BSE/BFO): auto-correct to NSE/NFO and inform user.

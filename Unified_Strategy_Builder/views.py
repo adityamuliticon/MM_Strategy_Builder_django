@@ -35,16 +35,8 @@ def strategy_counts_view(request):
         if key:
             counts[key] += 1
 
-    # If master_id field wasn't recognised (all zeros but strategies exist),
-    # fall back to counting by plugin name so the sidebar still shows correct numbers.
+    # Log when master_id values aren't recognised so we can update _STRATEGY_TYPE_IDS
     if strategies and not any(counts.values()):
-        plugin_to_key = {
-            s.get("plugin", ""): _ID_TO_KEY.get(
-                next((tid for k, tid in _STRATEGY_TYPE_IDS.items()), ""), ""
-            )
-            for s in strategies
-        }
-        # Simpler: group by plugin field and log for debugging
         plugin_counts = {}
         for s in strategies:
             p = s.get("plugin", "unknown")
@@ -86,7 +78,7 @@ def chat(request):
     if session_id not in memory:
         memory[session_id] = []
 
-    result = orchestrator.process_message(user_message, memory[session_id])
+    result = orchestrator.process_message(user_message, memory[session_id][:])
     response_text   = result.get("message", "") if isinstance(result, dict) else result
     input_tokens    = result.get("input_tokens", 0) if isinstance(result, dict) else 0
     output_tokens   = result.get("output_tokens", 0) if isinstance(result, dict) else 0

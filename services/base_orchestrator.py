@@ -166,7 +166,7 @@ class BaseOrchestrator:
                                         tool_name = key
                                         val = data[key]
                                         if key in _wrap_keys:
-                                            args = val if "strategy_json" in val else {"strategy_json": val}
+                                            args = val if isinstance(val, dict) and "strategy_json" in val else {"strategy_json": val}
                                         else:
                                             args = val
                                         break
@@ -175,7 +175,8 @@ class BaseOrchestrator:
                             tool_key = f"{tool_name}:{args_str}"
                             if tool_key in executed_tools:
                                 print(f"!! [{_prefix} Turn {turn+1}] Skipping redundant tool: {tool_name}")
-                                continue
+                                tool_called = True
+                                break
                             executed_tools.add(tool_key)
                             print(f"> [{_prefix} Turn {turn+1}] Executing tool: {tool_name}")
                             tool_result = self._handler().handle_tool_call(tool_name, args)
@@ -356,7 +357,7 @@ class BaseOrchestrator:
                                         tool_name = key
                                         val = data[key]
                                         if key in _wrap_keys:
-                                            args = val if "strategy_json" in val else {"strategy_json": val}
+                                            args = val if isinstance(val, dict) and "strategy_json" in val else {"strategy_json": val}
                                         else:
                                             args = val
                                         break
@@ -364,7 +365,8 @@ class BaseOrchestrator:
                             args_str = json.dumps(args, sort_keys=True)
                             tool_key = f"{tool_name}:{args_str}"
                             if tool_key in executed_tools:
-                                continue
+                                tool_called = True
+                                break
                             executed_tools.add(tool_key)
                             yield {"t": "status", "v": _status_msgs.get(tool_name, "Processing...")}
                             tool_result = self._handler().handle_tool_call(tool_name, args)

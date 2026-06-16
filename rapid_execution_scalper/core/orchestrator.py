@@ -67,6 +67,7 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
   - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
 * DEFAULT SEGMENT: If user mentions index name without specifying options/CE/PE → main_segment: "FUT".
 * Use main_segment: "OPT" ONLY when user explicitly says "options", "call", "put", "CE", "PE", or a specific strike.
+* No F&O available (Rule 4): If a symbol has no F&O contract, default to NSE/EQ. If the user explicitly asked for FUT or OPT on that symbol, inform them no F&O is available and that you are defaulting to cash equity — do NOT switch silently.
 * Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ── CONTRACT & EXPIRY ─────────────────────────────────────

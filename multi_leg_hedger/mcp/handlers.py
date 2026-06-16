@@ -3,6 +3,7 @@
 from multi_leg_hedger.mcp.tools import (
     create_and_save_mlh_strategy, mlh_validate_strategy,
     mlh_generate_payload, mlh_save,
+    delete_strategy,
     get_backtest_options, run_backtest, get_backtest_result,
     get_deploy_options, deploy_strategy,
 )
@@ -23,7 +24,7 @@ class MLHToolHandler:
             elif tool_name == "get_my_strategies":
                 return shared.get_my_strategies(**arguments)
             elif tool_name == "delete_strategy":
-                return shared.delete_strategy(**arguments)
+                return delete_strategy(**arguments)
             elif tool_name == "get_strategy_record":
                 return shared.get_strategy_record(**arguments)
             elif tool_name == "modify_strategy":

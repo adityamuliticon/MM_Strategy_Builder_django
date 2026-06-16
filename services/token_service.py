@@ -199,6 +199,9 @@ def force_refresh() -> str:
 def get_auth_header() -> str:
     """Return the full Authorization header value: 'Bearer <token>'."""
     token = get_valid_token()
-    if token and not token.startswith("Bearer "):
+    if not token:
+        print("[TokenService] WARNING: No token available — API call will receive 401.")
+        return ""
+    if not token.startswith("Bearer "):
         return f"Bearer {token}"
     return token

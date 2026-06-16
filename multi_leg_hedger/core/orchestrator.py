@@ -85,6 +85,7 @@ UNDERLYING SYMBOL & EXCHANGE RULES
   - Cross currency: EURUSD, GBPUSD, USDJPY
   - Normalize slash/dash notation: "USD/INR" → "USDINR", "EUR/USD" → "EURUSD", "GBP/USD" → "GBPUSD", "USD/JPY" → "USDJPY"
 * Default: BANKNIFTY, exchange: "NFO", segment: "FUT". underlying display string is built automatically.
+* No F&O available — Rule 4: If a symbol has no F&O contract, default the underlying to "NSE" / "EQ". If the user explicitly asked for futures or options on that symbol, inform them no F&O is available and default to cash equity — do NOT switch silently.
 * Non-equity conflict (NIFTY on BSE, BANKNIFTY equity): ask user to clarify. Do NOT auto-correct.
 
 ═══════════════════════════════════════════════════════════
