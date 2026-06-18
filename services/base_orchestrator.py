@@ -18,6 +18,93 @@ _DIRECT_YIELD_TOOLS = frozenset({
     "get_my_strategies", "get_balance", "delete_strategy",
     "rename_strategy", "modify_strategy",
 })
+# Signals that the last assistant message showed the execution-settings confirmation table.
+_DEPLOY_SETTINGS_SIGNALS = frozenset({
+    "execution settings", "qty multiplier", "type **proceed**", "proceed** to deploy",
+})
+
+_SETTINGS_TABLE = (
+    "**Execution Settings (defaults):**\n\n"
+    "| Setting | Entry | Exit |\n"
+    "|---------|-------|------|\n"
+    "| Type | PSUEDO | PSUEDO |\n"
+    "| Pseudo Type | Auto | Auto |\n"
+    "| Pseudo Value | 0 | 0 |\n"
+    "| Wait Seconds | 30 | 30 |\n"
+    "| No. of Tries | 2 | 2 |\n"
+    "| Market Order on Retry | No | No |\n\n"
+    "**Qty Multiplier:** 1\n\n"
+    "**Types:** PSUEDO (Pseudo Type: Auto / Ticks / Points / %) · LIMIT (Wait only)\n\n"
+    "Type **proceed** to deploy with defaults, or specify changes — e.g.:\n"
+    "- `entry LIMIT 20 ticks` · `exit PSUEDO auto` · `qty 2` · `wait 60`"
+)
+
+
+def _parse_deploy_settings(msg):
+    """
+    Parse execution-setting overrides from a natural language message.
+    Returns a dict of deploy_strategy kwargs that differ from defaults.
+    """
+    o = {}
+    m = msg.lower()
+
+    # Qty multiplier: "qty 2", "multiplier 2"
+    qm = re.search(r'\bqty\s+(\d+)|\bmultipl\w*\s+(\d+)', m)
+    if qm:
+        o['qty_multiply'] = int(qm.group(1) or qm.group(2))
+
+    for side in ('entry', 'exit'):
+        # Execution type
+        if re.search(rf'\b{side}\b[^.]*\blimit\b', m):
+            o[f'{side}_execution_type'] = 'LIMIT'
+        elif re.search(rf'\b{side}\b[^.]*\bpsuedo\b', m):
+            o[f'{side}_execution_type'] = 'PSUEDO'
+
+        # Pseudo type + value (only meaningful for PSUEDO, but harmless for LIMIT)
+        if re.search(rf'\b{side}\b[^.]*\bauto\b', m):
+            o[f'{side}_psuedo_type'] = 'Auto'
+            o[f'{side}_psuedo_value'] = 0
+        elif re.search(rf'\b{side}\b[^.]*tick', m):
+            o[f'{side}_psuedo_type'] = 'Ticks'
+            v = re.search(rf'\b{side}\b[^.]*?(\d+)\s*tick', m) or re.search(r'(\d+)\s*tick', m)
+            if v:
+                o[f'{side}_psuedo_value'] = int(v.group(1))
+        elif re.search(rf'\b{side}\b[^.]*point', m):
+            o[f'{side}_psuedo_type'] = 'Points'
+            v = re.search(rf'\b{side}\b[^.]*?(\d+)\s*point', m) or re.search(r'(\d+)\s*point', m)
+            if v:
+                o[f'{side}_psuedo_value'] = int(v.group(1))
+        elif re.search(rf'\b{side}\b[^.]*percent|\b{side}\b[^.]*\b%', m):
+            o[f'{side}_psuedo_type'] = '%'
+            v = re.search(rf'\b{side}\b[^.]*?(\d+(?:\.\d+)?)\s*%', m)
+            if v:
+                o[f'{side}_psuedo_value'] = float(v.group(1))
+
+        # Wait seconds (side-specific): "wait 40", "for 40 sec", "40 seconds", "40s"
+        w = (
+            re.search(rf'\b{side}\b[^.]*wait\s+(\d+)', m)
+            or re.search(rf'\b{side}\b[^.]*for\s+(\d+)\s*sec', m)
+            or re.search(rf'\b{side}\b[^.]*\b(\d+)\s*sec(?:ond)?s?\b', m)
+        )
+        if w:
+            o[f'{side}_wait_seconds'] = int(w.group(1))
+
+        # No. of tries
+        n = re.search(rf'\b{side}\b[^.]*(?:tr(?:y|ies)|attempt)\s+(\d+)', m)
+        if n:
+            o[f'{side}_no_of_try'] = int(n.group(1))
+
+    # Global wait (no side specified) — applies to both
+    if 'entry_wait_seconds' not in o and 'exit_wait_seconds' not in o:
+        gw = (
+            re.search(r'\bwait\s+(\d+)', m)
+            or re.search(r'\bfor\s+(\d+)\s*sec', m)
+            or re.search(r'\b(\d+)\s*sec(?:ond)?s?\b', m)
+        )
+        if gw:
+            o['entry_wait_seconds'] = o['exit_wait_seconds'] = int(gw.group(1))
+
+    return o
 
 
 class BaseOrchestrator:
@@ -46,11 +133,19 @@ class BaseOrchestrator:
     def _debug_json_str(self):       return False  # RES returns True
 
     def _is_deploy_confirm_context(self, history):
-        """True when the last assistant message is about deployment charges, not strategy creation."""
+        """True when the last assistant message is about deployment charges (trading mode selection)."""
         for msg in reversed(history or []):
             if msg.get("role") == "assistant" and msg.get("content"):
                 content = msg["content"].lower()
                 return any(kw in content for kw in _DEPLOY_CONTEXT_SIGNALS)
+        return False
+
+    def _is_deploy_settings_context(self, history):
+        """True when the last assistant message showed the execution-settings confirmation table."""
+        for msg in reversed(history or []):
+            if msg.get("role") == "assistant" and msg.get("content"):
+                content = msg["content"].lower()
+                return any(kw in content for kw in _DEPLOY_SETTINGS_SIGNALS)
         return False
 
     def _credits_check(self, msg):   return "credits" in msg.lower()
@@ -268,7 +363,75 @@ class BaseOrchestrator:
                     yield {"t": "done", "in_tok": 0, "out_tok": 0}
                     return
                 break  # only inspect the last assistant message
-        # ──────────────────────────────────────────────────────────────────
+
+        # ── Shortcut: "proceed" or settings change after seeing execution-settings table ──
+        # Handles both "proceed" (use defaults) and inline changes ("entry LIMIT 20 ticks").
+        _proceed_m = re.search(
+            r'\b(proceed|no|yes|ok|sure|go|default|confirm|deploy|continue'
+            r'|entry|exit|limit|psuedo|qty|wait|tick|auto|point|percent)\b',
+            user_message, re.IGNORECASE,
+        )
+        if _proceed_m and "deploy_strategy" in self._tool_whitelist():
+            if self._is_deploy_settings_context(history):
+                for _msg in reversed(history or []):
+                    if _msg.get("role") != "assistant":
+                        continue
+                    _c = _msg.get("content", "")
+                    if not any(kw in _c.lower() for kw in _DEPLOY_SETTINGS_SIGNALS):
+                        continue
+                    # Format A: "Ready to deploy **X** to **Live Trading**"
+                    _sm = re.search(
+                        r"deploy\s+\*?\*?(.+?)\*?\*?\s+to\s+\*?\*?(Live|Paper)\s+Trading",
+                        _c, re.IGNORECASE,
+                    )
+                    # Format B: "**Deploy: X** · Balance: ..." (new direct-yield format)
+                    _sm2 = re.search(r"\*\*Deploy:\s*([^·*\n]+)", _c) if not _sm else None
+                    if _sm:
+                        _strat = _sm.group(1).strip().strip("'\"")
+                        _mode = _sm.group(2).capitalize()
+                    elif _sm2:
+                        _strat = _sm2.group(1).strip().strip("'\"")
+                        _mode = "Live"  # only live trading
+                    if _sm or _sm2:
+                        _overrides = _parse_deploy_settings(user_message)
+                        yield {"t": "status", "v": f"Deploying '{_strat}' to {_mode} Trading (connecting to exchange)..."}
+                        _dr = self._handler().handle_tool_call(
+                            "deploy_strategy",
+                            {"strategy_name": _strat, "trading_mode": _mode, "charges_acknowledged": True, **_overrides},
+                        )
+                        yield {"t": "chunk", "v": _dr.get("message", f"Strategy deployed to {_mode} Trading.")}
+                        yield {"t": "done", "in_tok": 0, "out_tok": 0}
+                        return
+                    break
+
+        # ── Shortcut: "Live Trading" / "Paper Trading" in deploy-charges context ──────
+        # The LLM returns empty content for short mode selections.
+        # Show execution settings table and ask for confirmation before deploying.
+        _deploy_mode_m = re.search(r'\b(live|paper)\b', user_message, re.IGNORECASE)
+        if _deploy_mode_m and "deploy_strategy" in self._tool_whitelist():
+            if self._is_deploy_confirm_context(history):
+                for _msg in reversed(history or []):
+                    if _msg.get("role") != "assistant":
+                        continue
+                    _c = _msg.get("content", "")
+                    if not any(kw in _c.lower() for kw in _DEPLOY_CONTEXT_SIGNALS):
+                        continue
+                    _strat_m = (
+                        re.search(r'\|\s*Strategy\s*\|\s*(.+?)\s*\|', _c)
+                        or re.search(r"Strategy\s*[|\s]+([^\|\n]+)", _c)
+                    )
+                    if _strat_m:
+                        _strat = _strat_m.group(1).strip()
+                        _mode = "Live" if _deploy_mode_m.group(1).lower() == "live" else "Paper"
+                        _settings_msg = (
+                            f"Ready to deploy **{_strat}** to **{_mode} Trading**.\n\n"
+                            + _SETTINGS_TABLE
+                        )
+                        yield {"t": "chunk", "v": _settings_msg}
+                        yield {"t": "done", "in_tok": 0, "out_tok": 0}
+                        return
+                    break
+        # ─────────────────────────────────────────────────────────────────────────────
 
         _is_confirm = bool(history) and any(w in user_message.lower() for w in _CONFIRM_WORDS)
         _in_deploy_ctx = self._is_deploy_confirm_context(history)
@@ -420,6 +583,17 @@ class BaseOrchestrator:
                             tool_called = True
                             if tool_name == _save_tool and tool_result.get("status") == "success":
                                 yield {"t": "chunk", "v": self._save_success_stream(args, tool_result)}
+                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                                return
+                            if tool_name == "get_deploy_options" and tool_result.get("status") == "success":
+                                _dn = tool_result.get("strategy_name") or args.get("strategy_name") or args.get("strategy_id", "")
+                                _db = tool_result.get("point_balance")
+                                _dc = tool_result.get("live_trade_charge_per_order", 1.0)
+                                _dsm = (
+                                    f"**Deploy: {_dn}** · Balance: {_db} pts · Live charge: {_dc} pt/order\n\n"
+                                    + _SETTINGS_TABLE
+                                )
+                                yield {"t": "chunk", "v": _dsm}
                                 yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
                                 return
                             if tool_name == "deploy_strategy" and tool_result.get("status") == "success" and not tool_result.get("requires_confirmation"):
