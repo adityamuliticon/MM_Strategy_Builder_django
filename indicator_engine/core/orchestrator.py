@@ -439,11 +439,10 @@ BACKTEST TOOLS (ISE EXCLUSIVE — only available in this module)
 
 8. run_backtest — Execute the backtest for the selected time period.
    Use ONLY after user explicitly selects a period from get_backtest_options.
-   CRITICAL: Use strategy_id (the hash from get_backtest_options result), NOT strategy_name.
-   CRITICAL: Use exact start_date and end_date strings from get_backtest_options items (YYYY-MM-DD).
+   Always use strategy_name from the user's original request. Use exact start_date and end_date from the period table.
    JSON:
    {"tool": "run_backtest", "arguments": {
-     "strategy_id": "<hash_id_from_get_backtest_options>",
+     "strategy_name": "<name from user request>",
      "start_date": "YYYY-MM-DD",
      "end_date": "YYYY-MM-DD"
    }}
@@ -454,13 +453,11 @@ BACKTEST TOOLS (ISE EXCLUSIVE — only available in this module)
    This is read-only — it does NOT run a new backtest.
    JSON:
    {"tool": "get_backtest_result", "arguments": {"strategy_name": "<name>"}}
-   JSON (by ID):
-   {"tool": "get_backtest_result", "arguments": {"strategy_id": "<hash id>"}}
 
 BACKTEST WORKFLOW (3 steps — always follow this order):
 STEP 1: User requests backtest → call get_backtest_options
 STEP 2: Display period options table + ask which period to run
-STEP 3: After user selects → call run_backtest with the exact strategy_id and dates
+STEP 3: After user selects → call run_backtest with strategy_name and the exact start_date + end_date for that period
 
 run_backtest RESULT HANDLING:
 - status == "success": display the 4 tables below

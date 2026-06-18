@@ -35,7 +35,7 @@ def chat(request):
     if session_id not in res_memory:
         res_memory[session_id] = []
 
-    result = res_orchestrator.process_message(user_message, res_memory[session_id])
+    result = res_orchestrator.process_message(user_message, res_memory[session_id][:])
     response_text   = result.get("message", "") if isinstance(result, dict) else result
     input_tokens    = result.get("input_tokens", 0) if isinstance(result, dict) else 0
     output_tokens   = result.get("output_tokens", 0) if isinstance(result, dict) else 0

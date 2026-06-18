@@ -399,6 +399,7 @@ deploy_strategy — Deploy strategy to Live or Paper trading on Market Maya.
     {"tool": "deploy_strategy", "arguments": {
       "strategy_name": "<name>",
       "trading_mode": "Live",
+      "charges_acknowledged": true,
       "qty_multiply": 1,
       "entry_execution_type": "PSUEDO",
       "entry_psuedo_value": 0,
@@ -430,7 +431,7 @@ STEP 1: User requests deploy → call get_deploy_options → show this table:
 Then show: "**Disclaimer**: Market Maya charges per order on live execution."
 Ask: "Which trading mode would you like? **Live Trading** or **Paper Trading**? (Multiplier: 1 by default)"
 
-STEP 2: After user confirms → call deploy_strategy with trading_mode and qty_multiply.
+STEP 2: After user confirms → call deploy_strategy with charges_acknowledged=true, trading_mode, and qty_multiply.
 
 DISPLAYING deploy_strategy RESULT:
 On success show:

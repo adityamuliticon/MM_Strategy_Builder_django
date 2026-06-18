@@ -123,26 +123,47 @@ def _scheduled_refresh_loop():
         time.sleep(60)
 
 
+_scheduler_lock_fd = None  # kept open to hold the OS file lock across the process lifetime
+
+
 def _ensure_scheduler():
-    """Start the scheduled refresh daemon once, lazily, on first API call."""
-    global _scheduler_started
+    """Start the scheduled refresh daemon once per process, lazily, on first API call.
+
+    Uses a non-blocking OS file lock so only one gunicorn/uwsgi worker starts the
+    scheduler. The in-process _scheduler_start_lock prevents double-start within a
+    single worker.
+    """
+    global _scheduler_started, _scheduler_lock_fd
     if _scheduler_started:
         return
     with _scheduler_start_lock:
-        if not _scheduler_started:
-            # Skip in Django's reloader parent process
-            if os.environ.get('RUN_MAIN') != 'true' and 'runserver' in ' '.join(
-                    __import__('sys').argv):
-                return
-            t = threading.Thread(
-                target=_scheduled_refresh_loop,
-                daemon=True,
-                name="TokenRefreshScheduler"
-            )
-            t.start()
+        if _scheduler_started:
+            return
+        # Skip in Django's reloader parent process
+        if os.environ.get('RUN_MAIN') != 'true' and 'runserver' in ' '.join(
+                __import__('sys').argv):
+            return
+        # Cross-process guard: try to acquire an exclusive non-blocking file lock.
+        # The fd is kept open so the lock is held for the lifetime of this worker.
+        try:
+            import fcntl
+            fd = open('/tmp/mm_token_scheduler.lock', 'w')
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            _scheduler_lock_fd = fd  # hold open — releasing fd releases the lock
+        except (IOError, OSError):
+            # Another worker already holds the lock — it runs the scheduler
             _scheduler_started = True
-            print("[TokenService] Scheduled refresh daemon started "
-                  f"(hours IST: {sorted(_SCHEDULED_REFRESH_HOURS)})")
+            return
+
+        t = threading.Thread(
+            target=_scheduled_refresh_loop,
+            daemon=True,
+            name="TokenRefreshScheduler"
+        )
+        t.start()
+        _scheduler_started = True
+        print("[TokenService] Scheduled refresh daemon started "
+              f"(hours IST: {sorted(_SCHEDULED_REFRESH_HOURS)})")
 
 
 def get_valid_token() -> str:
@@ -154,16 +175,8 @@ def get_valid_token() -> str:
 
     from chat_logs.models import BearerToken
 
-    now = datetime.now(tz=timezone.utc)
-    record = BearerToken.objects.order_by('-updated_at').first()
-
-    if record and record.expires_at and (record.expires_at - now) > timedelta(minutes=30):
-        return record.token
-
     with _refresh_lock:
-        # Re-read after acquiring lock — another thread may have already refreshed
         record = BearerToken.objects.order_by('-updated_at').first()
-        # H-4 (token): use fresh `now` inside the lock to avoid stale comparison
         now = datetime.now(tz=timezone.utc)
         if record and record.expires_at and (record.expires_at - now) > timedelta(minutes=30):
             return record.token

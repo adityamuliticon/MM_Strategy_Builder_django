@@ -8,13 +8,19 @@ STORE_PATH = os.path.join(BASE_DIR, "inbound_signal_bridge", "rag", "store", "fa
 
 class ISBRetriever:
     def __init__(self):
-        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        self.vectorstore = FAISS.load_local(
-            STORE_PATH, embeddings, allow_dangerous_deserialization=True
-        )
-        self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 5})
+        self.retriever = None
+        try:
+            embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+            vectorstore = FAISS.load_local(
+                STORE_PATH, embeddings, allow_dangerous_deserialization=True
+            )
+            self.retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+        except Exception as e:
+            print(f"[ISBRetriever] FAISS index not loaded: {e}")
 
     def get_context(self, query):
+        if not self.retriever:
+            return "No ISB documentation found for this query."
         docs = self.retriever.invoke(query)
         return "\n\n".join(doc.page_content for doc in docs)
 

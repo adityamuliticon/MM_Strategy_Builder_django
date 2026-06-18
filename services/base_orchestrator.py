@@ -9,6 +9,11 @@ _CONFIRM_WORDS = frozenset({
     'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok',
     'sure', 'approve', 'approved', 'continue', 'do it', 'submit',
 })
+# Phrases that indicate the last assistant message was about deployment (not strategy creation).
+# Used to suppress _confirm_save_instruction injection in that context.
+_DEPLOY_CONTEXT_SIGNALS = frozenset({
+    "which trading mode", "live trading charge", "paper trading charge", "per order",
+})
 _DIRECT_YIELD_TOOLS = frozenset({
     "get_my_strategies", "get_balance", "delete_strategy",
     "rename_strategy", "modify_strategy",
@@ -39,6 +44,14 @@ class BaseOrchestrator:
     def _null_content_check(self):   return True   # RES+MLH return False
     def _has_direct_yield(self):     return False  # RES+MLH return True
     def _debug_json_str(self):       return False  # RES returns True
+
+    def _is_deploy_confirm_context(self, history):
+        """True when the last assistant message is about deployment charges, not strategy creation."""
+        for msg in reversed(history or []):
+            if msg.get("role") == "assistant" and msg.get("content"):
+                content = msg["content"].lower()
+                return any(kw in content for kw in _DEPLOY_CONTEXT_SIGNALS)
+        return False
 
     def _credits_check(self, msg):   return "credits" in msg.lower()
 
@@ -77,13 +90,14 @@ class BaseOrchestrator:
             history = []
 
         _is_confirm = bool(history) and any(w in user_message.lower() for w in _CONFIRM_WORDS)
+        _in_deploy_ctx = self._is_deploy_confirm_context(history)
         context = self._retriever().get_context(user_message)
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "system", "content": f"{self._context_label()}:\n{context}"},
         ] + history + [{"role": "user", "content": user_message}]
 
-        if _is_confirm:
+        if _is_confirm and not _in_deploy_ctx:
             messages[-1] = {
                 "role": "user",
                 "content": user_message + "\n\n" + self._confirm_save_instruction(),
@@ -194,7 +208,7 @@ class BaseOrchestrator:
             except Exception as e:
                 print(f"[{_prefix}] Tool execution error: {e}")
 
-            if _is_confirm and not tool_called and not _confirm_retry_done:
+            if _is_confirm and not _in_deploy_ctx and not tool_called and not _confirm_retry_done:
                 retry_msg = self._confirm_retry_msg_process()
                 if retry_msg:
                     _confirm_retry_done = True
@@ -226,14 +240,45 @@ class BaseOrchestrator:
         if history is None:
             history = []
 
+        # ── Shortcut: digit selection in a backtest-options context ────────
+        # The LLM returns empty content when the user says "1"/"2"/... after
+        # seeing a backtest options table, so we parse + call the tool directly.
+        _digit_m = re.fullmatch(r'\s*(\d)\s*', user_message)
+        if _digit_m and "run_backtest" in self._tool_whitelist():
+            period_num = int(_digit_m.group(1))
+            for _msg in reversed(history or []):
+                if _msg.get("role") != "assistant":
+                    continue
+                _c = _msg.get("content", "")
+                _name_m = re.search(r'Backtest Strategy\s*[-–]\s*(.+)', _c)
+                _row_m = re.search(
+                    rf'\|\s*{period_num}\s*\|[^|]+\|\s*(\d{{4}}-\d{{2}}-\d{{2}})\s*\|\s*(\d{{4}}-\d{{2}}-\d{{2}})\s*\|',
+                    _c,
+                )
+                if _name_m and _row_m:
+                    _strat = _name_m.group(1).split('\n')[0].strip()
+                    _s_date = _row_m.group(1)
+                    _e_date = _row_m.group(2)
+                    yield {"t": "status", "v": "Running backtest (this may take 10–30 seconds)..."}
+                    _bt = self._handler().handle_tool_call(
+                        "run_backtest",
+                        {"strategy_name": _strat, "start_date": _s_date, "end_date": _e_date},
+                    )
+                    yield {"t": "chunk", "v": _bt.get("message", "Backtest triggered. Use get_backtest_result to fetch results.")}
+                    yield {"t": "done", "in_tok": 0, "out_tok": 0}
+                    return
+                break  # only inspect the last assistant message
+        # ──────────────────────────────────────────────────────────────────
+
         _is_confirm = bool(history) and any(w in user_message.lower() for w in _CONFIRM_WORDS)
+        _in_deploy_ctx = self._is_deploy_confirm_context(history)
         context = self._retriever().get_context(user_message)
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "system", "content": f"{self._context_label()}:\n{context}"},
         ] + history + [{"role": "user", "content": user_message}]
 
-        if _is_confirm and self._confirm_in_stream():
+        if _is_confirm and not _in_deploy_ctx and self._confirm_in_stream():
             messages[-1] = {
                 "role": "user",
                 "content": user_message + "\n\n" + self._confirm_save_instruction(),
@@ -377,6 +422,14 @@ class BaseOrchestrator:
                                 yield {"t": "chunk", "v": self._save_success_stream(args, tool_result)}
                                 yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
                                 return
+                            if tool_name == "deploy_strategy" and tool_result.get("status") == "success" and not tool_result.get("requires_confirmation"):
+                                yield {"t": "chunk", "v": tool_result.get("message", "Strategy deployed successfully.")}
+                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                                return
+                            if tool_name == "run_backtest":
+                                yield {"t": "chunk", "v": tool_result.get("message", "Backtest triggered. Use get_backtest_result when ready.")}
+                                yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
+                                return
                             if _has_direct and tool_name in _DIRECT_YIELD_TOOLS:
                                 ok = tool_result.get("status") == "success"
                                 if ok and tool_result.get("formatted_list"):
@@ -401,7 +454,7 @@ class BaseOrchestrator:
             if empty_confirm_msg and not tool_called and not full_content.strip() and _is_confirm:
                 yield {"t": "chunk", "v": empty_confirm_msg}
 
-            if _is_confirm and not tool_called and not _confirm_retry_done:
+            if _is_confirm and not _in_deploy_ctx and not tool_called and not _confirm_retry_done:
                 retry_msg = self._confirm_retry_msg_stream()
                 if retry_msg:
                     _confirm_retry_done = True

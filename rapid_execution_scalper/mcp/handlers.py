@@ -70,6 +70,7 @@ class RESToolHandler:
                 strategy_id=arguments.get("strategy_id", ""),
                 strategy_name=arguments.get("strategy_name", ""),
                 trading_mode=arguments.get("trading_mode", "Live"),
+                charges_acknowledged=arguments.get("charges_acknowledged", False),
                 qty_multiply=arguments.get("qty_multiply", 1),
                 entry_execution_type=arguments.get("entry_execution_type", "PSUEDO"),
                 entry_psuedo_value=arguments.get("entry_psuedo_value", 0),

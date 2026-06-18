@@ -39,6 +39,9 @@ def res_deploy(payload):
 
 
 def create_and_save_res_strategy(strategy_json):
+    errors = res_validator.validate_strategy(strategy_json)
+    if errors:
+        return {"status": "error", "message": "Validation failed", "errors": errors}
     payload = res_generate_payload(strategy_json)
     return res_deploy(payload)
 
@@ -94,12 +97,14 @@ def get_deploy_options(strategy_id="", strategy_name=""):
 
 
 def deploy_strategy(strategy_id="", strategy_name="", trading_mode="Live", qty_multiply=1,
+                    charges_acknowledged=False,
                     entry_execution_type="PSUEDO", entry_psuedo_value=0, entry_psuedo_type="Auto",
                     entry_wait_seconds=30, entry_no_of_try=2, entry_market_order_after_retry=False,
                     exit_execution_type="PSUEDO", exit_psuedo_value=0, exit_psuedo_type="Auto",
                     exit_wait_seconds=30, exit_no_of_try=2, exit_market_order_after_retry=False):
     return _deploy_strategy(
         strategy_id=strategy_id, strategy_name=strategy_name, trading_mode=trading_mode,
+        charges_acknowledged=charges_acknowledged,
         qty_multiply=qty_multiply,
         entry_execution_type=entry_execution_type, entry_psuedo_value=entry_psuedo_value,
         entry_psuedo_type=entry_psuedo_type, entry_wait_seconds=entry_wait_seconds,
