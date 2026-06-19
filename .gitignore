@@ -31,3 +31,7 @@ venv
 
 # Ignore all PNG files
 **/*.png
+
+# Ignore all JPEG files
+**/*.jpeg
+**/*.jpg
