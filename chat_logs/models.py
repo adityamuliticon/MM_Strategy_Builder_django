@@ -15,6 +15,10 @@ class ChatLog(models.Model):
     timestamp       = models.DateTimeField(auto_now_add=True, db_index=True)
     module          = models.CharField(max_length=10, choices=MODULE_CHOICES, db_index=True)
     session_id      = models.CharField(max_length=100, db_index=True)
+    user            = models.ForeignKey(
+        'users.AppUser', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='chat_logs',
+    )
     user_message    = models.TextField()
     ai_response     = models.TextField()
     input_tokens    = models.IntegerField(default=0)
@@ -76,9 +80,46 @@ class APICallLog(models.Model):
     duration_ms      = models.FloatField(null=True, blank=True)
     status           = models.CharField(max_length=20, choices=STATUS_CHOICES, default='success', db_index=True)
     session_id       = models.CharField(max_length=100, blank=True, db_index=True)
+    user             = models.ForeignKey(
+        'users.AppUser', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='api_call_logs',
+    )
 
     class Meta:
         ordering = ['-timestamp']
 
     def __str__(self):
         return f"[{self.module}] {self.call_type} → {self.status} @ {self.timestamp:%Y-%m-%d %H:%M:%S}"
+
+
+class ChatMessage(models.Model):
+    """Per-user per-module conversation history — replaces the in-process memory dicts."""
+
+    MODULE_CHOICES = [
+        ('USB', 'Unified Strategy Builder'),
+        ('ISE', 'Indicator Signal Engine'),
+        ('ISB', 'Inbound Signal Bridge'),
+        ('RES', 'Rapid Execution Scalper'),
+        ('MLH', 'Multi-Leg Hedger'),
+    ]
+    ROLE_CHOICES = [
+        ('user', 'User'),
+        ('assistant', 'Assistant'),
+    ]
+
+    user      = models.ForeignKey(
+        'users.AppUser', on_delete=models.CASCADE, related_name='messages',
+    )
+    module    = models.CharField(max_length=10, choices=MODULE_CHOICES, db_index=True)
+    role      = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    content   = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+        indexes = [
+            models.Index(fields=['user', 'module', 'timestamp']),
+        ]
+
+    def __str__(self):
+        return f"[{self.module}] {self.user.email} ({self.role}) @ {self.timestamp:%H:%M:%S}"

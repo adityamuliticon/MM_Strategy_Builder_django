@@ -24,5 +24,6 @@ rag/store/faiss_index/
 
 venv
 
-CLAUDE.md
+.png
 
+.db

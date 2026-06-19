@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Market Maya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #0a0e14; color: #e0e6ed; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: rgba(30,34,42,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 44px 38px; width: 380px; }
+        h2 { font-size: 1.4rem; margin-bottom: 4px; }
+        p { color: #94a3b8; font-size: 0.85rem; margin-bottom: 28px; }
+        label { display: block; font-size: 0.78rem; font-weight: 600; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+        input { width: 100%; padding: 10px 13px; background: transparent; border: 1px solid rgba(255,255,255,0.12); border-radius: 7px; color: #e0e6ed; font-size: 0.93rem; outline: none; margin-bottom: 16px; }
+        input:focus { border-color: #00f2ff; }
+        button { width: 100%; padding: 11px; background: linear-gradient(135deg, #007bff, #00f2ff); border: none; border-radius: 7px; color: #fff; font-weight: 600; cursor: pointer; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .err { color: #ef4444; font-size: 0.84rem; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Admin Panel</h2>
+        <p>Market Maya — Internal Dashboard</p>
+        <form id="form">
+            <label>Username</label>
+            <input type="text" id="u" autocomplete="username">
+            <label>Password</label>
+            <input type="password" id="p" autocomplete="current-password">
+            <button type="submit" id="btn">Sign In</button>
+            <div class="err" id="err"></div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('btn');
+            btn.disabled = true;
+            document.getElementById('err').textContent = '';
+            const resp = await fetch('/admin-auth/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: document.getElementById('u').value, password: document.getElementById('p').value }),
+            });
+            const data = await resp.json();
+            if (resp.ok && data.status === 'ok') {
+                window.location.href = '/admin-panel/';
+            } else {
+                document.getElementById('err').textContent = data.error || 'Invalid credentials';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -2,20 +2,18 @@
 
 import json
 from django.shortcuts import render
-from services.session_context import set_session_id
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from indicator_engine.core.orchestrator import ise_orchestrator
 from chat_logs.models import ChatLog
 from config import Config
-
-# In-process session store keyed by session_id. Intentionally simple: single server process only.
-ise_memory = {}
+from services.view_helpers import setup_user_context, get_history, save_messages, _AuthError
 
 
 def index(request):
-    return render(request, 'indicator_engine.html')
+    display_name = request.session.get('display_name', '')
+    return render(request, 'indicator_engine.html', {'display_name': display_name})
 
 
 @csrf_exempt
@@ -26,45 +24,36 @@ def chat(request):
         data = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
         return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+
     user_message = (data.get('message') or '').strip()
     if not user_message:
         return JsonResponse({'error': 'Message is required'}, status=400)
-    session_id = data.get('session_id', 'default')
-    set_session_id(session_id)
 
-    if session_id not in ise_memory:
-        ise_memory[session_id] = []
+    try:
+        user_id, session_id = setup_user_context(request, 'ISE')
+    except _AuthError as e:
+        return e.response
 
-    result = ise_orchestrator.process_message(user_message, ise_memory[session_id][:])
-    response_text    = result.get("message", "") if isinstance(result, dict) else result
-    input_tokens     = result.get("input_tokens", 0) if isinstance(result, dict) else 0
-    output_tokens    = result.get("output_tokens", 0) if isinstance(result, dict) else 0
-    runware_task_id  = result.get("runware_task_id", "") if isinstance(result, dict) else ""
-    total_tokens     = input_tokens + output_tokens
-
-    cost_usd = (
-        input_tokens  * Config.COST_PER_1M_INPUT_TOKENS_USD +
-        output_tokens * Config.COST_PER_1M_OUTPUT_TOKENS_USD
-    ) / 1_000_000
+    history = get_history(user_id, 'ISE')
+    result = ise_orchestrator.process_message(user_message, history)
+    response_text   = result.get("message", "") if isinstance(result, dict) else result
+    input_tokens    = result.get("input_tokens", 0) if isinstance(result, dict) else 0
+    output_tokens   = result.get("output_tokens", 0) if isinstance(result, dict) else 0
+    runware_task_id = result.get("runware_task_id", "") if isinstance(result, dict) else ""
+    total_tokens    = input_tokens + output_tokens
+    cost_usd = (input_tokens * Config.COST_PER_1M_INPUT_TOKENS_USD +
+                output_tokens * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
     cost_inr = cost_usd * Config.USD_TO_INR_RATE
 
+    save_messages(user_id, 'ISE', user_message, response_text)
     ChatLog.objects.create(
-        module='ISE',
-        session_id=session_id,
-        user_message=user_message,
-        ai_response=response_text,
-        input_tokens=input_tokens,
-        output_tokens=output_tokens,
-        total_tokens=total_tokens,
-        cost_usd=round(cost_usd, 8),
-        cost_inr=round(cost_inr, 4),
+        module='ISE', session_id=session_id, user_id=user_id,
+        user_message=user_message, ai_response=response_text,
+        input_tokens=input_tokens, output_tokens=output_tokens, total_tokens=total_tokens,
+        cost_usd=round(cost_usd, 8), cost_inr=round(cost_inr, 4),
         model_used=Config.RUNWARE_MODEL_ID or 'unknown',
         runware_task_id=runware_task_id,
     )
-
-    ise_memory[session_id].append({"role": "user", "content": user_message})
-    ise_memory[session_id].append({"role": "assistant", "content": response_text})
-
     return JsonResponse({"status": "success", "message": response_text})
 
 
@@ -76,16 +65,17 @@ def chat_stream(request):
         data = json.loads(request.body)
     except (json.JSONDecodeError, ValueError):
         return JsonResponse({'error': 'Invalid JSON in request body'}, status=400)
+
     user_message = (data.get('message') or '').strip()
     if not user_message:
         return JsonResponse({'error': 'Message is required'}, status=400)
-    session_id = data.get('session_id', 'default')
-    set_session_id(session_id)
 
-    if session_id not in ise_memory:
-        ise_memory[session_id] = []
+    try:
+        user_id, session_id = setup_user_context(request, 'ISE')
+    except _AuthError as e:
+        return e.response
 
-    history = ise_memory[session_id][:]
+    history = get_history(user_id, 'ISE')
 
     def event_stream():
         full_response = ""
@@ -100,29 +90,22 @@ def chat_stream(request):
                     in_tok = event.get('in_tok', 0)
                     out_tok = event.get('out_tok', 0)
                     runware_task_id = event.get('task_id', '')
-
                 yield f"data: {json.dumps(event)}\n\n"
-
                 if t in ('done', 'error'):
                     break
         except Exception as e:
             print(f"[ISE stream error] {e}")
-            err = {"t": "error", "v": "⚠️ Connection error. Please try again."}
-            yield f"data: {json.dumps(err)}\n\n"
+            yield f"data: {json.dumps({'t': 'error', 'v': '⚠️ Connection error. Please try again.'})}\n\n"
         finally:
-            ise_memory[session_id].append({"role": "user", "content": user_message})
-            ise_memory[session_id].append({"role": "assistant", "content": full_response})
-            cost_usd = (
-                in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD +
-                out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD
-            ) / 1_000_000
+            save_messages(user_id, 'ISE', user_message, full_response)
+            cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD +
+                        out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000
             cost_inr = cost_usd * Config.USD_TO_INR_RATE
             try:
                 ChatLog.objects.create(
-                    module='ISE', session_id=session_id,
+                    module='ISE', session_id=session_id, user_id=user_id,
                     user_message=user_message, ai_response=full_response,
-                    input_tokens=in_tok, output_tokens=out_tok,
-                    total_tokens=in_tok + out_tok,
+                    input_tokens=in_tok, output_tokens=out_tok, total_tokens=in_tok + out_tok,
                     cost_usd=round(cost_usd, 8), cost_inr=round(cost_inr, 4),
                     model_used=Config.RUNWARE_MODEL_ID or 'unknown',
                     runware_task_id=runware_task_id,

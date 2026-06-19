@@ -169,8 +169,14 @@ def _ensure_scheduler():
 def get_valid_token() -> str:
     """
     Return a valid Market Maya bearer token (raw string, no 'Bearer ' prefix).
-    Refreshes automatically when the stored token expires within 30 minutes.
+    For authenticated user requests, returns the per-user token set in thread-local.
+    Falls back to the global scheduled token for background/system calls.
     """
+    from services.session_context import get_user_token
+    user_token = get_user_token()
+    if user_token:
+        return user_token[7:] if user_token.startswith("Bearer ") else user_token
+
     _ensure_scheduler()
 
     from chat_logs.models import BearerToken

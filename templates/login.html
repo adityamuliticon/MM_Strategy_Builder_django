@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Maya | Sign In</title>
+    <script src="{% static 'js/theme.js' %}?v=15"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e14;
+            --card-bg: rgba(30,34,42,0.85);
+            --primary-glow: #00f2ff;
+            --accent-blue: #007bff;
+            --text-main: #e0e6ed;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255,255,255,0.1);
+            --danger: #ef4444;
+        }
+        .light-theme {
+            --bg-dark: #f8fafc;
+            --card-bg: #ffffff;
+            --primary-glow: #0ea5e9;
+            --accent-blue: #2563eb;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: rgba(15,23,42,0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at top right, rgba(0,242,255,0.05), transparent 55%),
+                              radial-gradient(circle at bottom left, rgba(0,123,255,0.04), transparent 55%);
+        }
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+            backdrop-filter: blur(12px);
+        }
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .brand h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, var(--primary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .light-theme .brand h1 {
+            background: linear-gradient(90deg, #0f172a, #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        .brand p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 11px 14px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: var(--primary-glow);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--primary-glow));
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .btn-login:hover { opacity: 0.9; }
+        .btn-login:active { transform: scale(0.98); }
+        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            text-align: center;
+            min-height: 20px;
+        }
+        .theme-btn {
+            position: fixed;
+            top: 18px; right: 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 7px 10px;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-btn" id="theme-toggle" title="Toggle theme">
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+
+    <div class="login-card">
+        <div class="brand">
+            <h1>Market Maya</h1>
+            <p>AI Strategy Builder — Sign in to continue</p>
+        </div>
+        <form id="login-form" autocomplete="on">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Your Market Maya password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn-login" id="login-btn">Sign In</button>
+            <div class="error-msg" id="error-msg"></div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const btn = document.getElementById('login-btn');
+        const errorEl = document.getElementById('error-msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.textContent = 'Signing in…';
+            errorEl.textContent = '';
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const resp = await fetch('/auth/login/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await resp.json();
+
+                if (resp.ok && data.status === 'ok') {
+                    window.location.href = '/';
+                } else {
+                    errorEl.textContent = data.error || 'Login failed. Please try again.';
+                    btn.disabled = false;
+                    btn.textContent = 'Sign In';
+                }
+            } catch (err) {
+                errorEl.textContent = 'Network error — please try again.';
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+            }
+        });
+    </script>
+</body>
+</html>

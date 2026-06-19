@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Market Maya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #0a0e14; color: #e0e6ed; min-height: 100vh; padding: 32px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .header h1 { font-size: 1.5rem; background: linear-gradient(90deg, #fff, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .logout-btn { padding: 7px 16px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 7px; color: #ef4444; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+        .logout-btn:hover { background: rgba(239,68,68,0.25); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: rgba(30,34,42,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; }
+        .stat-card .label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: #00f2ff; }
+        .stat-card .sub { font-size: 0.75rem; color: #64748b; margin-top: 3px; }
+        .section-title { font-size: 1rem; font-weight: 600; color: #94a3b8; margin-bottom: 14px; letter-spacing: 0.03em; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { background: rgba(255,255,255,0.04); color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); white-space: nowrap; }
+        td { padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-active { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+        .badge-inactive { background: rgba(100,116,139,0.15); color: #64748b; border: 1px solid rgba(100,116,139,0.3); }
+        .email { font-weight: 600; color: #e0e6ed; }
+        .name { color: #94a3b8; font-size: 0.8rem; }
+        .num { text-align: right; font-variant-numeric: tabular-nums; }
+        .cost { color: #00f2ff; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <a href="/admin-logout/" class="logout-btn">Sign Out</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="label">Total Users</div>
+            <div class="value">{{ total_users }}</div>
+            <div class="sub">{{ active_users }} active · {{ inactive_users }} inactive</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Messages</div>
+            <div class="value">{{ total_messages }}</div>
+            <div class="sub">across all modules</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">API Calls</div>
+            <div class="value">{{ total_api_calls }}</div>
+            <div class="sub">Market Maya calls</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Tokens Used</div>
+            <div class="value">{{ total_tokens }}</div>
+            <div class="sub">input + output</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Cost</div>
+            <div class="value" style="font-size:1.3rem">${{ total_cost_usd }}</div>
+            <div class="sub">₹{{ total_cost_inr }}</div>
+        </div>
+    </div>
+
+    <div class="section-title">Users ({{ total_users }})</div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Token Expires</th>
+                    <th class="num">Messages</th>
+                    <th class="num">API Calls</th>
+                    <th class="num">Tokens</th>
+                    <th class="num">Cost USD</th>
+                    <th class="num">Cost INR</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>
+                        <div class="email">{{ u.email }}</div>
+                        {% if u.display_name %}<div class="name">{{ u.display_name }}</div>{% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                        <span class="badge badge-active">Active</span>
+                        {% else %}
+                        <span class="badge badge-inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{% if u.last_login %}{{ u.last_login|date:"d M Y H:i" }}{% else %}—{% endif %}</td>
+                    <td>{% if u.token_expires %}{{ u.token_expires|date:"d M Y H:i" }}{% else %}—{% endif %}</td>
+                    <td class="num">{{ u.messages }}</td>
+                    <td class="num">{{ u.api_calls }}</td>
+                    <td class="num">{{ u.tokens }}</td>
+                    <td class="num cost">${{ u.cost_usd }}</td>
+                    <td class="num">₹{{ u.cost_inr }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" style="text-align:center;color:#64748b;padding:32px">No users yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

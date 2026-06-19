@@ -24,6 +24,40 @@ function setInputLocked(locked) {
     userInput.disabled = locked;
 }
 
+function handleAuthError(response) {
+    try {
+        response.json().then(data => {
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        });
+    } catch (_) {
+        window.location.href = '/login/';
+    }
+}
+
+// Load conversation history on page load
+async function loadHistory() {
+    const module = (window.CHAT_MODULE || 'USB').toUpperCase();
+    try {
+        const resp = await fetch(`/api/history/?module=${module}`);
+        if (!resp.ok) {
+            if (resp.status === 401) {
+                window.location.href = '/login/';
+            }
+            return;
+        }
+        const data = await resp.json();
+        if (data.history && data.history.length > 0) {
+            // Clear the default greeting if there's real history
+            chatContainer.innerHTML = '';
+            for (const msg of data.history) {
+                appendMessage(msg.role === 'assistant' ? 'ai' : 'user', msg.content);
+            }
+        }
+    } catch (_) {}
+}
+
 async function handleSend() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -41,13 +75,20 @@ async function handleSend() {
     let accumulated = '';
 
     try {
-        const response = await fetch('/api/chat/stream', {
+        const streamUrl = window.CHAT_STREAM_URL || '/api/chat/stream';
+        const response = await fetch(streamUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: text, session_id: 'user_1' })
+            body: JSON.stringify({ message: text }),
         });
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) {
+            if (response.status === 401) {
+                handleAuthError(response);
+                return;
+            }
+            throw new Error(`HTTP ${response.status}`);
+        }
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -83,7 +124,6 @@ async function handleSend() {
             }
         }
 
-        // Safety: remove cursor if stream closed without a done event
         if (msgDiv.innerHTML.includes('streaming-cursor')) {
             try {
                 msgDiv.innerHTML = safeMarkdown(accumulated) || accumulated || 'No response.';
@@ -113,3 +153,9 @@ sendBtn.addEventListener('click', handleSend);
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSend();
 });
+
+// Load history when the page is ready
+document.addEventListener('DOMContentLoaded', loadHistory);
+if (document.readyState !== 'loading') {
+    loadHistory();
+}

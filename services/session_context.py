@@ -15,6 +15,24 @@ def get_session_id() -> str:
     return getattr(_local, 'session_id', '')
 
 
+def set_user_token(token: str):
+    """Store the current request user's Market Maya JWT in thread-local."""
+    _local.user_token = token
+
+
+def get_user_token() -> str:
+    """Return the per-user token set for this request thread, or empty string."""
+    return getattr(_local, 'user_token', '')
+
+
+def set_user_id(user_id):
+    _local.user_id = user_id
+
+
+def get_user_id():
+    return getattr(_local, 'user_id', None)
+
+
 def log_api_call(module, call_type, endpoint, request_payload, response_status, response_body, duration_ms, status):
     """Save an APICallLog record. Called from all market_maya service files after every HTTP call."""
     try:
@@ -24,6 +42,7 @@ def log_api_call(module, call_type, endpoint, request_payload, response_status, 
                 response_body = json.loads(response_body)
             except Exception:
                 response_body = {"raw": response_body[:5000]}
+        user_id = getattr(_local, 'user_id', None)
         APICallLog.objects.create(
             module=module,
             call_type=call_type,
@@ -34,6 +53,7 @@ def log_api_call(module, call_type, endpoint, request_payload, response_status, 
             duration_ms=round(duration_ms, 2) if duration_ms is not None else None,
             status=status,
             session_id=get_session_id(),
+            user_id=user_id,
         )
     except Exception as e:
         print(f"[APICallLog] Logging error: {e}")
