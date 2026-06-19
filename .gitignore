@@ -28,3 +28,6 @@ venv
 
 # Database files
 **/*.db
+
+# Ignore all PNG files
+**/*.png
