@@ -27,4 +27,5 @@ venv
 .png
 
 # Database files
-*.db
+**/*.db
+./logs/chat_history.db
