@@ -26,4 +26,5 @@ venv
 
 .png
 
-.db
+# Database files
+*.db
