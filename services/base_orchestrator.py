@@ -16,11 +16,25 @@ _DEPLOY_CONTEXT_SIGNALS = frozenset({
 })
 _DIRECT_YIELD_TOOLS = frozenset({
     "get_my_strategies", "get_balance", "delete_strategy",
-    "rename_strategy", "modify_strategy",
+    "rename_strategy", "modify_strategy", "undeploy_strategy",
 })
 # Signals that the last assistant message showed the execution-settings confirmation table.
 _DEPLOY_SETTINGS_SIGNALS = frozenset({
     "execution settings", "qty multiplier", "type **proceed**", "proceed** to deploy",
+})
+# Signals that the last assistant message is awaiting tool confirmation (undeploy, delete, rename, modify).
+# Suppresses _confirm_save_instruction injection so "yes" routes to the pending tool, not the save tool.
+_TOOL_CONFIRM_SIGNALS = frozenset({
+    "undeploy",                   # undeploy_strategy confirmation
+    "stop live/paper",            # "stop live/paper trading for this strategy"
+    "undeploy_strategy again",    # literal from mcp/tools.py
+    "permanently delete",         # delete_strategy confirmation
+    "cannot be undone",           # delete_strategy confirmation
+    "delete_strategy again",      # literal from mcp/tools.py
+    "rename_strategy again",      # rename_strategy confirmation
+    "modify_strategy again",      # modify_strategy confirmation
+    "confirmed=true to proceed",  # present in ALL requires_confirmation tool messages
+    "requires_confirmation",      # raw JSON (direct-yield path in RES/MLH)
 })
 
 _SETTINGS_TABLE = (
@@ -148,6 +162,14 @@ class BaseOrchestrator:
                 return any(kw in content for kw in _DEPLOY_SETTINGS_SIGNALS)
         return False
 
+    def _is_tool_confirm_context(self, history):
+        """True when the last assistant message is waiting for confirmation from any tool (undeploy, delete, rename, etc.)."""
+        for msg in reversed(history or []):
+            if msg.get("role") == "assistant" and msg.get("content"):
+                content = msg["content"].lower()
+                return any(kw in content for kw in _TOOL_CONFIRM_SIGNALS)
+        return False
+
     def _credits_check(self, msg):   return "credits" in msg.lower()
 
     def _process_error_msgs(self):
@@ -192,7 +214,7 @@ class BaseOrchestrator:
             {"role": "system", "content": f"{self._context_label()}:\n{context}"},
         ] + history + [{"role": "user", "content": user_message}]
 
-        if _is_confirm and not _in_deploy_ctx:
+        if _is_confirm and not _in_deploy_ctx and not self._is_tool_confirm_context(history):
             messages[-1] = {
                 "role": "user",
                 "content": user_message + "\n\n" + self._confirm_save_instruction(),
@@ -303,7 +325,7 @@ class BaseOrchestrator:
             except Exception as e:
                 print(f"[{_prefix}] Tool execution error: {e}")
 
-            if _is_confirm and not _in_deploy_ctx and not tool_called and not _confirm_retry_done:
+            if _is_confirm and not _in_deploy_ctx and not self._is_tool_confirm_context(history) and not tool_called and not _confirm_retry_done:
                 retry_msg = self._confirm_retry_msg_process()
                 if retry_msg:
                     _confirm_retry_done = True
@@ -441,7 +463,7 @@ class BaseOrchestrator:
             {"role": "system", "content": f"{self._context_label()}:\n{context}"},
         ] + history + [{"role": "user", "content": user_message}]
 
-        if _is_confirm and not _in_deploy_ctx and self._confirm_in_stream():
+        if _is_confirm and not _in_deploy_ctx and not self._is_tool_confirm_context(history) and self._confirm_in_stream():
             messages[-1] = {
                 "role": "user",
                 "content": user_message + "\n\n" + self._confirm_save_instruction(),
@@ -628,7 +650,7 @@ class BaseOrchestrator:
             if empty_confirm_msg and not tool_called and not full_content.strip() and _is_confirm:
                 yield {"t": "chunk", "v": empty_confirm_msg}
 
-            if _is_confirm and not _in_deploy_ctx and not tool_called and not _confirm_retry_done:
+            if _is_confirm and not _in_deploy_ctx and not self._is_tool_confirm_context(history) and not tool_called and not _confirm_retry_done:
                 retry_msg = self._confirm_retry_msg_stream()
                 if retry_msg:
                     _confirm_retry_done = True

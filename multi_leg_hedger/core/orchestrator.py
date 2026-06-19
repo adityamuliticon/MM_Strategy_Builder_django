@@ -616,6 +616,25 @@ On success show:
 On error: show the error message clearly. Common errors:
 - "already deployed" → tell user strategy is already running live/paper
 - "insufficient balance" → tell user to top up their point balance
+
+12. undeploy_strategy — Stop a deployed strategy (remove from Live or Paper trading).
+    Use when user says: "undeploy [strategy]", "stop [strategy]", "deactivate [strategy]",
+    "remove from live trading", "stop paper trading [strategy]".
+    Always confirm before undeploying — the tool returns requires_confirmation on first call.
+    JSON (first call — triggers confirmation):
+    {"tool": "undeploy_strategy", "arguments": {"strategy_name": "<name>"}}
+    JSON (confirmed — actually undeploys):
+    {"tool": "undeploy_strategy", "arguments": {"strategy_name": "<name>", "confirmed": true}}
+
+UNDEPLOY WORKFLOW (2 steps):
+STEP 1: User requests undeploy → call undeploy_strategy (confirmed=false) → show the confirmation message to user.
+STEP 2: After user confirms → call undeploy_strategy again with confirmed=true.
+
+On success show:
+| Field | Value |
+|-------|-------|
+| Strategy | <strategy_name> |
+| Status | Undeployed successfully |
 """
 
     # ── Hook implementations ───────────────────────────────────────────────
@@ -636,7 +655,7 @@ On error: show the error message clearly. Common errors:
             "get_my_strategies", "delete_strategy", "get_strategy_record",
             "modify_strategy", "rename_strategy", "get_balance",
             "get_backtest_options", "run_backtest", "get_backtest_result",
-            "get_deploy_options", "deploy_strategy",
+            "get_deploy_options", "deploy_strategy", "undeploy_strategy",
         ]
 
     def _strategy_json_wrap_keys(self):
@@ -656,6 +675,7 @@ On error: show the error message clearly. Common errors:
             "get_backtest_result":          "Fetching backtest results...",
             "get_deploy_options":           "Fetching deploy options...",
             "deploy_strategy":              "Deploying strategy to Market Maya...",
+            "undeploy_strategy":            "Undeploying strategy...",
         }
 
     def _max_turns_msg(self):

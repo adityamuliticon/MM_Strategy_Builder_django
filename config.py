@@ -32,9 +32,11 @@ class Config:
     CREATE_SCALPING_STRATEGY_URL = "https://api.marketmaya.com/api/mainStrategy/createScalpingStrategy"
     CREATE_MULTI_LEG_HEDGER_URL = "https://api.marketmaya.com/api/mainStrategy/CreateMultiLegCallPutStrategy"
 
-    # Deploy
+    # Deploy / Undeploy
     GET_CHARGES_URL = "https://api.marketmaya.com/api/transaction/getCharges"
     DEPLOY_STRATEGY_URL = "https://webapi.marketmaya.com/api/mainStrategy/deploy"
+    CHECK_PENDING_PAYMENTS_URL = "https://api.marketmaya.com/api/mainStrategy/checkPendingPayments"
+    UNDEPLOY_STRATEGY_URL = "https://webapi.marketmaya.com/api/mainStrategy/undeploy"
 
     # Backtest (ISE and MIH)
     BACKTEST_OPTIONS_URL = "https://api.marketmaya.com/api/subscription/getBacktestOptions"

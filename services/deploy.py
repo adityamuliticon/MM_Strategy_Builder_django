@@ -1,4 +1,4 @@
-"""Strategy deployment service: fetches charges, resolves strategy ID, posts to Market Maya deploy endpoint.
+"""Strategy deployment/undeployment service for Market Maya.
 
 Flow for deploy_strategy:
   1. Resolve strategy → hash_id
@@ -6,6 +6,15 @@ Flow for deploy_strategy:
   3. Connect WebSocket + join (required — server validates active WS session before deploying)
   4. POST /api/mainStrategy/deploy with full DeployStrategyDto payload
   5. Keep WS alive in background to receive deploy status events
+
+Flow for undeploy_strategy:
+  1. Resolve strategy → hash_id + sid
+  2. Parse JWT → extract ws_id
+  3. Connect WebSocket + join (server validates active WS session before undeploying)
+  4. POST checkPendingPayments — block if pending=true
+  5. POST /api/mainStrategy/undeploy
+  6. Send WS jobaction/undeploy — mirrors algoSocketService.sendAction('undeploy', executionLevel, sid)
+  7. Keep WS alive in background to receive undeploy status events
 """
 
 import base64
@@ -27,16 +36,16 @@ _CLAIM_MS = "http://schemas.microsoft.com/ws/2008/06/identity/claims/"
 def _resolve_strategy_id(strategy_id="", strategy_name=""):
     search_term = strategy_name or strategy_id
     if not search_term:
-        return None, None, "Provide strategy_id or strategy_name."
+        return None, None, None, "Provide strategy_id or strategy_name."
     result = get_strategies(search=search_term, take=10)
     if result["status"] != "success":
-        return None, None, result.get("message", "Failed to search strategies.")
+        return None, None, None, result.get("message", "Failed to search strategies.")
     strategies = result.get("strategies", [])
     if not strategies:
-        return None, None, f"No strategy found matching '{search_term}'."
+        return None, None, None, f"No strategy found matching '{search_term}'."
     exact = [s for s in strategies if s["name"].lower() == search_term.lower()]
     chosen = exact[0] if exact else strategies[0]
-    return chosen["id"], chosen.get("name", search_term), None
+    return chosen["id"], chosen.get("sid"), chosen.get("name", search_term), None
 
 
 def _auth_headers():
@@ -135,12 +144,54 @@ def _keep_ws_alive_deploy(websocket_conn, duration=120):
             pass
 
 
+def _keep_ws_alive_undeploy(websocket_conn, duration=60):
+    """Background thread: keeps WS alive and listens for undeploy status events."""
+    print(f"[Undeploy] WS thread started, keeping alive for up to {duration}s")
+    try:
+        websocket_conn.settimeout(5)
+        start = time.time()
+        last_heartbeat = start
+
+        while time.time() - start < duration:
+            try:
+                if time.time() - last_heartbeat > 20:
+                    websocket_conn.send(json.dumps({"method": "heartbeat"}))
+                    last_heartbeat = time.time()
+
+                msg = websocket_conn.recv()
+                print(f"[Undeploy] WS msg: {msg[:300]}")
+
+                msg_lower = msg.lower()
+                # jobactionresponse is the TradingServer's ack for our jobaction/undeploy
+                if "jobactionresponse" in msg_lower and "undeploy" in msg_lower:
+                    print(f"[Undeploy] WS jobactionresponse received: {msg[:200]}")
+                    break
+                if any(k in msg_lower for k in ("undeploystatus", "undeploysuccess", "undeployed")):
+                    if any(t in msg for t in ("Completed", "Failed", "Success", "Error")):
+                        print("[Undeploy] WS undeploy terminal event received.")
+                        break
+
+            except websocket.WebSocketTimeoutException:
+                pass
+            except Exception as loop_e:
+                print(f"[Undeploy] WS loop error: {loop_e}")
+                break
+    except Exception as e:
+        print(f"[Undeploy] WS thread outer error: {e}")
+    finally:
+        try:
+            websocket_conn.close()
+            print("[Undeploy] WS connection closed.")
+        except Exception:
+            pass
+
+
 def get_deploy_options(strategy_id="", strategy_name=""):
     """
     Fetch point balance + charges before deploying.
     Shows the user: current balance, live/paper charge per order, and disclaimer.
     """
-    hash_id, resolved_name, err = _resolve_strategy_id(strategy_id, strategy_name)
+    hash_id, _, resolved_name, err = _resolve_strategy_id(strategy_id, strategy_name)
     if err:
         return {"status": "error", "message": err}
 
@@ -218,7 +269,7 @@ def deploy_strategy(
       4. POST /api/mainStrategy/deploy with full DeployStrategyDto
       5. Keep WS alive in background for deploy status events
     """
-    hash_id, resolved_name, err = _resolve_strategy_id(strategy_id, strategy_name)
+    hash_id, _, resolved_name, err = _resolve_strategy_id(strategy_id, strategy_name)
     if err:
         return {"status": "error", "message": err}
 
@@ -348,6 +399,166 @@ def deploy_strategy(
     except Exception as e:
         print(f"[Deploy] Flow error: {e}")
         return {"status": "error", "message": f"Failed to deploy strategy: {e}"}
+    finally:
+        if ws:
+            try:
+                ws.close()
+            except Exception:
+                pass
+
+
+def undeploy_strategy(strategy_id="", strategy_name=""):
+    """
+    Undeploy a deployed strategy from Live or Paper trading.
+
+    Flow:
+      1. Resolve strategy → hash_id
+      2. Parse JWT → extract ws_id for WebSocket connection
+      3. Connect WebSocket + join (server validates active WS session before undeploying)
+      4. POST checkPendingPayments — block if pending=true
+      5. POST /api/mainStrategy/undeploy
+      6. Keep WS alive in background for undeploy status events
+    """
+    hash_id, resolved_sid, resolved_name, err = _resolve_strategy_id(strategy_id, strategy_name)
+    if err:
+        return {"status": "error", "message": err}
+
+    # ── Step 1: Parse JWT for WebSocket user context ──────────────────────────
+    from services.token_service import get_valid_token
+    token_str = get_valid_token()
+    claims = _parse_jwt_claims(token_str)
+    ws_id = claims["ws_id"]
+    if not ws_id:
+        return {"status": "error", "message": "Could not extract user ID from token for WebSocket connection."}
+
+    raw_token = token_str[7:] if token_str.startswith("Bearer ") else token_str
+    headers = _auth_headers()
+
+    ws = None
+    try:
+        # ── Step 2: Connect WebSocket + join ──────────────────────────────────
+        ws_url = (
+            f"wss://algosocketserver.marketmaya.com/algo-server"
+            f"?usertype=Client&executionLevel=Level%208&id={ws_id}"
+        )
+        print(f"[Undeploy] Connecting WS: {ws_url}")
+        ws = websocket.create_connection(ws_url, timeout=10)
+
+        join_payload = {
+            "token": raw_token,
+            "executionLevel": "Level 8",
+            "id": ws_id,
+            "type": "Client",
+            "ip": claims["ip_address"],
+            "ib_id": None,
+            "action_from": "Client",
+            "action_from_id": ws_id,
+        }
+        ws.send(json.dumps({"method": "join", "data": json.dumps(join_payload)}))
+        print("[Undeploy] Join sent")
+
+        ws.settimeout(5)
+        try:
+            for _ in range(15):
+                msg = ws.recv()
+                if "joinSuccess" in msg:
+                    print("[Undeploy] joinSuccess received.")
+                    break
+        except Exception as e:
+            print(f"[Undeploy] joinSuccess wait timeout: {e}")
+
+        # ── Step 3: Check pending payments ────────────────────────────────────
+        start = time.time()
+        try:
+            r = requests.post(
+                Config.CHECK_PENDING_PAYMENTS_URL,
+                json={"id": hash_id},
+                headers=headers,
+                timeout=15,
+            )
+            duration_ms = (time.time() - start) * 1000
+            print(f"[Undeploy] checkPendingPayments HTTP {r.status_code}: {r.text[:200]}")
+            if r.status_code == 200:
+                body = r.json()
+                log_api_call('SHARED', 'check_pending_payments', Config.CHECK_PENDING_PAYMENTS_URL,
+                             {"id": hash_id}, r.status_code, body, duration_ms, 'success')
+                if body.get("pending"):
+                    return {
+                        "status": "error",
+                        "message": (
+                            f"Cannot undeploy '{resolved_name}' — there are pending payments for this strategy. "
+                            "Please resolve all pending payments first and try again."
+                        ),
+                    }
+            else:
+                log_api_call('SHARED', 'check_pending_payments', Config.CHECK_PENDING_PAYMENTS_URL,
+                             {"id": hash_id}, r.status_code, r.text, duration_ms, 'error')
+        except Exception as e:
+            print(f"[Undeploy] Pending payments check error (proceeding): {e}")
+
+        # ── Step 4: POST undeploy ──────────────────────────────────────────────
+        start = time.time()
+        r = requests.post(
+            Config.UNDEPLOY_STRATEGY_URL,
+            json={"id": hash_id},
+            headers=headers,
+            timeout=30,
+        )
+        duration_ms = (time.time() - start) * 1000
+        print(f"[Undeploy] HTTP {r.status_code}: {r.text[:300]}")
+
+        if r.status_code == 200:
+            body = r.json()
+            if body.get("statusCode") == 200:
+                log_api_call('SHARED', 'undeploy_strategy', Config.UNDEPLOY_STRATEGY_URL,
+                             {"id": hash_id}, r.status_code, body, duration_ms, 'success')
+
+                # ── Step 5: Send WS jobaction/undeploy (mirrors frontend algoSocketService.sendAction) ──
+                # sendAction('undeploy', executionLevel, sid) → send("jobaction", {client_id, actionname, executionlevel, val1=sid, ...})
+                try:
+                    action_data = {
+                        "client_id": ws_id,
+                        "actionname": "undeploy",
+                        "executionlevel": "Level 8",
+                        "val1": resolved_sid if resolved_sid is not None else "",
+                        "val2": "", "val3": "", "val4": "", "val5": "",
+                        "ip": claims["ip_address"],
+                        "ib_id": None,
+                        "action_from": "Client",
+                        "action_from_id": ws_id,
+                    }
+                    ws.send(json.dumps({"method": "jobaction", "data": json.dumps(action_data)}))
+                    print(f"[Undeploy] WS jobaction/undeploy sent for sid={resolved_sid}")
+                except Exception as e:
+                    print(f"[Undeploy] WS action send error (non-fatal): {e}")
+
+                # ── Step 6: Keep WS alive for undeploy status events ──────────
+                t = threading.Thread(target=_keep_ws_alive_undeploy, args=(ws,), daemon=True)
+                t.start()
+                ws = None  # background thread owns the connection now
+
+                return {
+                    "status": "success",
+                    "message": f"Strategy '{resolved_name}' undeployed successfully.",
+                }
+
+            log_api_call('SHARED', 'undeploy_strategy', Config.UNDEPLOY_STRATEGY_URL,
+                         {"id": hash_id}, r.status_code, body, duration_ms, 'error')
+            return {"status": "error", "message": body.get("message", "Undeploy failed.")}
+
+        try:
+            err_body = r.json()
+            err_msg = err_body.get("message") or err_body.get("error") or r.text
+        except Exception:
+            err_body = r.text
+            err_msg = r.text
+        log_api_call('SHARED', 'undeploy_strategy', Config.UNDEPLOY_STRATEGY_URL,
+                     {"id": hash_id}, r.status_code, err_body, duration_ms, 'error')
+        return {"status": "error", "code": r.status_code, "message": err_msg}
+
+    except Exception as e:
+        print(f"[Undeploy] Flow error: {e}")
+        return {"status": "error", "message": f"Failed to undeploy strategy: {e}"}
     finally:
         if ws:
             try:

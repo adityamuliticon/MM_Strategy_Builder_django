@@ -1,0 +1,200 @@
+when we click on undeploy it call this api 
+
+api1="
+header="Request URL
+https://api.marketmaya.com/api/mainStrategy/checkPendingPayments
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0d7cc373e0c46f3-BOM
+content-encoding
+gzip
+content-security-policy-report-only
+script-src 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; report-uri https://csp-reporting.cloudflare.com/cdn-cgi/script_monitor/report?m=ui6jM4dhsKiLUpICfOhlvOL2TR2MzKZoYc1qZGv3Nc4-1781759532.6783068-1.0.1.1-9JqizUB9PMu2V620l.8NAx7ySDvB4EOE9qYZCVqLAwZ9AwahoguMYTmi7V8dOLQNb4HU1tio3bbVC_..2G_zLjWCTKG8S0NRWRq9P1UTNCa0xEaiU7uvF7xA99XQ9uiNUd7x3ypZ8dMdobi6bkvNHW0dNf49hfLSMyE.SlPyOWE_HE23LrX0Wf9Y.2Cx08Hp; report-to cf-csp-endpoint
+content-type
+application/json; charset=utf-8
+date
+Thu, 18 Jun 2026 05:12:12 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=0UOFuLmjybwjPtc9DnM7hj16Wv2cisZmnNOwOFGkhn29PDNvUa259NbAK3ma3AkNBGgqiiUYq1unbe2k8Pdrt4o6QkMgnmUHTCDbrNc%2FhTfbQuEnWJRWOIcVTd2WyhsFPxlNdQ%3D%3D"}]}
+report-to
+{"group":"cf-csp-endpoint","max_age":86400,"endpoints":[{"url":"https://csp-reporting.cloudflare.com/cdn-cgi/script_monitor/report?m=ui6jM4dhsKiLUpICfOhlvOL2TR2MzKZoYc1qZGv3Nc4-1781759532.6783068-1.0.1.1-9JqizUB9PMu2V620l.8NAx7ySDvB4EOE9qYZCVqLAwZ9AwahoguMYTmi7V8dOLQNb4HU1tio3bbVC_..2G_zLjWCTKG8S0NRWRq9P1UTNCa0xEaiU7uvF7xA99XQ9uiNUd7x3ypZ8dMdobi6bkvNHW0dNf49hfLSMyE.SlPyOWE_HE23LrX0Wf9Y.2Cx08Hp"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/checkPendingPayments
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODE4MDczOTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMTkxLjE5MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiMTFkMzBjNWEtNThiZC00N2ViLTgyYjYtNDZjNmY2MWQxNDIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc4MTc1MzEzNSwibmJmIjoxNzgxNzUzMTM1fQ.eFmvwL_Olp1XG-OdRcrYXj4vuP9fpp6TftQsSiX8p1Qyvx5_zjWWs4PwbSNvmY9eEwUb9p_Bt8vnnJ5WEg8fUQ
+content-length
+45
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+paylode="{"id":"4HQuEQaA0$BfUvibwUvmIO6aB0$waC0$aC0$"}"
+preview="
+pending
+: 
+false"
+response="{"pending":false}"
+"
+
+
+api2="
+header="Request URL
+https://webapi.marketmaya.com/api/mainStrategy/undeploy
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+172.67.69.170:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0d7cc3a5ea246f3-BOM
+content-encoding
+br
+content-type
+application/json; charset=utf-8
+date
+Thu, 18 Jun 2026 05:12:13 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=bsZTN16p9ZCU5VWUrFPEZog7xXk3pVfS%2FY%2FO1rbUtR5FiUhsY8Zsbtyms%2BraargWTuEMQ10pAfM756EalHxPcUrR9Gw4esiHT0kviEiaY16j38k3dRJnPtFv6RywKDBks7Qzx37BZw%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+:authority
+webapi.marketmaya.com
+:method
+POST
+:path
+/api/mainStrategy/undeploy
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODE4MDczOTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxNzIuNzAuMTkxLjE5MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEZXZlbG9wZXIgQm9udG9uIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5c2lkIjoiMTFkMzBjNWEtNThiZC00N2ViLTgyYjYtNDZjNmY2MWQxNDIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9ncm91cHNpZCI6IjAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9hbm9ueW1vdXMiOiJGYWxzZSIsImlhdCI6MTc4MTc1MzEzNSwibmJmIjoxNzgxNzUzMTM1fQ.eFmvwL_Olp1XG-OdRcrYXj4vuP9fpp6TftQsSiX8p1Qyvx5_zjWWs4PwbSNvmY9eEwUb9p_Bt8vnnJ5WEg8fUQ
+content-length
+45
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+paylode="{"id":"4HQuEQaA0$BfUvibwUvmIO6aB0$waC0$aC0$"}"
+preview="{statusCode: 200, message: "Strategy undeployed successfully.", data: true}
+data
+: 
+true
+message
+: 
+"Strategy undeployed successfully."
+statusCode
+: 
+200"
+response="{"statusCode":200,"message":"Strategy undeployed successfully.","data":true}"
+"   

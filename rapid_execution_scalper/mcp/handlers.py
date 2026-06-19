@@ -14,6 +14,7 @@ from rapid_execution_scalper.mcp.tools import (
     get_balance,
     get_deploy_options,
     deploy_strategy,
+    undeploy_strategy,
 )
 
 
@@ -84,6 +85,12 @@ class RESToolHandler:
                 exit_wait_seconds=arguments.get("exit_wait_seconds", 30),
                 exit_no_of_try=arguments.get("exit_no_of_try", 2),
                 exit_market_order_after_retry=arguments.get("exit_market_order_after_retry", False),
+            )
+        elif tool_name == "undeploy_strategy":
+            return undeploy_strategy(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+                confirmed=arguments.get("confirmed", False),
             )
         return f"Error: Unknown tool '{tool_name}'."
 

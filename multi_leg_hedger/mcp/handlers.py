@@ -5,7 +5,7 @@ from multi_leg_hedger.mcp.tools import (
     mlh_generate_payload, mlh_save,
     delete_strategy,
     get_backtest_options, run_backtest, get_backtest_result,
-    get_deploy_options, deploy_strategy,
+    get_deploy_options, deploy_strategy, undeploy_strategy,
 )
 import services.market_maya_shared as shared
 
@@ -74,6 +74,12 @@ class MLHToolHandler:
                     exit_wait_seconds=arguments.get("exit_wait_seconds", 30),
                     exit_no_of_try=arguments.get("exit_no_of_try", 2),
                     exit_market_order_after_retry=arguments.get("exit_market_order_after_retry", False),
+                )
+            elif tool_name == "undeploy_strategy":
+                return undeploy_strategy(
+                    strategy_id=arguments.get("strategy_id", ""),
+                    strategy_name=arguments.get("strategy_name", ""),
+                    confirmed=arguments.get("confirmed", False),
                 )
             else:
                 return {"status": "error", "message": f"Unknown tool: {tool_name}"}

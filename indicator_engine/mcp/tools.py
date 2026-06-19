@@ -12,6 +12,7 @@ from indicator_engine.services.backtest import (
 from services.deploy import (
     get_deploy_options as _get_deploy_options,
     deploy_strategy as _deploy_strategy,
+    undeploy_strategy as _undeploy_strategy,
 )
 from services.market_maya_shared import (
     get_strategies as _get_strategies,
@@ -134,3 +135,17 @@ def deploy_strategy(strategy_id="", strategy_name="", trading_mode="Live", qty_m
         exit_psuedo_type=exit_psuedo_type, exit_wait_seconds=exit_wait_seconds,
         exit_no_of_try=exit_no_of_try, exit_market_order_after_retry=exit_market_order_after_retry,
     )
+
+
+def undeploy_strategy(strategy_id="", strategy_name="", confirmed=False):
+    if not confirmed:
+        search = strategy_name or strategy_id
+        return {
+            "status": "requires_confirmation",
+            "message": (
+                f"Are you sure you want to undeploy '{search}'? "
+                "This will stop live/paper trading for this strategy. "
+                "Call undeploy_strategy again with confirmed=True to proceed."
+            ),
+        }
+    return _undeploy_strategy(strategy_id=strategy_id, strategy_name=strategy_name)

@@ -573,6 +573,29 @@ Build from day_trade_history (most recent 20 days, newest first):
 |------|--------|----------|----------|-----|
 | 2026-05-27 | ... | ... | ... | ₹... |
 ...
+
+═══════════════════════════════════════════════════════════
+UNDEPLOY TOOL
+═══════════════════════════════════════════════════════════
+
+undeploy_strategy — Stop a deployed strategy (remove from Live or Paper trading).
+    Use when user says: "undeploy [strategy]", "stop [strategy]", "deactivate [strategy]",
+    "remove from live trading", "stop paper trading [strategy]".
+    Always confirm before undeploying — the tool returns requires_confirmation on first call.
+    JSON (first call — triggers confirmation):
+    {"tool": "undeploy_strategy", "arguments": {"strategy_name": "<name>"}}
+    JSON (confirmed — actually undeploys):
+    {"tool": "undeploy_strategy", "arguments": {"strategy_name": "<name>", "confirmed": true}}
+
+UNDEPLOY WORKFLOW (2 steps):
+STEP 1: User requests undeploy → call undeploy_strategy (confirmed=false) → show the confirmation message to user.
+STEP 2: After user confirms → call undeploy_strategy again with confirmed=true.
+
+On success show:
+| Field | Value |
+|-------|-------|
+| Strategy | <strategy_name> |
+| Status | Undeployed successfully |
 """
 
     # ── Hook implementations ───────────────────────────────────────────────
@@ -589,6 +612,7 @@ Build from day_trade_history (most recent 20 days, newest first):
             "get_my_strategies", "delete_strategy", "get_strategy_record",
             "modify_strategy", "rename_strategy", "get_balance",
             "get_backtest_options", "run_backtest", "get_backtest_result",
+            "undeploy_strategy",
         ]
 
     def _strategy_json_wrap_keys(self):
@@ -606,6 +630,7 @@ Build from day_trade_history (most recent 20 days, newest first):
             "get_backtest_options":         "Fetching backtest options...",
             "run_backtest":                 "Running backtest (this may take 10–30 seconds)...",
             "get_backtest_result":          "Fetching backtest results...",
+            "undeploy_strategy":            "Undeploying strategy...",
         }
 
     def _max_turns_msg(self):

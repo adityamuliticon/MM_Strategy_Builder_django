@@ -5,7 +5,7 @@ from Unified_Strategy_Builder.mcp.tools import (
     get_validation_rules, validate_strategy, generate_payload, deploy,
     create_and_save_strategy, get_my_strategies, delete_strategy,
     get_strategy_record, modify_strategy, rename_strategy, get_balance,
-    get_deploy_options, deploy_strategy,
+    get_deploy_options, deploy_strategy, undeploy_strategy,
 )
 
 
@@ -76,6 +76,12 @@ class ToolHandler:
                 exit_wait_seconds=arguments.get("exit_wait_seconds", 30),
                 exit_no_of_try=arguments.get("exit_no_of_try", 2),
                 exit_market_order_after_retry=arguments.get("exit_market_order_after_retry", False),
+            )
+        elif tool_name == "undeploy_strategy":
+            return undeploy_strategy(
+                strategy_id=arguments.get("strategy_id", ""),
+                strategy_name=arguments.get("strategy_name", ""),
+                confirmed=arguments.get("confirmed", False),
             )
         return f"Error: Unknown tool '{tool_name}'."
 

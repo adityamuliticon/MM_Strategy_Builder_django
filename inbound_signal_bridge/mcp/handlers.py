@@ -12,6 +12,7 @@ from inbound_signal_bridge.mcp.tools import (
     modify_strategy,
     rename_strategy,
     get_balance,
+    undeploy_strategy,
 )
 
 
@@ -55,6 +56,12 @@ class ISBToolHandler:
                 )
             elif tool_name == "get_balance":
                 return get_balance()
+            elif tool_name == "undeploy_strategy":
+                return undeploy_strategy(
+                    strategy_id=arguments.get("strategy_id", ""),
+                    strategy_name=arguments.get("strategy_name", ""),
+                    confirmed=arguments.get("confirmed", False),
+                )
             else:
                 return {"status": "error", "message": f"Unknown tool: {tool_name}"}
         except Exception as e:
