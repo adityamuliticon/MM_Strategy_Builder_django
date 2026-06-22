@@ -78,6 +78,8 @@
                     <th>Status</th>
                     <th>Last Login</th>
                     <th>Token Expires</th>
+                    <th class="num">Points</th>
+                    <th class="num">Strategies</th>
                     <th class="num">Messages</th>
                     <th class="num">API Calls</th>
                     <th class="num">Tokens</th>
@@ -101,6 +103,14 @@
                     </td>
                     <td>{% if u.last_login %}{{ u.last_login|date:"d M Y H:i" }}{% else %}—{% endif %}</td>
                     <td>{% if u.token_expires %}{{ u.token_expires|date:"d M Y H:i" }}{% else %}—{% endif %}</td>
+                    <td class="num">{% if u.point_balance is not None %}{{ u.point_balance|floatformat:1 }}{% else %}—{% endif %}</td>
+                    <td class="num">
+                        {% if u.strategy_counts %}
+                        <span title="USB:{{ u.strategy_counts.usb|default:0 }} ISE:{{ u.strategy_counts.ise|default:0 }} ISB:{{ u.strategy_counts.isb|default:0 }} RES:{{ u.strategy_counts.res|default:0 }} MLH:{{ u.strategy_counts.mlh|default:0 }}">
+                            {{ u.strategy_counts.usb|default:0 }}/{{ u.strategy_counts.ise|default:0 }}/{{ u.strategy_counts.isb|default:0 }}/{{ u.strategy_counts.res|default:0 }}/{{ u.strategy_counts.mlh|default:0 }}
+                        </span>
+                        {% else %}—{% endif %}
+                    </td>
                     <td class="num">{{ u.messages }}</td>
                     <td class="num">{{ u.api_calls }}</td>
                     <td class="num">{{ u.tokens }}</td>
@@ -108,7 +118,7 @@
                     <td class="num">₹{{ u.cost_inr }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="9" style="text-align:center;color:#64748b;padding:32px">No users yet.</td></tr>
+                <tr><td colspan="11" style="text-align:center;color:#64748b;padding:32px">No users yet.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

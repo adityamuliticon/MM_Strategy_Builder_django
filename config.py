@@ -16,6 +16,10 @@ class Config:
     MARKET_MAYA_EMAIL    = os.getenv("MARKET_MAYA_EMAIL", "")
     MARKET_MAYA_PASSWORD = os.getenv("MARKET_MAYA_PASSWORD", "")
     MM_LOGIN_URL = "https://webapi.marketmaya.com/api/auth/clientLogin"
+
+    # Fernet key for encrypting stored user passwords — generate with:
+    # python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    MM_ENCRYPTION_KEY = os.getenv("MM_ENCRYPTION_KEY", "")
     
     # Runware usually uses OpenAI-compatible endpoints
     RUNWARE_BASE_URL = "https://api.runware.ai/v1" # Adjust if different

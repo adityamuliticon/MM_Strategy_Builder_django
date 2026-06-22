@@ -1,5 +1,6 @@
 django
 python-dotenv
+cryptography
 requests
 langchain
 langchain-community

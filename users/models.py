@@ -20,8 +20,13 @@ class AppUser(models.Model):
 class UserBearerToken(models.Model):
     user = models.OneToOneField(AppUser, on_delete=models.CASCADE, related_name='bearer_token')
     token = models.TextField()
+    encrypted_password = models.TextField(blank=True, default='')
     expires_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # Cached API data updated on every balance/strategy-counts page load
+    cached_point_balance = models.FloatField(null=True, blank=True)
+    cached_strategy_counts = models.JSONField(null=True, blank=True)
+    data_cached_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Token({self.user.email})"

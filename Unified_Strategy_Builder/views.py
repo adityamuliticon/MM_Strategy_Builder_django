@@ -40,13 +40,31 @@ def strategy_counts_view(request):
             plugin_counts[p] = plugin_counts.get(p, 0) + 1
         print(f"[strategy_counts] master_id unrecognised. Plugin breakdown: {plugin_counts}")
 
+    user_id = request.session.get('user_id')
+    if user_id:
+        from users.models import UserBearerToken
+        from django.utils.timezone import now
+        UserBearerToken.objects.filter(user_id=user_id).update(
+            cached_strategy_counts=counts,
+            data_cached_at=now(),
+        )
+
     return JsonResponse(counts)
 
 
 def balance_view(request):
     result = get_balance()
     if result.get("status") == "success":
-        return JsonResponse({"point_balance": result["point_balance"]})
+        point_balance = result["point_balance"]
+        user_id = request.session.get('user_id')
+        if user_id:
+            from users.models import UserBearerToken
+            from django.utils.timezone import now
+            UserBearerToken.objects.filter(user_id=user_id).update(
+                cached_point_balance=point_balance,
+                data_cached_at=now(),
+            )
+        return JsonResponse({"point_balance": point_balance})
     return JsonResponse({"point_balance": None})
 
 

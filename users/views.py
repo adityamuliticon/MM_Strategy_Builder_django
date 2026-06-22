@@ -94,13 +94,16 @@ def auth_login(request):
     )
     expires_at = _decode_jwt_exp(token)
 
+    from services.crypto import encrypt_password
+    encrypted_pw = encrypt_password(password)
+
     user, _ = AppUser.objects.update_or_create(
         email=email,
         defaults={'display_name': display_name, 'is_active': True, 'last_login': now()},
     )
     UserBearerToken.objects.update_or_create(
         user=user,
-        defaults={'token': token, 'expires_at': expires_at},
+        defaults={'token': token, 'expires_at': expires_at, 'encrypted_password': encrypted_pw},
     )
 
     request.session.cycle_key()
@@ -204,6 +207,9 @@ def admin_panel(request):
             active_count += 1
         token_record = UserBearerToken.objects.filter(user=u).first()
         token_expires = token_record.expires_at if token_record else None
+        point_balance = token_record.cached_point_balance if token_record else None
+        strategy_counts = token_record.cached_strategy_counts if token_record else None
+        data_cached_at = token_record.data_cached_at if token_record else None
         user_rows.append({
             'id': str(u.id),
             'email': u.email,
@@ -216,6 +222,9 @@ def admin_panel(request):
             'tokens': token_totals.get(u.id, 0) or 0,
             'cost_usd': round(cost_usd_totals.get(u.id, 0.0), 6),
             'cost_inr': round(cost_inr_totals.get(u.id, 0.0), 4),
+            'point_balance': point_balance,
+            'strategy_counts': strategy_counts,
+            'data_cached_at': data_cached_at,
         })
 
     total_tokens = ChatLog.objects.aggregate(t=Sum('total_tokens'))['t'] or 0

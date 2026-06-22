@@ -198,6 +198,62 @@ def get_valid_token() -> str:
         return Config.MARKET_MAYA_BEARER_TOKEN or ""
 
 
+def refresh_user_token(user) -> str:
+    """
+    Re-login Market Maya for a specific user using their stored encrypted password.
+    Updates UserBearerToken with the new JWT. Returns new token string, or '' on failure.
+    Called automatically by setup_user_context() when a user's token has expired.
+    """
+    from users.models import UserBearerToken
+    from services.crypto import decrypt_password
+
+    token_record = UserBearerToken.objects.filter(user=user).first()
+    if not token_record or not token_record.encrypted_password:
+        print(f"[TokenService] No stored credentials for {user.email} — cannot auto-refresh.")
+        return ''
+
+    password = decrypt_password(token_record.encrypted_password)
+    if not password:
+        print(f"[TokenService] Decryption failed for {user.email}.")
+        return ''
+
+    payload = {
+        "userName":    user.email,
+        "password":    password,
+        "EncryptPass": False,
+        "rememberMe":  True,
+        "agreements":  True,
+        "domain":      "terminal.marketmaya.com",
+        "isTOTPCheck": False,
+    }
+    try:
+        resp = requests.post(
+            Config.MM_LOGIN_URL,
+            json=payload,
+            headers={
+                "Content-Type": "application/json",
+                "Origin":       "https://terminal.marketmaya.com",
+                "Referer":      "https://terminal.marketmaya.com/",
+            },
+            timeout=30,
+        )
+        print(f"[TokenService] User refresh HTTP {resp.status_code} for {user.email}")
+        if resp.status_code == 200:
+            body = resp.json()
+            if body.get('statusCode') == 200:
+                new_token = body['data']['token']
+                expires_at = _decode_jwt_exp(new_token)
+                token_record.token = new_token
+                token_record.expires_at = expires_at
+                token_record.save()
+                print(f"[TokenService] User token refreshed for {user.email}. Expires: {expires_at}")
+                return new_token
+    except Exception as e:
+        print(f"[TokenService] User token refresh error for {user.email}: {e}")
+
+    return ''
+
+
 def force_refresh() -> str:
     """
     Force an immediate token refresh regardless of expiry.

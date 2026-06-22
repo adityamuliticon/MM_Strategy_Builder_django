@@ -7,9 +7,10 @@ from services.session_context import set_session_id, set_user_token, set_user_id
 def setup_user_context(request, module):
     """
     Loads user from session, sets per-user token + session_id in thread-local.
-    Returns (user_id, session_id) or raises a JsonResponse on auth failure.
-    Middleware already sets the token for normal requests; this re-sets it to
-    ensure SSE generator threads also have the right token captured.
+    Returns (user_id, session_id) or raises _AuthError on unrecoverable failure.
+
+    If the stored token is expired, attempts a silent auto-refresh using the
+    user's encrypted stored password before raising an error.
     """
     from users.models import AppUser, UserBearerToken
     from datetime import datetime, timezone
@@ -22,15 +23,24 @@ def setup_user_context(request, module):
 
     token_record = UserBearerToken.objects.filter(user_id=user_id).first()
     if token_record:
-        # Check token expiry
         if token_record.expires_at:
             now_utc = datetime.now(timezone.utc)
             if token_record.expires_at <= now_utc:
-                raise _AuthError(JsonResponse(
-                    {'error': 'Market Maya session expired. Please log in again.', 'redirect': '/login/'},
-                    status=401,
-                ))
-        set_user_token(token_record.token)
+                # Token expired — attempt silent auto-refresh using stored credentials
+                from services.token_service import refresh_user_token
+                user = token_record.user
+                new_token = refresh_user_token(user)
+                if new_token:
+                    set_user_token(new_token)
+                else:
+                    raise _AuthError(JsonResponse(
+                        {'error': 'Session expired. Please log in again.', 'redirect': '/login/'},
+                        status=401,
+                    ))
+            else:
+                set_user_token(token_record.token)
+        else:
+            set_user_token(token_record.token)
 
     set_user_id(user_id)
     session_id = f"{user_id}_{module}"
