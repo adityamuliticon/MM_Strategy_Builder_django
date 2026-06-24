@@ -10,6 +10,7 @@ from chat_logs.models import ChatLog
 from config import Config
 from services.market_maya_shared import get_strategies, get_balance
 from services.view_helpers import setup_user_context, get_history, save_messages, _AuthError
+from services.request_queue import request_queue
 
 _STRATEGY_TYPE_IDS = {
     "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
@@ -93,7 +94,8 @@ def chat(request):
         return e.response
 
     history = get_history(user_id, 'USB')
-    result = orchestrator.process_message(user_message, history)
+    with request_queue:
+        result = orchestrator.process_message(user_message, history)
     response_text   = result.get("message", "") if isinstance(result, dict) else result
     input_tokens    = result.get("input_tokens", 0) if isinstance(result, dict) else 0
     output_tokens   = result.get("output_tokens", 0) if isinstance(result, dict) else 0
@@ -134,6 +136,7 @@ def chat_stream(request):
         return e.response
 
     history = get_history(user_id, 'USB')
+    start_time = request_queue.acquire()
 
     def event_stream():
         full_response = ""
@@ -155,6 +158,7 @@ def chat_stream(request):
             print(f"[USB stream error] {e}")
             yield f"data: {json.dumps({'t': 'error', 'v': '⚠️ Connection error. Please try again.'})}\n\n"
         finally:
+            request_queue.release(start_time)
             save_messages(user_id, 'USB', user_message, full_response)
             cost_usd = (in_tok * Config.COST_PER_1M_INPUT_TOKENS_USD +
                         out_tok * Config.COST_PER_1M_OUTPUT_TOKENS_USD) / 1_000_000

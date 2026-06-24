@@ -124,7 +124,7 @@ def _parse_deploy_settings(msg):
 class BaseOrchestrator:
     def __init__(self):
         self.client = OpenAI(api_key=Config.RUNWARE_API_KEY, base_url=Config.RUNWARE_BASE_URL)
-        self.model = Config.RUNWARE_MODEL_ID or "runware-latest"
+        self.model = Config.RUNWARE_MODEL_ID
 
     # ── Abstract hooks — implement in every subclass ───────────────────────
     def _retriever(self):                raise NotImplementedError

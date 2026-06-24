@@ -11,3 +11,5 @@ sentence-transformers
 marko
 jsonref
 websocket-client==1.8.0
+gunicorn
+gevent
