@@ -32,7 +32,7 @@ class StrategyValidator:
 
         # Segment — accept mainSegment (API) or segment (LLM schema); also allow EQ/INDEX
         segment = params.get("mainSegment") or params.get("segment", "")
-        allowed_segments = ["FUT", "OPT", "EQ", "Stock", "INDEX"]
+        allowed_segments = ["FUT", "OPT", "EQ", "INDEX"]
         if segment not in allowed_segments:
             errors.append(f"Invalid Segment. Must be one of: {', '.join(allowed_segments)}")
 

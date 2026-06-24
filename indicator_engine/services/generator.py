@@ -110,14 +110,14 @@ class ISEPayloadGenerator:
         lot_size = LOT_SIZES.get(symbol, 1)
         qty = lot * lot_size
 
-        # optionType: empty string for FUT/Stock, CE/PE for OPT
+        # optionType: empty string for FUT/EQ, CE/PE for OPT
         option_type = str(leg.get("optionType", "")).upper()
         if segment != "OPT":
             option_type = ""
         elif option_type not in ("CE", "PE"):
             option_type = "CE"
 
-        # atm: 0 for FUT/Stock
+        # atm: 0 for FUT/EQ
         atm = int(leg.get("atm", 0)) if segment == "OPT" else 0
 
         # Leg-level trail SL

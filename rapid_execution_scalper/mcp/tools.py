@@ -47,7 +47,7 @@ def create_and_save_res_strategy(strategy_json):
     return res_deploy(payload)
 
 
-def get_my_strategies(search="", take=50):
+def get_my_strategies(search="", take=500):
     result = _get_strategies(search=search, take=take)
     if result.get("status") != "success":
         return result

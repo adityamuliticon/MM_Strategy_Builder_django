@@ -519,7 +519,9 @@ class BaseOrchestrator:
                     for char in delta:
                         if char == '{':
                             if brace_depth == 0 and text_part:
-                                yield {"t": "chunk", "v": text_part}
+                                clean = re.sub(r'```(?:json|js|JSON)?', '', text_part)
+                                if clean:
+                                    yield {"t": "chunk", "v": clean}
                                 text_part = ""
                             brace_depth += 1
                         elif char == '}':
@@ -527,7 +529,9 @@ class BaseOrchestrator:
                         elif brace_depth == 0:
                             text_part += char
                     if text_part and brace_depth == 0:
-                        yield {"t": "chunk", "v": text_part}
+                        clean = re.sub(r'```(?:json|js|JSON)?', '', text_part)
+                        if clean:
+                            yield {"t": "chunk", "v": clean}
             except Exception as e:
                 print(f"[{_prefix}] Stream error on turn {turn+1}: {e}")
 
@@ -541,7 +545,7 @@ class BaseOrchestrator:
                         _in_tok += fb.usage.prompt_tokens or 0
                         _out_tok += fb.usage.completion_tokens or 0
                     full_content = fb.choices[0].message.content or ""
-                    ui_text = re.sub(r'\{.*?\}', '', full_content, flags=re.DOTALL).strip()
+                    ui_text = re.sub(r'```(?:json|js|JSON)?', '', re.sub(r'\{.*?\}', '', full_content, flags=re.DOTALL)).strip()
                     if ui_text:
                         yield {"t": "chunk", "v": ui_text}
                 except Exception as e2:

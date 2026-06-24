@@ -1,6 +1,6 @@
 """ISB strategy validator — checks required fields and ISB-specific leg constraints."""
 
-VALID_SEGMENTS = {"FUT", "OPT", "Stock"}
+VALID_SEGMENTS = {"FUT", "OPT", "EQ"}
 VALID_EXCHANGES = {"NSE", "NFO", "BFO", "BSE", "MCX", "CDS"}
 VALID_CONTRACTS = {"NEAR", "NEXT", "FAR"}
 VALID_EXPIRIES = {"MONTHLY", "WEEKLY"}
@@ -48,10 +48,10 @@ class ISBValidator:
 
             segment = str(leg.get("segment", "FUT"))
             seg_norm = segment.upper()
-            if seg_norm == "STOCK":
-                seg_norm = "Stock"
+            if seg_norm in ("STOCK", "EQ"):
+                seg_norm = "EQ"
             if seg_norm not in VALID_SEGMENTS:
-                errors.append(f"{prefix}: segment must be FUT, OPT, or Stock.")
+                errors.append(f"{prefix}: segment must be FUT, OPT, or EQ.")
 
             contract = str(leg.get("contract", "NEAR")).upper()
             if contract not in VALID_CONTRACTS:

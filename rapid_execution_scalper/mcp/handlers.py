@@ -39,7 +39,7 @@ class RESToolHandler:
         elif tool_name == "get_my_strategies":
             return get_my_strategies(
                 search=arguments.get("search", ""),
-                take=arguments.get("take", 50),
+                take=arguments.get("take", 500),
             )
         elif tool_name == "delete_strategy":
             return delete_strategy(

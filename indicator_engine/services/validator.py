@@ -1,11 +1,11 @@
 """ISE strategy validator — checks required fields, allowed values, and indicator configuration."""
 
 VALID_EXCHANGES = ["NSE", "NFO", "BFO", "BSE", "MCX", "CDS"]
-VALID_SEGMENTS = ["FUT", "OPT", "Stock"]
+VALID_SEGMENTS = ["FUT", "OPT", "EQ"]
 VALID_CONTRACTS = ["NEAR", "NEXT", "FAR"]
 VALID_EXPIRIES = ["MONTHLY", "WEEKLY"]
 VALID_OPTION_TYPES = ["CE", "PE", ""]
-VALID_TIMEFRAMES = ["5Min", "10Min", "15Min", "30Min", "1Hour", "4Hour", "1Day"]
+VALID_TIMEFRAMES = ["5Min", "10Min", "15Min", "30Min", "1Hr", "4Hr", "1Hour", "4Hour", "1Day"]
 VALID_CHART_TYPES = ["Candlestick", "Heikin-Ashi"]
 VALID_SIGNALS = ["BUY", "SELL", "Both"]
 VALID_UNDERLYING_TYPES = ["Future", "Spot/Index"]

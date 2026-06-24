@@ -116,6 +116,7 @@ body {
 
 .main-chat {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -248,7 +249,9 @@ body {
 
 .chat-container {
     flex: 1;
+    min-width: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -257,16 +260,20 @@ body {
 
 .message {
     max-width: 80%;
+    min-width: 0;
     padding: 12px 18px;
     border-radius: 15px;
     font-size: 0.95rem;
     line-height: 1.5;
     position: relative;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 /* Markdown Styles */
 .message table {
     width: 100%;
+    min-width: 0;
     border-collapse: collapse;
     margin: 10px 0;
     font-size: 0.85rem;

@@ -7,7 +7,9 @@ from services.session_context import log_api_call
 
 
 def _record_to_modify_payload(data):
-    """Convert getCustomTradeRecord camelCase response → modify payload snake_case."""
+    """Convert getCustomTradeRecord camelCase response → modify payload snake_case.
+    NOTE: authoritative copy lives in marketmaya/Operations.py. Apply any bug fixes there first,
+    then mirror here. This copy remains only until ISE/ISB/RES/MLH migrate to marketmaya."""
     payload = {
         "id": data["id"],
         "strategy_name": data.get("strategyName", ""),
@@ -78,7 +80,7 @@ def _auth_headers():
     }
 
 
-def get_strategies(search="", skip=0, take=50, trading_type="All", strategy_master_ids=None):
+def get_strategies(search="", skip=0, take=500, trading_type="All", strategy_master_ids=None):
     payload = {
         "skip": skip,
         "take": take,
@@ -342,7 +344,7 @@ def rename_strategy(strategy_id="", strategy_name="", new_name=""):
         return {"status": "error", "message": str(e)}
 
 
-def get_my_strategies(search="", take=50):
+def get_my_strategies(search="", take=500):
     """Wrapper used by MLH and other handlers. Returns pre-formatted text so the LLM response passes through the brace filter cleanly."""
     result = get_strategies(search=search, take=take)
     if result.get("status") != "success":

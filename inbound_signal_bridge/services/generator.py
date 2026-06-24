@@ -75,14 +75,14 @@ class ISBPayloadGenerator:
         exchange_hint = str(leg.get("exchange", ""))
         exchange, segment = resolve_leg_exchange(symbol, segment_hint, exchange_hint)
 
-        # Option type: "" for FUT and Stock
+        # Option type: "" for FUT and EQ
         option_type = str(leg.get("optionType", "")).upper()
         if segment != "OPT":
             option_type = ""
         elif option_type not in ("CE", "PE"):
             option_type = "CE"
 
-        # ATM: 0 for FUT and Stock
+        # ATM: 0 for FUT and EQ
         atm = int(leg.get("atm", 0)) if segment == "OPT" else 0
 
         # Strike price: 0 = use ATM offset

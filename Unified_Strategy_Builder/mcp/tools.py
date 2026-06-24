@@ -1,152 +1,44 @@
-"""USB MCP tool functions — thin wrappers that expose USB capabilities to the LLM via tool calls."""
+"""USB MCP tool functions — USB-specific capabilities exposed to the LLM.
+
+Common tools (get_my_strategies, delete_strategy, get_strategy_record,
+modify_strategy, rename_strategy, get_balance, get_deploy_options,
+deploy_strategy, undeploy_strategy) are handled centrally by
+utils.Orchestrator.StrategiesOrchestrator.SharedToolHandler.
+"""
 
 from Unified_Strategy_Builder.services.validator import validator
 from Unified_Strategy_Builder.services.generator import generator
 from Unified_Strategy_Builder.services.market_maya import market_maya
 from Unified_Strategy_Builder.rag.retriever import retriever
-from services.market_maya_shared import (
-    get_strategies as _get_strategies,
-    delete_strategy as _delete_strategy,
-    get_strategy_record as _get_strategy_record,
-    modify_strategy as _modify_strategy,
-    rename_strategy as _rename_strategy,
-    get_balance as _get_balance,
-)
-from services.deploy import (
-    get_deploy_options as _get_deploy_options,
-    deploy_strategy as _deploy_strategy,
-    undeploy_strategy as _undeploy_strategy,
-)
+
 
 def get_validation_rules(parameter_name):
-    """
-    Retrieves validation rules for a specific parameter from the documentation.
-    """
-    context = retriever.get_context(f"validation rules for {parameter_name}")
-    return context
+    return retriever.get_context(f"validation rules for {parameter_name}")
+
 
 def validate_strategy(strategy_json):
-    """
-    Validates a strategy JSON object.
-    """
     main_errors = validator.validate_main_parameters(strategy_json)
     leg_errors = []
     for leg in strategy_json.get("legs", []):
         leg_errors.extend(validator.validate_leg_parameters(leg))
-    
     all_errors = main_errors + leg_errors
     if all_errors:
         return {"status": "error", "errors": all_errors}
     return {"status": "success"}
 
+
 def generate_payload(strategy_json):
-    """
-    Generates a V3 payload from strategy parameters.
-    """
-    main_params = strategy_json
-    legs = strategy_json.get("legs", [])
-    payload = generator.generate_v3_payload(main_params, legs)
-    return payload
+    return generator.generate_v3_payload(strategy_json, strategy_json.get("legs", []))
+
 
 def deploy(payload):
-    """
-    Deploys the strategy to Market Maya.
-    """
     return market_maya.save_strategy(payload)
 
+
 def create_and_save_strategy(strategy_json):
-    """
-    Validates, generates the correct V3 payload, and saves it in one step.
-    H-13: validation now runs before every save, not just when AI calls validate separately.
-    """
+    """Validate → generate payload → save in one step."""
     validation = validate_strategy(strategy_json)
     if validation.get("status") == "error":
         return validation
     payload = generate_payload(strategy_json)
     return deploy(payload)
-
-
-def get_my_strategies(search="", take=50):
-    result = _get_strategies(search=search, take=take)
-    if result.get("status") != "success":
-        return result
-    strategies = result.get("strategies", [])
-    total = result.get("total", 0)
-    lines = [f"Total: {total} strategies (showing {len(strategies)}):"]
-    for i, s in enumerate(strategies, 1):
-        deployed = "Deployed" if s.get("deployed") else "Not deployed"
-        created = (s.get("created") or "")[:10] or "—"
-        lines.append(f"{i}. {s['name']} | {s['plugin']} | {deployed} | Created: {created}")
-    return {
-        "status": "success",
-        "total": total,
-        "formatted_list": "\n".join(lines),
-        "strategies": [{"name": s["name"], "id": s["id"]} for s in strategies],
-    }
-
-
-def delete_strategy(strategy_id="", strategy_name="", confirmed=False):
-    # H-10: require explicit confirmation before deleting — protects against accidental deletion
-    if not confirmed:
-        search = strategy_name or strategy_id
-        return {
-            "status": "requires_confirmation",
-            "message": (
-                f"Are you sure you want to permanently delete '{search}'? "
-                "This cannot be undone. Call delete_strategy again with confirmed=True to proceed."
-            )
-        }
-    return _delete_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
-
-
-def get_strategy_record(strategy_id="", strategy_name=""):
-    return _get_strategy_record(strategy_id=strategy_id, strategy_name=strategy_name)
-
-
-def modify_strategy(payload):
-    return _modify_strategy(payload)
-
-
-def rename_strategy(strategy_id="", strategy_name="", new_name=""):
-    return _rename_strategy(strategy_id=strategy_id, strategy_name=strategy_name, new_name=new_name)
-
-
-def get_balance():
-    return _get_balance()
-
-
-def get_deploy_options(strategy_id="", strategy_name=""):
-    return _get_deploy_options(strategy_id=strategy_id, strategy_name=strategy_name)
-
-
-def deploy_strategy(strategy_id="", strategy_name="", trading_mode="Live", qty_multiply=1,
-                    charges_acknowledged=False,
-                    entry_execution_type="PSUEDO", entry_psuedo_value=0, entry_psuedo_type="Auto",
-                    entry_wait_seconds=30, entry_no_of_try=2, entry_market_order_after_retry=False,
-                    exit_execution_type="PSUEDO", exit_psuedo_value=0, exit_psuedo_type="Auto",
-                    exit_wait_seconds=30, exit_no_of_try=2, exit_market_order_after_retry=False):
-    return _deploy_strategy(
-        strategy_id=strategy_id, strategy_name=strategy_name, trading_mode=trading_mode,
-        charges_acknowledged=charges_acknowledged,
-        qty_multiply=qty_multiply,
-        entry_execution_type=entry_execution_type, entry_psuedo_value=entry_psuedo_value,
-        entry_psuedo_type=entry_psuedo_type, entry_wait_seconds=entry_wait_seconds,
-        entry_no_of_try=entry_no_of_try, entry_market_order_after_retry=entry_market_order_after_retry,
-        exit_execution_type=exit_execution_type, exit_psuedo_value=exit_psuedo_value,
-        exit_psuedo_type=exit_psuedo_type, exit_wait_seconds=exit_wait_seconds,
-        exit_no_of_try=exit_no_of_try, exit_market_order_after_retry=exit_market_order_after_retry,
-    )
-
-
-def undeploy_strategy(strategy_id="", strategy_name="", confirmed=False):
-    if not confirmed:
-        search = strategy_name or strategy_id
-        return {
-            "status": "requires_confirmation",
-            "message": (
-                f"Are you sure you want to undeploy '{search}'? "
-                "This will stop live/paper trading for this strategy. "
-                "Call undeploy_strategy again with confirmed=True to proceed."
-            ),
-        }
-    return _undeploy_strategy(strategy_id=strategy_id, strategy_name=strategy_name)
