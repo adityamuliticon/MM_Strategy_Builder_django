@@ -42,7 +42,7 @@ class Config:
     CHECK_PENDING_PAYMENTS_URL = "https://api.marketmaya.com/api/mainStrategy/checkPendingPayments"
     UNDEPLOY_STRATEGY_URL = "https://webapi.marketmaya.com/api/mainStrategy/undeploy"
 
-    # Backtest (ISE and MIH)
+    # Backtest (ISE and MIH and RES)
     BACKTEST_OPTIONS_URL = "https://api.marketmaya.com/api/subscription/getBacktestOptions"
     DEDUCT_BACKTEST_POINTS_URL = "https://api.marketmaya.com/api/subscription/deductBacktestPoints"
     GET_BACKTEST_RESULT_URL = "https://webapi.marketmaya.com/api/mainStrategy/getBackTestResult"
@@ -53,7 +53,7 @@ class Config:
     
     # RAG Settings
     DOCS_PATH = "docs"
-    VECTOR_STORE_PATH = "Unified_Strategy_Builder/rag/store/faiss_index"
+    VECTOR_STORE_PATH = "utils/rag/store/faiss_index"
 
     # Token pricing (update these to match your Runware model's actual rates)
     # Cost per 1 million tokens in USD

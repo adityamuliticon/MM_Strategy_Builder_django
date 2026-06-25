@@ -2,8 +2,8 @@
 
 import re
 from services.base_orchestrator import BaseOrchestrator
-from multi_leg_hedger.rag.retriever import mlh_retriever
-from multi_leg_hedger.mcp.handlers import mlh_handler
+from utils.rag.retriever import common_retriever
+from utils.mcp.handlers import mlh_handler
 
 
 class MLHOrchestrator(BaseOrchestrator):
@@ -343,9 +343,13 @@ PLUGIN FILTER — when user says "[module] only" / "only [module] strategies" / 
 
 2. delete_strategy — Delete a strategy by name or ID.
    Use when user says: "delete strategy X", "remove strategy X".
-   ALWAYS confirm before deleting: "Are you sure you want to delete '[name]'?"
-   JSON:
+   TWO-STEP flow (MUST follow):
+   STEP 1: Call delete_strategy without confirmed → show the confirmation message to user.
+   STEP 2: After user confirms → call delete_strategy again with confirmed=true.
+   JSON (first call):
    {"tool": "delete_strategy", "arguments": {"strategy_name": "<exact strategy name>"}}
+   JSON (second call — after user says yes):
+   {"tool": "delete_strategy", "arguments": {"strategy_name": "<exact strategy name>", "confirmed": true}}
 
 3. get_strategy_record — Fetch full current strategy data (use as FIRST step of any modify workflow).
    JSON:
@@ -690,7 +694,7 @@ On success show:
 """
 
     # ── Hook implementations ───────────────────────────────────────────────
-    def _retriever(self):            return mlh_retriever
+    def _retriever(self):            return common_retriever
     def _handler(self):              return mlh_handler
     def _context_label(self):        return "Relevant Documentation Context"
     def _save_tool_name(self):       return "create_and_save_mlh_strategy"

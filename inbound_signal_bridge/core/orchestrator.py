@@ -1,8 +1,8 @@
 """ISBOrchestrator — system prompt and module hooks for the inbound signal bridge plugin."""
 
 from services.base_orchestrator import BaseOrchestrator
-from inbound_signal_bridge.rag.retriever import isb_retriever
-from inbound_signal_bridge.mcp.handlers import isb_handler
+from utils.rag.retriever import common_retriever
+from utils.mcp.handlers import isb_handler
 
 
 class ISBOrchestrator(BaseOrchestrator):
@@ -328,10 +328,13 @@ You also have two management tools available:
 2. delete_strategy — Delete a strategy by name or ID.
    Use when user says: "delete strategy X", "remove strategy X", "delete X".
    You can pass the strategy name directly — the backend will look up the ID automatically.
-   JSON (by name — preferred):
+   TWO-STEP flow (MUST follow):
+   STEP 1: Call delete_strategy without confirmed → show the confirmation message to user.
+   STEP 2: After user confirms → call delete_strategy again with confirmed=true.
+   JSON (first call — by name, preferred):
    {"tool": "delete_strategy", "arguments": {"strategy_name": "<exact strategy name>"}}
-   JSON (by ID if you already have it):
-   {"tool": "delete_strategy", "arguments": {"strategy_id": "<hash id>"}}
+   JSON (second call — after user says yes):
+   {"tool": "delete_strategy", "arguments": {"strategy_name": "<exact strategy name>", "confirmed": true}}
 
 After get_my_strategies succeeds, display results as a Markdown table:
 | # | Name | Plugin | Type | Legs | Deployed | Created |
@@ -544,7 +547,7 @@ On success show:
 """
 
     # ── Hook implementations ───────────────────────────────────────────────
-    def _retriever(self):            return isb_retriever
+    def _retriever(self):            return common_retriever
     def _handler(self):              return isb_handler
     def _context_label(self):        return "Relevant ISB Documentation"
     def _save_tool_name(self):       return "create_and_save_isb_strategy"

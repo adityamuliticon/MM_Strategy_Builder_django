@@ -2,8 +2,8 @@
 
 import re
 from services.base_orchestrator import BaseOrchestrator
-from rapid_execution_scalper.rag.retriever import res_retriever
-from rapid_execution_scalper.mcp.handlers import res_handler
+from utils.rag.retriever import common_retriever
+from utils.mcp.handlers import res_handler
 
 
 class RESOrchestrator(BaseOrchestrator):
@@ -310,13 +310,17 @@ and empty search, then show ONLY rows where Plugin matches the requested module 
 Hedger", "Unified Strategy Builder", "Rapid Execution Scalper", "Inbound Signal Bridge",
 "Indicator Signal Engine"). Show filtered count only, not the grand total. NEVER show other
 plugins when user asks for a specific one.
-delete_strategy(strategy_id, strategy_name) — delete by name or ID
+delete_strategy — Delete a strategy by name or ID. TWO-STEP flow (MUST follow):
+   STEP 1: Call delete_strategy without confirmed → show the confirmation message to user.
+   STEP 2: After user confirms → call delete_strategy again with confirmed=true.
+   JSON (first call): {"tool": "delete_strategy", "arguments": {"strategy_name": "<name>"}}
+   JSON (second call): {"tool": "delete_strategy", "arguments": {"strategy_name": "<name>", "confirmed": true}}
 get_strategy_record(strategy_id, strategy_name) — fetch current configuration
 modify_strategy(payload) — update existing strategy
 rename_strategy(strategy_id, strategy_name, new_name) — rename strategy
 get_balance() — show Balance, Hold Balance, Point Balance
 
-For delete/modify/rename: ALWAYS confirm with the user before executing.
+For modify/rename: ALWAYS confirm with the user before executing.
 For modify: show the current values (from get_strategy_record) vs proposed values as a diff table, then ask for confirmation.
 
 ═══════════════════════════════════════════════════════════
@@ -391,6 +395,102 @@ STRICT JSON SCHEMA FOR create_and_save_res_strategy
     }
   }
 }
+
+═══════════════════════════════════════════════════════════
+BACKTEST TOOLS
+═══════════════════════════════════════════════════════════
+
+get_backtest_options — Fetch available backtest time periods and point costs.
+   Use when user says: "backtest [strategy]", "run backtest on [strategy]",
+   "show backtest options for [strategy]", "how much does backtest cost".
+   JSON:
+   {"tool": "get_backtest_options", "arguments": {"strategy_name": "<name>"}}
+   JSON (by ID if already known):
+   {"tool": "get_backtest_options", "arguments": {"strategy_id": "<hash id>"}}
+
+run_backtest — Execute the backtest for the selected time period.
+   Use ONLY after user explicitly selects a period from get_backtest_options.
+   Always use strategy_name from the user's original request. Use exact start_date and end_date from the period table.
+   JSON:
+   {"tool": "run_backtest", "arguments": {
+     "strategy_name": "<name from user request>",
+     "start_date": "YYYY-MM-DD",
+     "end_date": "YYYY-MM-DD"
+   }}
+
+get_backtest_result — Fetch stored results from the last completed backtest (NO points charged).
+   Use when user says: "show backtest result for [strategy]", "what was the backtest result",
+   "show last backtest of [strategy]", "view backtest results", "check backtest".
+   This is read-only — it does NOT run a new backtest.
+   JSON:
+   {"tool": "get_backtest_result", "arguments": {"strategy_name": "<name>"}}
+
+BACKTEST WORKFLOW (3 steps — always follow this order):
+STEP 1: User requests backtest → call get_backtest_options
+STEP 2: Display period options table + ask which period to run
+STEP 3: After user selects → call run_backtest with strategy_name and the exact start_date + end_date for that period
+
+run_backtest RESULT HANDLING:
+- status == "processing": say "The backtest has been triggered. It usually completes within 30 seconds. Say 'show backtest result' when ready and I'll fetch it for free using get_backtest_result." Do NOT call run_backtest again.
+- status == "error" and insufficient_balance == True: tell user their balance (available_points) is below required_points.
+- status == "error" (other): show the error message clearly.
+
+VIEW STORED RESULT (no points charged):
+If user says "show backtest result" / "view last backtest" → call get_backtest_result directly.
+If result status == "no_backtest": tell user no backtest has been run yet and offer to run one.
+
+DISPLAYING get_backtest_options RESULT:
+Show strategy title on top, then this table:
+| # | Period | Start Date | End Date | Points Cost |
+|---|--------|------------|----------|-------------|
+| 1 | 1 Month | YYYY-MM-DD | YYYY-MM-DD | FREE |
+| 2 | 6 Months | YYYY-MM-DD | YYYY-MM-DD | 18 pts |
+...mark 0-point entries as FREE, others as "X pts"
+
+Below the table show:
+"**Point Balance**: X | **Per Day Charge**: 0.1 pts | **Free Days**: 30 days"
+End with: "Which time period would you like to backtest?"
+
+DISPLAYING get_backtest_result RESULT (stored result, no new run):
+Show strategy name and run date as a header, then the following tables:
+
+### Backtest Overview
+| Field | Value |
+|-------|-------|
+| Strategy | <strategy_name> |
+| Backtest Run | <backtest_run_date> |
+| Data Period | <period_start> → <period_end> |
+| Capital | ₹<capital> |
+| Year ROI | <year_roi>% |
+| Max Drawdown | <drawdown_percent>% |
+| Recovery Days | <max_drawdown_recover_days> days |
+
+### Trade Analysis
+(2-column table from trade_analysis dict — Total Trades, Positive/Negative Trades, Cover/SL/Target Trades, BUY/SELL Trades etc.)
+
+### Day / Month / Year Statistics
+(compact table combining day_analysis, month_analysis, year_analysis)
+
+### Period Comparison
+| Period | P&L | ROI | Drawdown | Draw% |
+|--------|-----|-----|----------|-------|
+| All Data | ₹... | ...% | ₹... | ...% |
+| 1 Year | ₹... | ...% | ₹... | ...% |
+| 6 Months | ₹... | ...% | ₹... | ...% |
+| 3 Months | ₹... | ...% | ₹... | ...% |
+| 1 Month | ₹... | ...% | ₹... | ...% |
+
+### Yearly P&L
+| Year | Trades | Positive | Negative | P&L |
+|------|--------|----------|----------|-----|
+
+### Monthly P&L (oldest → newest)
+| Month | Trades | Positive | Negative | P&L |
+|-------|--------|----------|----------|-----|
+
+### Daily P&L (Recent 20 Days, newest first)
+| Date | Trades | Positive | Negative | P&L |
+|------|--------|----------|----------|-----|
 
 ═══════════════════════════════════════════════════════════
 DEPLOY TOOLS
@@ -511,7 +611,7 @@ On success show:
 """
 
     # ── Hook implementations ───────────────────────────────────────────────
-    def _retriever(self):            return res_retriever
+    def _retriever(self):            return common_retriever
     def _handler(self):              return res_handler
     def _context_label(self):        return "Relevant Documentation Context"
     def _save_tool_name(self):       return "create_and_save_res_strategy"
@@ -528,6 +628,7 @@ On success show:
             "create_and_save_res_strategy", "res_validate_strategy", "res_get_validation_rules",
             "get_my_strategies", "delete_strategy", "get_strategy_record",
             "modify_strategy", "rename_strategy", "get_balance",
+            "get_backtest_options", "run_backtest", "get_backtest_result",
             "get_deploy_options", "deploy_strategy", "undeploy_strategy",
         ]
 
@@ -543,6 +644,9 @@ On success show:
             "modify_strategy":              "Saving changes...",
             "rename_strategy":              "Renaming strategy...",
             "get_balance":                  "Fetching balance...",
+            "get_backtest_options":         "Fetching backtest options...",
+            "run_backtest":                 "Running backtest (this may take 10–30 seconds)...",
+            "get_backtest_result":          "Fetching backtest results...",
             "get_deploy_options":           "Fetching deploy options...",
             "deploy_strategy":              "Deploying strategy to Market Maya...",
             "undeploy_strategy":            "Undeploying strategy...",
