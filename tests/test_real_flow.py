@@ -83,7 +83,7 @@ print(f"  user_id     : {sess['user_id']}")
 section("STEP 3  Load USB orchestrator — real RAG + real Runware")
 
 print("  Loading orchestrator (FAISS + embeddings)...", flush=True)
-from Unified_Strategy_Builder.core.orchestrator import orchestrator as usb_orch
+from utils.Orchestrator.orchestrators import orchestrator as usb_orch
 
 # Quick RAG sanity check
 print("  Running RAG test for 'what is SL'...", flush=True)

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from indicator_engine.core.orchestrator import ise_orchestrator
+from utils.Orchestrator.orchestrators import ise_orchestrator
 from chat_logs.models import ChatLog
 from config import Config
 from services.view_helpers import setup_user_context, get_history, save_messages, _AuthError

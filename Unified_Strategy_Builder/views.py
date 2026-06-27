@@ -5,10 +5,12 @@ from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from Unified_Strategy_Builder.core.orchestrator import orchestrator
+from utils.Orchestrator.orchestrators import orchestrator
 from chat_logs.models import ChatLog
 from config import Config
-from services.market_maya_shared import get_strategies, get_balance
+from marketmaya.Operations import Operations
+get_strategies = Operations.get_strategies
+get_balance    = Operations.get_balance
 from services.view_helpers import setup_user_context, get_history, save_messages, _AuthError
 from services.request_queue import request_queue
 

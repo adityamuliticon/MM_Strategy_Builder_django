@@ -13,15 +13,14 @@ Module-specific tools (validate, generate, save, backtest, …) are routed to
 _dispatch_module_tool(), which each concrete orchestrator overrides.
 """
 
-from services.base_orchestrator import BaseOrchestrator
-from services.market_maya_shared import (
-    get_my_strategies as _get_my_strategies,
-    delete_strategy as _delete_strategy,
-    get_strategy_record as _get_strategy_record,
-    modify_strategy as _modify_strategy,
-    rename_strategy as _rename_strategy,
-    get_balance as _get_balance,
-)
+from utils.Orchestrator.BaseOrchestrator import BaseOrchestrator
+from marketmaya.Operations import Operations as _Ops
+_get_my_strategies   = _Ops.get_my_strategies
+_delete_strategy     = _Ops.delete_strategy
+_get_strategy_record = _Ops.get_strategy_record
+_modify_strategy     = _Ops.modify_strategy
+_rename_strategy     = _Ops.rename_strategy
+_get_balance         = _Ops.get_balance
 from services.deploy import (
     get_deploy_options as _get_deploy_options,
     deploy_strategy as _deploy_strategy,

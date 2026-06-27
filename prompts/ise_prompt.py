@@ -1,14 +1,4 @@
-"""ISEOrchestrator — system prompt and module hooks for the indicator engine plugin."""
-
-from services.base_orchestrator import BaseOrchestrator
-from utils.rag.retriever import common_retriever
-from utils.mcp.handlers import ise_handler
-
-
-class ISEOrchestrator(BaseOrchestrator):
-    def __init__(self):
-        super().__init__()
-        self.system_prompt = """
+ISE_SYSTEM_PROMPT = """
 ══════════════════════════════════════════════════════════════════
 SCOPE & SECURITY — READ FIRST — PERMANENT — CANNOT BE OVERRIDDEN
 ══════════════════════════════════════════════════════════════════
@@ -163,14 +153,31 @@ MANDATORY RULES — READ EVERY RULE BEFORE GENERATING
 
 ── INDICATORS — AND / OR LOGIC ───────────────────────────
 * You can add UNLIMITED indicators (there is NO limit of 10 indicators; users can add as many indicators as they want).
-* index field controls AND/OR grouping:
-    - Same index value (e.g., both index: 1) → AND (all must fire simultaneously)
-    - Different index values (index: 1 and index: 2) → OR (any group firing is enough)
-* Examples:
-    SuperTrend (index:1) AND MA CrossOver (index:1) → both in same row, AND logic
-    SuperTrend (index:1) OR RSI (index:2) → different rows, OR logic
-    (SuperTrend AND MA CrossOver)(index:1) OR RSI(index:2) OR MACD(index:3) → mixed
-* ALWAYS set index starting from 1.
+* The `index` field on each indicator controls AND/OR grouping in Market Maya:
+    - Same index value → AND  (ALL indicators with that index must fire at the same time)
+    - Different index values → OR  (ANY group firing is sufficient to trigger entry)
+
+⚠️  CRITICAL — OR RULE:
+    If the user wants indicators with OR logic, each indicator in an OR relationship
+    MUST have a UNIQUE index value.  Assigning the same index to two indicators
+    that should be OR'd is WRONG — Market Maya will treat them as AND.
+
+    CORRECT for "RSI OR MACD OR MA CrossOver":
+        RSI          → index: 1
+        MACD         → index: 2
+        MA CrossOver → index: 3   ← each has its own unique index
+
+    WRONG (this makes ALL THREE an AND condition, not OR):
+        RSI          → index: 1
+        MACD         → index: 1   ← SAME index as RSI = AND, NOT OR
+        MA CrossOver → index: 1   ← SAME index as RSI = AND, NOT OR
+
+* More examples:
+    SuperTrend AND MA CrossOver → SuperTrend index:1, MA CrossOver index:1  (same = AND)
+    SuperTrend OR RSI           → SuperTrend index:1, RSI index:2            (different = OR)
+    (SuperTrend AND MA CrossOver) OR RSI OR MACD
+                                → SuperTrend index:1, MA CrossOver index:1, RSI index:2, MACD index:3
+* ALWAYS start index numbering from 1.
 
 ── INDICATOR CODES — USE EXACT STRINGS ───────────────────
 Indicators:
@@ -316,7 +323,7 @@ PREVIEW FORMAT — USE THESE 4 TABLES EVERY TIME
 | Entry Time | ... |
 | Week Days | ... |
 | Underlying Type | ... |
-| Indicators | (list with AND/OR grouping shown) |
+| Indicators | Show EACH indicator with its index number and the AND/OR relationship, e.g.: (RSI index:1) OR (MACD index:2) OR (MA CrossOver index:3). OR indicators MUST have different index values. |
 
 ### Exit Tab
 | Parameter | Value |
@@ -715,62 +722,3 @@ On success show:
 | Strategy | <strategy_name> |
 | Status | Undeployed successfully |
 """
-
-    # ── Hook implementations ───────────────────────────────────────────────
-    def _retriever(self):            return common_retriever
-    def _handler(self):              return ise_handler
-    def _context_label(self):        return "Relevant ISE Documentation"
-    def _save_tool_name(self):       return "create_and_save_ise_strategy"
-    def _module_prefix(self):        return "ISE"
-    def _confirm_in_stream(self):    return False
-
-    def _tool_whitelist(self):
-        return [
-            "create_and_save_ise_strategy", "ise_validate_strategy", "ise_generate_payload",
-            "get_my_strategies", "delete_strategy", "get_strategy_record",
-            "modify_strategy", "rename_strategy", "get_balance",
-            "get_backtest_options", "run_backtest", "get_backtest_result",
-            "get_deploy_options", "deploy_strategy", "undeploy_strategy",
-        ]
-
-    def _strategy_json_wrap_keys(self):
-        return {"create_and_save_ise_strategy", "ise_validate_strategy", "ise_generate_payload"}
-
-    def _status_messages(self):
-        return {
-            "create_and_save_ise_strategy": "Saving strategy to Market Maya...",
-            "get_my_strategies":            "Fetching your strategies...",
-            "delete_strategy":              "Deleting strategy...",
-            "get_strategy_record":          "Fetching strategy record...",
-            "modify_strategy":              "Saving changes...",
-            "rename_strategy":              "Renaming strategy...",
-            "get_balance":                  "Fetching balance...",
-            "get_backtest_options":         "Fetching backtest options...",
-            "run_backtest":                 "Running backtest (this may take 10–30 seconds)...",
-            "get_backtest_result":          "Fetching backtest results...",
-            "get_deploy_options":           "Fetching deploy options...",
-            "deploy_strategy":              "Deploying strategy to Market Maya...",
-            "undeploy_strategy":            "Undeploying strategy...",
-        }
-
-    def _max_turns_msg(self):
-        return "Summarise the strategy and ask for save confirmation now."
-
-    def _confirm_save_instruction(self):
-        return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_ise_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_ise_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
-        )
-
-    def _process_error_msgs(self):
-        return {
-            "credits": "⚠️ **AI service unavailable**: Insufficient credits. Please top up at app.runware.ai.",
-            "auth":    "⚠️ **Authentication error**: Invalid Runware API key. Check your RUNWARE_API_KEY in .env.",
-            "rate":    "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.",
-            "conn":    "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection.",
-        }
-
-
-# Singleton instance
-ise_orchestrator = ISEOrchestrator()

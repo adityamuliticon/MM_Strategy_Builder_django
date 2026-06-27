@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from config import Config
-from services.base_market_maya import BaseMarketMayaService
+from services.base_import BaseMarketMayaService
 
 
 class RESMarketMayaService(BaseMarketMayaService):

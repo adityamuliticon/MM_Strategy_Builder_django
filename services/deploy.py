@@ -26,7 +26,8 @@ import requests
 import websocket
 
 from config import Config
-from services.market_maya_shared import get_strategies
+from marketmaya.Operations import Operations
+get_strategies = Operations.get_strategies
 from services.session_context import log_api_call
 
 _CLAIM_NS = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/"

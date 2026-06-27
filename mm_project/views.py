@@ -2,7 +2,8 @@
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.http import JsonResponse
-from services.market_maya_shared import get_strategies
+from marketmaya.Operations import Operations
+get_strategies = Operations.get_strategies
 
 STRATEGY_TYPE_IDS = {
     "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",

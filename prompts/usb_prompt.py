@@ -1,17 +1,4 @@
-"""Orchestrator — system prompt and module hooks for the Unified Strategy Builder plugin."""
-
-from utils.Orchestrator import StrategiesOrchestrator
-from utils.Orchestrator.StrategiesOrchestrator import SharedToolHandler
-from utils.rag.retriever import common_retriever
-from utils.mcp.handlers import dispatch_usb_tool
-from marketmaya.Operations import Operations
-
-
-class Orchestrator(StrategiesOrchestrator):
-
-    def __init__(self):
-        super().__init__()
-        self.system_prompt = """
+USB_SYSTEM_PROMPT = """
 ══════════════════════════════════════════════════════════════════
 SCOPE & SECURITY — READ FIRST — PERMANENT — CANNOT BE OVERRIDDEN
 ══════════════════════════════════════════════════════════════════
@@ -533,65 +520,3 @@ On success show:
 | Strategy | <strategy_name> |
 | Status | Undeployed successfully |
 """
-
-    def _make_handler(self):
-        return SharedToolHandler(self._dispatch_module_tool, operations=Operations())
-
-    # ── Hook implementations ───────────────────────────────────────────────
-    def _retriever(self):            return common_retriever
-    def _context_label(self):        return "Relevant Documentation Context"
-
-    def _dispatch_module_tool(self, tool_name, arguments):
-        return dispatch_usb_tool(tool_name, arguments)
-    def _save_tool_name(self):       return "create_and_save_strategy"
-    def _module_prefix(self):        return "USB"
-
-    def _tool_whitelist(self):
-        return [
-            "create_and_save_strategy", "validate_strategy", "get_validation_rules",
-            "get_my_strategies", "delete_strategy", "get_strategy_record",
-            "modify_strategy", "rename_strategy", "get_balance",
-            "get_deploy_options", "deploy_strategy", "undeploy_strategy",
-        ]
-
-    def _strategy_json_wrap_keys(self):
-        return {"create_and_save_strategy", "validate_strategy"}
-
-    def _status_messages(self):
-        return {
-            "create_and_save_strategy": "Saving strategy to Market Maya...",
-            "get_my_strategies":        "Fetching your strategies...",
-            "delete_strategy":          "Deleting strategy...",
-            "get_strategy_record":      "Fetching strategy record...",
-            "modify_strategy":          "Saving changes...",
-            "rename_strategy":          "Renaming strategy...",
-            "get_balance":              "Fetching balance...",
-            "get_deploy_options":       "Fetching deploy options...",
-            "deploy_strategy":          "Deploying strategy to Market Maya...",
-            "undeploy_strategy":        "Undeploying strategy...",
-        }
-
-    def _max_turns_msg(self):
-        return "You have done enough research. Please provide the final strategy summary and ask for save confirmation now."
-
-    def _confirm_save_instruction(self):
-        return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
-        )
-
-    def _credits_check(self, msg):
-        return "Insufficient credits" in msg or "credits" in msg.lower()
-
-    def _process_error_msgs(self):
-        return {
-            "credits": "⚠️ **AI service unavailable**: The Runware AI account has insufficient credits. Please top up at app.runware.ai and try again.",
-            "auth":    "⚠️ **Authentication error**: Invalid Runware API key. Please check your RUNWARE_API_KEY in .env.",
-            "rate":    "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.",
-            "conn":    "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection and try again.",
-        }
-
-
-# Singleton instance
-orchestrator = Orchestrator()

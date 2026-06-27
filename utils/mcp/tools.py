@@ -20,14 +20,13 @@ handler classes map the unqualified LLM tool_name to the right function.
 
 # ── Shared service imports ─────────────────────────────────────────────────────
 from utils.rag.retriever import common_retriever
-from services.market_maya_shared import (
-    get_strategies       as _get_strategies,
-    delete_strategy      as _delete_strategy,
-    get_strategy_record  as _get_strategy_record,
-    modify_strategy      as _modify_strategy,
-    rename_strategy      as _rename_strategy,
-    get_balance          as _get_balance,
-)
+from marketmaya.Operations import Operations as _Ops
+_get_strategies      = _Ops.get_strategies
+_delete_strategy     = _Ops.delete_strategy
+_get_strategy_record = _Ops.get_strategy_record
+_modify_strategy     = _Ops.modify_strategy
+_rename_strategy     = _Ops.rename_strategy
+_get_balance         = _Ops.get_balance
 from services.deploy import (
     get_deploy_options  as _get_deploy_options,
     deploy_strategy     as _deploy_strategy,

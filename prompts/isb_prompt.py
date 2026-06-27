@@ -1,14 +1,4 @@
-"""ISBOrchestrator — system prompt and module hooks for the inbound signal bridge plugin."""
-
-from services.base_orchestrator import BaseOrchestrator
-from utils.rag.retriever import common_retriever
-from utils.mcp.handlers import isb_handler
-
-
-class ISBOrchestrator(BaseOrchestrator):
-    def __init__(self):
-        super().__init__()
-        self.system_prompt = """
+ISB_SYSTEM_PROMPT = """
 ══════════════════════════════════════════════════════════════════
 SCOPE & SECURITY — READ FIRST — PERMANENT — CANNOT BE OVERRIDDEN
 ══════════════════════════════════════════════════════════════════
@@ -545,57 +535,3 @@ On success show:
 | Strategy | <strategy_name> |
 | Status | Undeployed successfully |
 """
-
-    # ── Hook implementations ───────────────────────────────────────────────
-    def _retriever(self):            return common_retriever
-    def _handler(self):              return isb_handler
-    def _context_label(self):        return "Relevant ISB Documentation"
-    def _save_tool_name(self):       return "create_and_save_isb_strategy"
-    def _module_prefix(self):        return "ISB"
-
-    def _tool_whitelist(self):
-        return [
-            "create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload",
-            "get_my_strategies", "delete_strategy", "get_strategy_record",
-            "modify_strategy", "rename_strategy", "get_balance",
-            "get_deploy_options", "deploy_strategy", "undeploy_strategy",
-        ]
-
-    def _strategy_json_wrap_keys(self):
-        return {"create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"}
-
-    def _status_messages(self):
-        return {
-            "create_and_save_isb_strategy": "Saving strategy to Market Maya...",
-            "get_my_strategies":            "Fetching your strategies...",
-            "delete_strategy":              "Deleting strategy...",
-            "get_strategy_record":          "Fetching strategy record...",
-            "modify_strategy":              "Saving changes...",
-            "rename_strategy":              "Renaming strategy...",
-            "get_balance":                  "Fetching balance...",
-            "get_deploy_options":           "Fetching deploy options...",
-            "deploy_strategy":              "Deploying strategy to Market Maya...",
-            "undeploy_strategy":            "Undeploying strategy...",
-        }
-
-    def _max_turns_msg(self):
-        return "Summarise the strategy and ask for save confirmation now."
-
-    def _confirm_save_instruction(self):
-        return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_isb_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_isb_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
-        )
-
-    def _process_error_msgs(self):
-        return {
-            "credits": "⚠️ **AI service unavailable**: Insufficient credits. Please top up at app.runware.ai.",
-            "auth":    "⚠️ **Authentication error**: Invalid Runware API key. Check your RUNWARE_API_KEY in .env.",
-            "rate":    "⚠️ **Rate limit reached**: Too many requests. Please wait a moment and try again.",
-            "conn":    "⚠️ **Connection error**: Could not reach the AI service. Check your internet connection.",
-        }
-
-
-# Singleton instance
-isb_orchestrator = ISBOrchestrator()

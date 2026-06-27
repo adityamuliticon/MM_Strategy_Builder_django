@@ -17,7 +17,8 @@ import base64
 import websocket
 from datetime import datetime
 from config import Config
-from services.market_maya_shared import get_strategies
+from marketmaya.Operations import Operations
+get_strategies = Operations.get_strategies
 
 
 def _resolve_strategy_info(strategy_id="", strategy_name=""):

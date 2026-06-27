@@ -100,11 +100,13 @@ def _llm_side_effect(**kw):
 # Only the final self.client.chat.completions.create is replaced.
 print("  Loading orchestrators and patching LLM client...", flush=True)
 
-from multi_leg_hedger.core.orchestrator          import mlh_orchestrator
-from Unified_Strategy_Builder.core.orchestrator  import orchestrator as usb_orchestrator
-from rapid_execution_scalper.core.orchestrator   import res_orchestrator
-from inbound_signal_bridge.core.orchestrator     import isb_orchestrator
-from indicator_engine.core.orchestrator          import ise_orchestrator
+from utils.Orchestrator.orchestrators import (
+    mlh_orchestrator,
+    orchestrator as usb_orchestrator,
+    res_orchestrator,
+    isb_orchestrator,
+    ise_orchestrator,
+)
 
 _ORCHESTRATORS = [mlh_orchestrator, usb_orchestrator, res_orchestrator,
                   isb_orchestrator, ise_orchestrator]
