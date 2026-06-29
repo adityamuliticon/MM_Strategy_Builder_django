@@ -3,6 +3,7 @@
 import re
 import time
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
+from utils.generators.BaseGenerator import BaseGenerator
 
 LOT_SIZES = {
     "BANKNIFTY": 30, "NIFTY": 65, "FINNIFTY": 40,
@@ -12,7 +13,7 @@ LOT_SIZES = {
 STRATEGY_TYPE_ID = "YioJhK5IqBULe8fPLMnXaAaC0$aC0$"
 
 
-class RESPayloadGenerator:
+class RESPayloadGenerator(BaseGenerator):
 
     def generate_payload(self, strategy_json):
         raw_name = strategy_json.get("strategy_name", "RES_Strategy")
@@ -192,7 +193,6 @@ class RESPayloadGenerator:
             sym_hl = "NIFTY"
         seg_hint = str(hl.get("segment", "FUT"))
         exch_hint = str(hl.get("exchange", ""))
-        seg = resolve_leg_exchange(sym_hl, seg_hint, exch_hint)[1]
 
         hl_exch, seg = resolve_leg_exchange(sym_hl, seg_hint, exch_hint)
 

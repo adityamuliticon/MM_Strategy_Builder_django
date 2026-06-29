@@ -3,6 +3,7 @@
 import random
 import string
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
+from utils.generators.BaseGenerator import BaseGenerator
 
 STRATEGY_TYPE_ID = "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$"
 
@@ -12,7 +13,7 @@ LOT_SIZES = {
 }
 
 
-class MLHPayloadGenerator:
+class MLHPayloadGenerator(BaseGenerator):
 
     def _qty(self, symbol, lot):
         return LOT_SIZES.get(symbol.upper(), 1) * lot

@@ -5,6 +5,7 @@ import os
 import re
 import time
 from services.exchange_resolver import resolve_leg_exchange
+from utils.generators.BaseGenerator import BaseGenerator
 
 # ── Lot sizes per symbol ────────────────────────────────────────────────────
 LOT_SIZES = {
@@ -31,7 +32,7 @@ for _entry in _MASTER_LIST:
 STRATEGY_TYPE_ID = "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$"
 
 
-class ISEPayloadGenerator:
+class ISEPayloadGenerator(BaseGenerator):
 
     def generate_payload(self, strategy_json):
         # ── Strategy name — append fresh 4-digit suffix ──────────────────────

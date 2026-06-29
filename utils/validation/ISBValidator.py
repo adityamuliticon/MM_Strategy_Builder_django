@@ -1,5 +1,7 @@
 """ISB strategy validator — checks required fields and ISB-specific leg constraints."""
 
+from utils.validation.BaseValidator import BaseValidator
+
 VALID_SEGMENTS = {"FUT", "OPT", "EQ"}
 VALID_EXCHANGES = {"NSE", "NFO", "BFO", "BSE", "MCX", "CDS"}
 VALID_CONTRACTS = {"NEAR", "NEXT", "FAR"}
@@ -8,7 +10,7 @@ VALID_QTY_DIST = {"Fix", "Capital(%)", "Capital Risk(%)", "Allocation Method 1"}
 VALID_PRODUCTS = {"MIS", "NRML", "CNC"}
 
 
-class ISBValidator:
+class ISBValidator(BaseValidator):
 
     def validate_strategy(self, strategy_json):
         errors = []
@@ -74,7 +76,6 @@ class ISBValidator:
             if not isinstance(lot, (int, float)) or lot <= 0:
                 errors.append(f"{prefix}: lot must be a positive number.")
 
-            # Capital Risk(%) requires a non-zero SL
             if qty_dist == "Capital Risk(%)" and int(leg.get("sl", 0)) == 0:
                 errors.append(f"{prefix}: Capital Risk(%) requires a non-zero SL value.")
 

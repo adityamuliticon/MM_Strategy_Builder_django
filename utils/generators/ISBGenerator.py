@@ -3,6 +3,7 @@
 import re
 import time
 from services.exchange_resolver import resolve_leg_exchange
+from utils.generators.BaseGenerator import BaseGenerator
 
 LOT_SIZES = {
     "BANKNIFTY": 30, "NIFTY": 25, "FINNIFTY": 40,
@@ -14,7 +15,7 @@ STRATEGY_TYPE_ID = "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
 QTY_DISTRIBUTIONS = {"Fix", "Capital(%)", "Capital Risk(%)", "Allocation Method 1"}
 
 
-class ISBPayloadGenerator:
+class ISBPayloadGenerator(BaseGenerator):
 
     def generate_payload(self, strategy_json):
         raw_name = strategy_json.get("strategyName", "ISB_Strategy")

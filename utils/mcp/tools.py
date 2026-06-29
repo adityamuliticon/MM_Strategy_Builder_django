@@ -34,36 +34,36 @@ from services.deploy import (
 )
 
 # ── Module-specific service imports ───────────────────────────────────────────
-from Unified_Strategy_Builder.services.validator   import validator     as _usb_validator
-from Unified_Strategy_Builder.services.generator   import generator     as _usb_generator
-from Unified_Strategy_Builder.services.market_maya import market_maya   as _usb_market_maya
+from utils.validation.USBValidator  import validator       as _usb_validator
+from utils.generators.USBGenerator  import generator       as _usb_generator
+from utils.market_maya.USBMarketMaya import market_maya    as _usb_market_maya
 
-from multi_leg_hedger.services.validator   import mlh_validator
-from multi_leg_hedger.services.generator   import mlh_generator
-from multi_leg_hedger.services.market_maya import mlh_market_maya
-from multi_leg_hedger.services.backtest    import (
+from utils.validation.MLHValidator  import mlh_validator
+from utils.generators.MLHGenerator  import mlh_generator
+from utils.market_maya.MLHMarketMaya import mlh_market_maya
+from services.backtest import (
     get_backtest_options as _mlh_get_backtest_options,
     run_backtest         as _mlh_run_backtest,
     get_backtest_result  as _mlh_get_backtest_result,
 )
 
-from rapid_execution_scalper.services.validator   import res_validator
-from rapid_execution_scalper.services.generator   import res_generator
-from rapid_execution_scalper.services.market_maya import res_market_maya
-from rapid_execution_scalper.services.backtest    import (
+from utils.validation.RESValidator  import res_validator
+from utils.generators.RESGenerator  import res_generator
+from utils.market_maya.RESMarketMaya import res_market_maya
+from services.backtest import (
     get_backtest_options as _res_get_backtest_options,
     run_backtest         as _res_run_backtest,
     get_backtest_result  as _res_get_backtest_result,
 )
 
-from inbound_signal_bridge.services.validator   import isb_validator
-from inbound_signal_bridge.services.generator   import isb_generator
-from inbound_signal_bridge.services.market_maya import isb_market_maya
+from utils.validation.ISBValidator  import isb_validator
+from utils.generators.ISBGenerator  import isb_generator
+from utils.market_maya.ISBMarketMaya import isb_market_maya
 
-from indicator_engine.services.validator   import ise_validator
-from indicator_engine.services.generator   import ise_generator
-from indicator_engine.services.market_maya import ise_market_maya
-from indicator_engine.services.backtest    import (
+from utils.validation.ISEValidator  import ise_validator
+from utils.generators.ISEGenerator  import ise_generator
+from utils.market_maya.ISEMarketMaya import ise_market_maya
+from services.backtest import (
     get_backtest_options as _ise_get_backtest_options,
     run_backtest         as _ise_run_backtest,
     get_backtest_result  as _ise_get_backtest_result,

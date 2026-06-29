@@ -1,7 +1,9 @@
 """RES strategy validator — checks required fields for scalping/jobbing strategy configuration."""
 
+from utils.validation.BaseValidator import BaseValidator
 
-class RESValidator:
+
+class RESValidator(BaseValidator):
 
     def validate_strategy(self, strategy_json):
         errors = []

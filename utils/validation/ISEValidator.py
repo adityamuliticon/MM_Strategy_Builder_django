@@ -1,5 +1,7 @@
 """ISE strategy validator — checks required fields, allowed values, and indicator configuration."""
 
+from utils.validation.BaseValidator import BaseValidator
+
 VALID_EXCHANGES = ["NSE", "NFO", "BFO", "BSE", "MCX", "CDS"]
 VALID_SEGMENTS = ["FUT", "OPT", "EQ"]
 VALID_CONTRACTS = ["NEAR", "NEXT", "FAR"]
@@ -13,10 +15,8 @@ VALID_PRODUCTS = ["MIS", "NRML", "CNC", "MTF"]
 
 
 def _get_valid_indicator_codes():
-    # H-12: derive valid codes from the same master JSON the generator uses,
-    # so adding a new indicator to indicator_master.json automatically unlocks it here too.
     try:
-        from indicator_engine.services.generator import _MASTER_LIST
+        from utils.generators.ISEGenerator import _MASTER_LIST
         codes = {entry.get("indicatorCode") or entry.get("indicator_code") or entry.get("code")
                  for entry in _MASTER_LIST if entry}
         codes.discard(None)
@@ -24,7 +24,6 @@ def _get_valid_indicator_codes():
             return codes
     except Exception:
         pass
-    # Fallback list (used only if master JSON is unavailable)
     return {
         "supertrend", "ma-cross-over", "rsi", "macd", "stochastic", "bollinger-bands",
         "hammer", "morning-star", "evening-star",
@@ -33,7 +32,7 @@ def _get_valid_indicator_codes():
     }
 
 
-class ISEValidator:
+class ISEValidator(BaseValidator):
     def validate_strategy(self, strategy_json):
         errors = []
 
