@@ -36,11 +36,11 @@ from services.deploy import (
 # ── Module-specific service imports ───────────────────────────────────────────
 from utils.validation.USBValidator  import validator       as _usb_validator
 from utils.generators.USBGenerator  import generator       as _usb_generator
-from utils.market_maya.USBMarketMaya import market_maya    as _usb_market_maya
+from strategys.market_maya.market_maya import market_maya      as _usb_market_maya
 
 from utils.validation.MLHValidator  import mlh_validator
 from utils.generators.MLHGenerator  import mlh_generator
-from utils.market_maya.MLHMarketMaya import mlh_market_maya
+from strategys.market_maya.market_maya import mlh_market_maya
 from services.backtest import (
     get_backtest_options as _mlh_get_backtest_options,
     run_backtest         as _mlh_run_backtest,
@@ -49,7 +49,7 @@ from services.backtest import (
 
 from utils.validation.RESValidator  import res_validator
 from utils.generators.RESGenerator  import res_generator
-from utils.market_maya.RESMarketMaya import res_market_maya
+from strategys.market_maya.market_maya import res_market_maya
 from services.backtest import (
     get_backtest_options as _res_get_backtest_options,
     run_backtest         as _res_run_backtest,
@@ -58,11 +58,11 @@ from services.backtest import (
 
 from utils.validation.ISBValidator  import isb_validator
 from utils.generators.ISBGenerator  import isb_generator
-from utils.market_maya.ISBMarketMaya import isb_market_maya
+from strategys.market_maya.market_maya import isb_market_maya
 
 from utils.validation.ISEValidator  import ise_validator
 from utils.generators.ISEGenerator  import ise_generator
-from utils.market_maya.ISEMarketMaya import ise_market_maya
+from strategys.market_maya.market_maya import ise_market_maya
 from services.backtest import (
     get_backtest_options as _ise_get_backtest_options,
     run_backtest         as _ise_run_backtest,
