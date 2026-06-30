@@ -62,6 +62,13 @@ class Config:
     # USD → INR conversion rate
     USD_TO_INR_RATE = float(os.getenv("USD_TO_INR_RATE", "95.71"))
 
+    # PostgreSQL
+    DB_NAME     = os.getenv("DB_NAME", "mm_strategy_builder")
+    DB_USER     = os.getenv("DB_USER", "postgres")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_HOST     = os.getenv("DB_HOST", "localhost")
+    DB_PORT     = os.getenv("DB_PORT", "5432")
+
     # Django — H-2: SECRET_KEY must be set; DEBUG must be explicitly enabled in .env
     _secret = os.getenv("SECRET_KEY", "")
     if not _secret:

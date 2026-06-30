@@ -51,24 +51,14 @@ WSGI_APPLICATION = 'mm_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'logs' / 'chat_history.db',
-        'OPTIONS': {
-            'timeout': 30,  # wait up to 30s for write lock under concurrent load
-        },
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': Config.DB_NAME,
+        'USER': Config.DB_USER,
+        'PASSWORD': Config.DB_PASSWORD,
+        'HOST': Config.DB_HOST,
+        'PORT': Config.DB_PORT,
     }
 }
-
-# Enable WAL mode on every new SQLite connection — allows concurrent readers
-# while a write is in progress, critical for 50-slot queue throughput.
-from django.db.backends.signals import connection_created
-
-def _sqlite_wal(sender, connection, **kwargs):
-    if connection.vendor == 'sqlite':
-        connection.cursor().execute('PRAGMA journal_mode=WAL;')
-        connection.cursor().execute('PRAGMA synchronous=NORMAL;')
-
-connection_created.connect(_sqlite_wal)
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'

@@ -13,3 +13,4 @@ jsonref
 websocket-client==1.8.0
 gunicorn
 gevent
+psycopg2-binary
