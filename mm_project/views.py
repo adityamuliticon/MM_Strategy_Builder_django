@@ -2,7 +2,7 @@
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.http import JsonResponse
-from marketmaya.Operations import Operations
+from marketmaya.operations import Operations
 get_strategies = Operations.get_strategies
 
 STRATEGY_TYPE_IDS = {

@@ -100,7 +100,7 @@ def _llm_side_effect(**kw):
 # Only the final self.client.chat.completions.create is replaced.
 print("  Loading orchestrators and patching LLM client...", flush=True)
 
-from utils.Orchestrator.orchestrators import (
+from utils.orchestrator.orchestrators import (
     mlh_orchestrator,
     orchestrator as usb_orchestrator,
     res_orchestrator,

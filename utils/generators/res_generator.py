@@ -3,7 +3,7 @@
 import re
 import time
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
-from utils.generators.BaseGenerator import BaseGenerator
+from utils.generators.base_generator import BaseGenerator
 
 LOT_SIZES = {
     "BANKNIFTY": 30, "NIFTY": 65, "FINNIFTY": 40,

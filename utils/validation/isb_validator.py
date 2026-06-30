@@ -1,6 +1,6 @@
 """ISB strategy validator — checks required fields and ISB-specific leg constraints."""
 
-from utils.validation.BaseValidator import BaseValidator
+from utils.validation.base_validator import BaseValidator
 
 VALID_SEGMENTS = {"FUT", "OPT", "EQ"}
 VALID_EXCHANGES = {"NSE", "NFO", "BFO", "BSE", "MCX", "CDS"}

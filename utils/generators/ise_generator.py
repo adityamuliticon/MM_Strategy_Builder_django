@@ -5,7 +5,7 @@ import os
 import re
 import time
 from services.exchange_resolver import resolve_leg_exchange
-from utils.generators.BaseGenerator import BaseGenerator
+from utils.generators.base_generator import BaseGenerator
 
 # ── Lot sizes per symbol ────────────────────────────────────────────────────
 LOT_SIZES = {

@@ -16,8 +16,8 @@ Future migration path:
     MLH  → same pattern
 """
 
-from marketmaya.Auth import Auth
-from marketmaya.Operations import Operations
+from marketmaya.auth import Auth
+from marketmaya.operations import Operations
 
 
 class MarketMaya:

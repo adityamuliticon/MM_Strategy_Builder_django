@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.utils.timezone import now
 
-from utils.Orchestrator.orchestrators import (
+from utils.orchestrator.orchestrators import (
     orchestrator,
     mlh_orchestrator,
     res_orchestrator,
@@ -9,7 +9,7 @@ from utils.Orchestrator.orchestrators import (
     ise_orchestrator,
 )
 from strategys.views.common import make_chat_views
-from marketmaya.Operations import Operations
+from marketmaya.operations import Operations
 
 get_strategies = Operations.get_strategies
 get_balance    = Operations.get_balance

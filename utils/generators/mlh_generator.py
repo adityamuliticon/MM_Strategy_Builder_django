@@ -3,7 +3,7 @@
 import random
 import string
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
-from utils.generators.BaseGenerator import BaseGenerator
+from utils.generators.base_generator import BaseGenerator
 
 STRATEGY_TYPE_ID = "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$"
 

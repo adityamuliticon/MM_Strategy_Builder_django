@@ -6,7 +6,7 @@ import re
 import time
 from config import Config
 from services.exchange_resolver import resolve_exchange_segment
-from utils.generators.BaseGenerator import BaseGenerator
+from utils.generators.base_generator import BaseGenerator
 
 
 class PayloadGenerator(BaseGenerator):

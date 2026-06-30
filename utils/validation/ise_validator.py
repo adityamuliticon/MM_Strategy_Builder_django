@@ -1,6 +1,6 @@
 """ISE strategy validator — checks required fields, allowed values, and indicator configuration."""
 
-from utils.validation.BaseValidator import BaseValidator
+from utils.validation.base_validator import BaseValidator
 
 VALID_EXCHANGES = ["NSE", "NFO", "BFO", "BSE", "MCX", "CDS"]
 VALID_SEGMENTS = ["FUT", "OPT", "EQ"]
@@ -16,7 +16,7 @@ VALID_PRODUCTS = ["MIS", "NRML", "CNC", "MTF"]
 
 def _get_valid_indicator_codes():
     try:
-        from utils.generators.ISEGenerator import _MASTER_LIST
+        from utils.generators.ise_generator import _MASTER_LIST
         codes = {entry.get("indicatorCode") or entry.get("indicator_code") or entry.get("code")
                  for entry in _MASTER_LIST if entry}
         codes.discard(None)

@@ -1,6 +1,6 @@
 """USB strategy validator — checks required fields and allowed values before payload generation."""
 
-from utils.validation.BaseValidator import BaseValidator
+from utils.validation.base_validator import BaseValidator
 
 _STRIKE_TYPE_MAP = {
     "ATM":              "Strike By ATM Value",

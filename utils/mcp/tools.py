@@ -20,7 +20,7 @@ handler classes map the unqualified LLM tool_name to the right function.
 
 # ── Shared service imports ─────────────────────────────────────────────────────
 from utils.rag.retriever import common_retriever
-from marketmaya.Operations import Operations as _Ops
+from marketmaya.operations import Operations as _Ops
 _get_strategies      = _Ops.get_strategies
 _delete_strategy     = _Ops.delete_strategy
 _get_strategy_record = _Ops.get_strategy_record
@@ -34,12 +34,12 @@ from services.deploy import (
 )
 
 # ── Module-specific service imports ───────────────────────────────────────────
-from utils.validation.USBValidator  import validator       as _usb_validator
-from utils.generators.USBGenerator  import generator       as _usb_generator
+from utils.validation.usb_validator  import validator       as _usb_validator
+from utils.generators.usb_generator  import generator       as _usb_generator
 from strategys.market_maya.market_maya import market_maya      as _usb_market_maya
 
-from utils.validation.MLHValidator  import mlh_validator
-from utils.generators.MLHGenerator  import mlh_generator
+from utils.validation.mlh_validator  import mlh_validator
+from utils.generators.mlh_generator  import mlh_generator
 from strategys.market_maya.market_maya import mlh_market_maya
 from services.backtest import (
     get_backtest_options as _mlh_get_backtest_options,
@@ -47,8 +47,8 @@ from services.backtest import (
     get_backtest_result  as _mlh_get_backtest_result,
 )
 
-from utils.validation.RESValidator  import res_validator
-from utils.generators.RESGenerator  import res_generator
+from utils.validation.res_validator  import res_validator
+from utils.generators.res_generator  import res_generator
 from strategys.market_maya.market_maya import res_market_maya
 from services.backtest import (
     get_backtest_options as _res_get_backtest_options,
@@ -56,12 +56,12 @@ from services.backtest import (
     get_backtest_result  as _res_get_backtest_result,
 )
 
-from utils.validation.ISBValidator  import isb_validator
-from utils.generators.ISBGenerator  import isb_generator
+from utils.validation.isb_validator  import isb_validator
+from utils.generators.isb_generator  import isb_generator
 from strategys.market_maya.market_maya import isb_market_maya
 
-from utils.validation.ISEValidator  import ise_validator
-from utils.generators.ISEGenerator  import ise_generator
+from utils.validation.ise_validator  import ise_validator
+from utils.generators.ise_generator  import ise_generator
 from strategys.market_maya.market_maya import ise_market_maya
 from services.backtest import (
     get_backtest_options as _ise_get_backtest_options,

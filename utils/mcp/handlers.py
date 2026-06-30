@@ -12,7 +12,7 @@ Handler classes:
   ISEToolHandler     — Indicator Signal Engine  → singleton: ise_handler
 """
 
-from marketmaya.Operations import Operations as shared
+from marketmaya.operations import Operations as shared
 
 from utils.mcp.tools import (
     # USB

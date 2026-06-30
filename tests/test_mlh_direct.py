@@ -20,8 +20,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.generators.MLHGenerator import mlh_generator, STRATEGY_TYPE_ID
-from utils.validation.MLHValidator import mlh_validator
+from utils.generators.mlh_generator import mlh_generator, STRATEGY_TYPE_ID
+from utils.validation.mlh_validator import mlh_validator
 from datetime import datetime
 
 

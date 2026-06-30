@@ -1,6 +1,6 @@
-from utils.Orchestrator.BaseOrchestrator import BaseOrchestrator
-from utils.Orchestrator.StrategiesOrchestrator import StrategiesOrchestrator
-from utils.Orchestrator.orchestrators import (
+from utils.orchestrator.base_orchestrator import BaseOrchestrator
+from utils.orchestrator.strategies_orchestrator import StrategiesOrchestrator
+from utils.orchestrator.orchestrators import (
     orchestrator,
     mlh_orchestrator,
     res_orchestrator,

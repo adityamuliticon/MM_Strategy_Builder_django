@@ -2,8 +2,8 @@
 
 import re
 
-from utils.Orchestrator.BaseOrchestrator import BaseOrchestrator
-from utils.Orchestrator.StrategiesOrchestrator import StrategiesOrchestrator
+from utils.orchestrator.base_orchestrator import BaseOrchestrator
+from utils.orchestrator.strategies_orchestrator import StrategiesOrchestrator
 from utils.rag.retriever import common_retriever
 from utils.mcp.handlers import dispatch_usb_tool, mlh_handler, res_handler, isb_handler, ise_handler
 from prompts.usb_prompt import USB_SYSTEM_PROMPT

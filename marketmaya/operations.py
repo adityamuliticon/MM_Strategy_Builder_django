@@ -16,7 +16,7 @@ import requests
 
 from config import Config
 from services.session_context import log_api_call
-from marketmaya.Auth import Auth
+from marketmaya.auth import Auth
 
 
 def _request(method: str, url: str, *, payload=None, params=None, headers=None) -> tuple:
