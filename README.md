@@ -53,25 +53,25 @@ MM_Strategy_Builder_django/
 │       └── market_maya.py             # All 5 Market Maya API clients (USB, MLH, RES, ISB, ISE)
 │
 ├── utils/                             # Shared infrastructure
-│   ├── Orchestrator/
-│   │   ├── BaseOrchestrator.py        # Template method: process_message + stream_message
-│   │   ├── StrategiesOrchestrator.py  # Concrete orchestrator with Runware AI + MCP routing
+│   ├── orchestrator/
+│   │   ├── base_orchestrator.py       # Template method: process_message + stream_message
+│   │   ├── strategies_orchestrator.py # Concrete orchestrator with Runware AI + MCP routing
 │   │   └── orchestrators.py           # 5 singleton orchestrator instances
 │   ├── generators/
-│   │   ├── BaseGenerator.py
-│   │   ├── USBGenerator.py            # V3 payload builder for USB
-│   │   ├── MLHGenerator.py
-│   │   ├── RESGenerator.py
-│   │   ├── ISBGenerator.py
-│   │   ├── ISEGenerator.py
+│   │   ├── base_generator.py
+│   │   ├── usb_generator.py           # V3 payload builder for USB
+│   │   ├── mlh_generator.py
+│   │   ├── res_generator.py
+│   │   ├── isb_generator.py
+│   │   ├── ise_generator.py
 │   │   └── indicator_master.json      # Indicator names → MM API IDs + parameter definitions
 │   ├── validation/
-│   │   ├── BaseValidator.py
-│   │   ├── USBValidator.py
-│   │   ├── MLHValidator.py
-│   │   ├── RESValidator.py
-│   │   ├── ISBValidator.py
-│   │   └── ISEValidator.py
+│   │   ├── base_validator.py
+│   │   ├── usb_validator.py
+│   │   ├── mlh_validator.py
+│   │   ├── res_validator.py
+│   │   ├── isb_validator.py
+│   │   └── ise_validator.py
 │   ├── mcp/
 │   │   ├── tools.py                   # All MCP tool functions for all 5 plugins
 │   │   └── handlers.py                # MCP tool dispatch handlers
@@ -99,8 +99,8 @@ MM_Strategy_Builder_django/
 │   └── ise_prompt.py
 │
 ├── marketmaya/                        # Market Maya API client library
-│   ├── Auth.py                        # Login + bearer token management
-│   ├── Operations.py                  # get_strategies, delete, modify, rename, balance
+│   ├── auth.py                        # Login + bearer token management
+│   ├── operations.py                  # get_strategies, delete, modify, rename, balance
 │   └── main.py
 │
 ├── users/                             # Auth Django app
