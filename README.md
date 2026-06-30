@@ -22,7 +22,8 @@ An AI-powered trading strategy builder for the **Market Maya API**. Five strateg
 - **AI**: Runware AI (OpenAI-compatible API)
 - **Vector DB**: FAISS + HuggingFace Embeddings (`all-MiniLM-L6-v2`)
 - **Protocol**: Model Context Protocol (MCP)
-- **Chat Logs**: SQLite via Django ORM (`chat_logs` app)
+- **Database**: PostgreSQL (Django ORM via `psycopg2-binary`)
+- **Cache**: Redis — chat history cache-aside (TTL 24 h, max 20 messages per user/module)
 - **Production Server**: Gunicorn + gevent workers
 - **Frontend**: HTML5, Vanilla CSS (Glassmorphism, dark/light mode), JavaScript (SSE streaming)
 
@@ -88,6 +89,7 @@ MM_Strategy_Builder_django/
 │   ├── request_queue.py               # Global semaphore — limits concurrent LLM API calls
 │   ├── session_context.py             # Per-user session memory
 │   ├── view_helpers.py                # setup_user_context, get_history, save_messages
+│   ├── redis_client.py                # Singleton Redis client (lazy init from Config)
 │   ├── token_service.py               # Bearer token refresh + caching
 │   └── crypto.py                      # Credential encryption
 │
@@ -140,8 +142,7 @@ MM_Strategy_Builder_django/
 │   ├── run_mlh_tests.py
 │   └── reports/                       # Saved test run outputs
 │
-└── logs/
-    └── chat_history.db                # SQLite chat log database
+└── logs/                              # Application logs (runtime output)
 ```
 
 ---
@@ -151,6 +152,8 @@ MM_Strategy_Builder_django/
 ### 1. Prerequisites
 
 - Python 3.10+
+- PostgreSQL 13+ (running locally or remote)
+- Redis 6+ (running locally — `sudo apt install redis-server` on Ubuntu)
 - Market Maya Bearer Token
 - Runware AI API Key
 
@@ -171,10 +174,27 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-RUNWARE_API_KEY=your_runware_key
-RUNWARE_MODEL_ID=your_model_id
-MARKET_MAYA_BEARER_TOKEN=your_market_maya_token
 SECRET_KEY=your_django_secret
+DEBUG=False
+
+# AI — leave empty to disable AI calls during testing (no charges incurred)
+RUNWARE_API_KEY=
+RUNWARE_MODEL_ID=
+
+MARKET_MAYA_BEARER_TOKEN=your_market_maya_token
+MM_ENCRYPTION_KEY=your_fernet_key
+
+# PostgreSQL
+DB_NAME=mm_strategy_builder
+DB_USER=postgres
+DB_PASSWORD=your_pg_password
+DB_HOST=localhost
+DB_PORT=5432
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
 
 # Optional — override defaults
 COST_PER_1M_INPUT_USD=0.25
@@ -182,15 +202,25 @@ COST_PER_1M_OUTPUT_USD=1.50
 USD_TO_INR_RATE=95.71
 ```
 
-> Leave `RUNWARE_API_KEY` and `RUNWARE_MODEL_ID` empty to disable AI calls during testing (no charges incurred).
+Generate a Fernet key with:
+```bash
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
 
-### 4. Run Migrations
+### 4. Set Up PostgreSQL
+
+```bash
+sudo -u postgres psql -c "CREATE DATABASE mm_strategy_builder;"
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'your_pg_password';"
+```
+
+### 5. Run Migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Build RAG Index
+### 6. Build RAG Index
 
 Run once to build the FAISS vector store from the documentation:
 
@@ -198,7 +228,17 @@ Run once to build the FAISS vector store from the documentation:
 python -c "from utils.rag.ingest import ingest_docs; ingest_docs()"
 ```
 
-### 6. Run
+### 7. Start Redis
+
+```bash
+# Ubuntu/Debian
+sudo systemctl start redis-server
+
+# Verify
+redis-cli ping   # should print PONG
+```
+
+### 8. Run
 
 **Development:**
 ```bash
@@ -221,7 +261,7 @@ Open `http://localhost:8000` — navigate between plugins from the sidebar.
 3. **Preview** — AI generates structured Markdown tables matching the Market Maya UI tabs
 4. **Confirmation** — User reviews and approves (confirm / yes / proceed / save)
 5. **Deployment** — `generator.py` builds the production payload, `market_maya.py` POSTs to the API
-6. **Logging** — Every interaction is saved to SQLite with token counts and INR cost
+6. **Logging** — Every interaction is saved to PostgreSQL with token counts and INR cost
 
 ---
 
@@ -318,7 +358,7 @@ The exchange resolver (`services/exchange_resolver.py`) encodes all Market Maya 
 
 ## Chat Log
 
-Every message across all plugins is tracked in `logs/chat_history.db`:
+Every message across all plugins is stored in PostgreSQL (`chat_logs` Django app):
 
 | Field | Description |
 |-------|-------------|
@@ -332,6 +372,23 @@ Every message across all plugins is tracked in `logs/chat_history.db`:
 | `model_used` | Runware model ID |
 
 Accessible at `/logs/` (dashboard) or `/logs/api/` (JSON API).
+
+---
+
+## Redis Cache
+
+Chat history is served from Redis on every request — PostgreSQL is only hit on a cache miss.
+
+| Setting | Value |
+|---------|-------|
+| Key pattern | `chat_history:{user_id}:{module}` |
+| TTL | 86 400 s (24 hours) |
+| Max messages per key | 20 (oldest trimmed automatically) |
+
+**Flow:**
+- `get_history()` — checks Redis first; on miss, fetches from PostgreSQL and warms the cache
+- `save_messages()` — writes to PostgreSQL, then pushes both messages to the Redis list via pipeline
+- **Graceful degradation** — all Redis operations are wrapped in `try/except`; if Redis is unavailable the app transparently falls back to PostgreSQL with no downtime
 
 ---
 

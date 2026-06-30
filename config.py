@@ -62,6 +62,11 @@ class Config:
     # USD → INR conversion rate
     USD_TO_INR_RATE = float(os.getenv("USD_TO_INR_RATE", "95.71"))
 
+    # Redis
+    REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+    REDIS_DB   = int(os.getenv("REDIS_DB", "0"))
+
     # PostgreSQL
     DB_NAME     = os.getenv("DB_NAME", "mm_strategy_builder")
     DB_USER     = os.getenv("DB_USER", "postgres")

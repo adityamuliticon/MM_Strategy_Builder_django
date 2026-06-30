@@ -1,7 +1,15 @@
 """Shared helpers used by all 5 module chat views."""
 
+import json
 from django.http import JsonResponse
 from services.session_context import set_session_id, set_user_token, set_user_id
+
+_HISTORY_TTL = 86400   # 24 hours
+_HISTORY_MAX = 20      # messages kept in Redis per user/module
+
+
+def _redis_key(user_id, module):
+    return f"chat_history:{user_id}:{module}"
 
 
 def setup_user_context(request, module):
@@ -49,21 +57,63 @@ def setup_user_context(request, module):
 
 
 def get_history(user_id, module, limit=10):
-    """Return the last `limit` messages for (user, module) as [{role, content}, ...]."""
+    """Return the last `limit` messages for (user, module).
+    Redis is checked first; falls back to PostgreSQL on miss.
+    """
+    try:
+        from services.redis_client import get_redis
+        r = get_redis()
+        key = _redis_key(user_id, module)
+        raw = r.lrange(key, -limit, -1)
+        if raw:
+            return [json.loads(m) for m in raw]
+    except Exception:
+        pass
+
+    # Cache miss — fetch from PostgreSQL and warm the cache
     from chat_logs.models import ChatMessage
     msgs = (
         ChatMessage.objects
         .filter(user_id=user_id, module=module)
         .order_by('-timestamp')[:limit]
     )
-    return [{"role": m.role, "content": m.content} for m in reversed(list(msgs))]
+    history = [{"role": m.role, "content": m.content} for m in reversed(list(msgs))]
+
+    try:
+        from services.redis_client import get_redis
+        r = get_redis()
+        key = _redis_key(user_id, module)
+        pipe = r.pipeline()
+        pipe.delete(key)
+        for msg in history:
+            pipe.rpush(key, json.dumps(msg))
+        pipe.ltrim(key, -_HISTORY_MAX, -1)
+        pipe.expire(key, _HISTORY_TTL)
+        pipe.execute()
+    except Exception:
+        pass
+
+    return history
 
 
 def save_messages(user_id, module, user_msg, ai_msg):
-    """Persist a user/assistant exchange to ChatMessage."""
+    """Persist a user/assistant exchange to PostgreSQL and update Redis cache."""
     from chat_logs.models import ChatMessage
     ChatMessage.objects.create(user_id=user_id, module=module, role='user', content=user_msg)
     ChatMessage.objects.create(user_id=user_id, module=module, role='assistant', content=ai_msg)
+
+    try:
+        from services.redis_client import get_redis
+        r = get_redis()
+        key = _redis_key(user_id, module)
+        pipe = r.pipeline()
+        pipe.rpush(key, json.dumps({"role": "user", "content": user_msg}))
+        pipe.rpush(key, json.dumps({"role": "assistant", "content": ai_msg}))
+        pipe.ltrim(key, -_HISTORY_MAX, -1)
+        pipe.expire(key, _HISTORY_TTL)
+        pipe.execute()
+    except Exception:
+        pass
 
 
 class _AuthError(Exception):
