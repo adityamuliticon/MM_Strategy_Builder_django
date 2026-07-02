@@ -1,9 +1,9 @@
 import os
 import sys
 from pathlib import Path
-from config import Config
+from marketmaya.config import Config
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 
 SECRET_KEY = Config.SECRET_KEY
 
@@ -32,7 +32,7 @@ SESSION_COOKIE_AGE = 86400 * 7   # 7 days
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
-ROOT_URLCONF = 'mm_project.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
@@ -47,7 +47,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mm_project.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
     'default': {
@@ -66,7 +66,6 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

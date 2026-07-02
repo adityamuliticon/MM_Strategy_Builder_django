@@ -1,7 +1,7 @@
 """Fernet symmetric encryption for storing user credentials securely."""
 
 from cryptography.fernet import Fernet, InvalidToken
-from config import Config
+from marketmaya.config import Config
 
 
 def _fernet():

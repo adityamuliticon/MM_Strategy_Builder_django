@@ -3,15 +3,14 @@
 import json
 import math
 import re
-import time
-from config import Config
+from marketmaya.config import Config
 from services.exchange_resolver import resolve_exchange_segment
 from utils.generators.base_generator import BaseGenerator
 
 
 class PayloadGenerator(BaseGenerator):
     def __init__(self):
-        self.strategy_type_id = "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$"
+        self.strategy_type_id = Config.STRATEGY_TYPE_IDS["usb"]
 
     def generate_v3_payload(self, main_params, legs):
         symbol_raw = main_params.get("symbol", main_params.get("mainSymbol", main_params.get("underlying", "NIFTY")))
@@ -105,7 +104,7 @@ class PayloadGenerator(BaseGenerator):
 
         payload = {
             "id": "",
-            "strategyName": re.sub(r'_\d{4}$', '', main_params.get("strategyName", main_params.get("strategy_name", "Strategy"))) + f"_{int(time.time()) % 10000}",
+            "strategyName": main_params.get("strategyName", main_params.get("strategy_name", "Strategy")),
             "underlying": underlying,
             "mainExchange": exchange,
             "mainSegment": segment,

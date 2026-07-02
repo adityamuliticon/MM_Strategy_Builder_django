@@ -32,9 +32,6 @@ _today    = datetime.today()
 BT_END    = _today.strftime("%Y-%m-%d")
 BT_START  = (_today - timedelta(days=30)).strftime("%Y-%m-%d")
 
-# 5-digit tag so names don't collide across runs
-RUN_TAG = str(int(time.time()))[-5:]
-
 MODULE_URLS = {
     "USB": "/api/chat/stream",
     "ISE": "/indicator/api/chat/stream",
@@ -43,17 +40,11 @@ MODULE_URLS = {
     "MLH": "/hedger/api/chat/stream",
 }
 
-# Base names — AI appends its own 4-digit suffix, so we track the real name
-# after parsing the preview.
-BASE_NAMES = {
-    "USB": f"FlowUSB{RUN_TAG}",
-    "ISE": f"FlowISE{RUN_TAG}",
-    "ISB": f"FlowISB{RUN_TAG}",
-    "RES": f"FlowRES{RUN_TAG}",
-    "MLH": f"FlowMLH{RUN_TAG}",
-}
+# Populated after login by build_names() using live strategy counts from MM.
+# Format: usb_001, ise_042, mlh_018, etc.
+BASE_NAMES: dict[str, str] = {}
 
-# Holds the actual names after the AI adds its suffix
+# Tracks the current name per module (updated after rename steps).
 ACTUAL_NAMES: dict[str, str] = {}
 
 # ─── Creation prompts — module-specific strategy types ────────────────────────
@@ -221,21 +212,6 @@ def step(session, url, mod, name, msg, *,
     return text, statuses
 
 
-# ─── Strategy name extractor ──────────────────────────────────────────────────
-def extract_name(text: str, base: str) -> str:
-    """
-    The AI appends a random 4-digit suffix, e.g. FlowUSB17696_3948.
-    Find the longest match starting with the base prefix in the preview text.
-    """
-    prefix = base[:8]                         # "FlowUSB1"
-    pattern = rf'\b({re.escape(prefix)}\w*)\b'
-    matches = re.findall(pattern, text, re.IGNORECASE)
-    if matches:
-        # Return the longest match (most complete name)
-        return max(matches, key=len)
-    return base
-
-
 # ─── Login ────────────────────────────────────────────────────────────────────
 def login(base_url: str) -> requests.Session:
     s = requests.Session()
@@ -252,20 +228,45 @@ def login(base_url: str) -> requests.Session:
     return s
 
 
+# ─── Build strategy names from live MM counts ─────────────────────────────────
+def build_names(session: requests.Session, base_url: str) -> dict[str, str]:
+    """
+    Query /api/strategy-counts/ to get current counts per module,
+    then return names like usb_042, mlh_018 (count + 1, zero-padded to 3 digits).
+    Falls back to timestamp-based names if the endpoint is unreachable.
+    """
+    try:
+        r = session.get(f"{base_url}/api/strategy-counts/", timeout=30)
+        if r.status_code == 200:
+            counts = r.json()
+            names = {
+                mod: f"{mod.lower()}_{(counts.get(mod.lower()) or 0) + 1:03d}"
+                for mod in ("USB", "ISE", "ISB", "RES", "MLH")
+            }
+            print(f"{GRN}✓{RST} Strategy names for this run:")
+            for mod, name in names.items():
+                print(f"    {mod}: {YEL}{name}{RST}")
+            return names
+    except Exception as e:
+        print(f"{YEL}⚠ Could not fetch strategy counts ({e}), using fallback names{RST}")
+
+    # Fallback: use last-5-digits of timestamp
+    tag = str(int(time.time()))[-5:]
+    return {mod: f"{mod.lower()}_{tag}" for mod in ("USB", "ISE", "ISB", "RES", "MLH")}
+
+
 # ─── Per-module flows ─────────────────────────────────────────────────────────
 
 def test_usb(session, base_url):
     mod = "USB"; url = base_url + MODULE_URLS[mod]
-    base = BASE_NAMES[mod]
-    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   base name: {base}\n{'─'*65}")
+    name = BASE_NAMES[mod]
+    ACTUAL_NAMES[mod] = name
+    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   name: {name}\n{'─'*65}")
 
     # 1. CREATE — expect markdown preview tables
     t, _ = step(session, url, mod, "1. Create (preview)",
-                CREATE_PROMPTS[mod].format(name=base),
+                CREATE_PROMPTS[mod].format(name=name),
                 must_contain="---", timeout=90)
-    name = extract_name(t, base)
-    ACTUAL_NAMES[mod] = name
-    print(f"         {YEL}→ actual name: {name}{RST}")
     if not t.strip(): return
 
     # 2. SAVE
@@ -280,7 +281,7 @@ def test_usb(session, base_url):
     # turn 2: confirm
     if d.strip() and REFUSED not in d:
         step(session, url, mod, "3. Deploy (confirm proceed)",
-             "proceed",
+             "yes deploy it",
              must_contain=["deployed", "Deploy", "successfully"], timeout=60)
 
     # 4. MODIFY
@@ -306,16 +307,14 @@ def test_usb(session, base_url):
 
 def test_ise(session, base_url):
     mod = "ISE"; url = base_url + MODULE_URLS[mod]
-    base = BASE_NAMES[mod]
-    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   base name: {base}\n{'─'*65}")
+    name = BASE_NAMES[mod]
+    ACTUAL_NAMES[mod] = name
+    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   name: {name}\n{'─'*65}")
 
     # 1. CREATE
     t, _ = step(session, url, mod, "1. Create (preview)",
-                CREATE_PROMPTS[mod].format(name=base),
+                CREATE_PROMPTS[mod].format(name=name),
                 must_contain="---", timeout=90)
-    name = extract_name(t, base)
-    ACTUAL_NAMES[mod] = name
-    print(f"         {YEL}→ actual name: {name}{RST}")
     if not t.strip(): return
 
     # 2. SAVE
@@ -357,16 +356,14 @@ def test_ise(session, base_url):
 
 def test_isb(session, base_url):
     mod = "ISB"; url = base_url + MODULE_URLS[mod]
-    base = BASE_NAMES[mod]
-    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   base name: {base}\n{'─'*65}")
+    name = BASE_NAMES[mod]
+    ACTUAL_NAMES[mod] = name
+    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   name: {name}\n{'─'*65}")
 
     # 1. CREATE
     t, _ = step(session, url, mod, "1. Create (preview)",
-                CREATE_PROMPTS[mod].format(name=base),
+                CREATE_PROMPTS[mod].format(name=name),
                 must_contain="---", timeout=90)
-    name = extract_name(t, base)
-    ACTUAL_NAMES[mod] = name
-    print(f"         {YEL}→ actual name: {name}{RST}")
     if not t.strip(): return
 
     # 2. SAVE
@@ -397,16 +394,14 @@ def test_isb(session, base_url):
 
 def test_res(session, base_url):
     mod = "RES"; url = base_url + MODULE_URLS[mod]
-    base = BASE_NAMES[mod]
-    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   base name: {base}\n{'─'*65}")
+    name = BASE_NAMES[mod]
+    ACTUAL_NAMES[mod] = name
+    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   name: {name}\n{'─'*65}")
 
     # 1. CREATE (averaging/jobbing — RES-specific format)
     t, _ = step(session, url, mod, "1. Create (preview)",
-                CREATE_PROMPTS[mod].format(name=base),
+                CREATE_PROMPTS[mod].format(name=name),
                 must_contain="---", timeout=90)
-    name = extract_name(t, base)
-    ACTUAL_NAMES[mod] = name
-    print(f"         {YEL}→ actual name: {name}{RST}")
     if not t.strip(): return
 
     # 2. SAVE
@@ -420,7 +415,7 @@ def test_res(session, base_url):
                 must_contain=["Balance", "pts"], timeout=60)
     if d.strip() and REFUSED not in d:
         step(session, url, mod, "3. Deploy (confirm proceed)",
-             "proceed",
+             "yes deploy it",
              must_contain=["deployed", "Deploy", "successfully"], timeout=60)
 
     # 4. MODIFY
@@ -446,16 +441,14 @@ def test_res(session, base_url):
 
 def test_mlh(session, base_url):
     mod = "MLH"; url = base_url + MODULE_URLS[mod]
-    base = BASE_NAMES[mod]
-    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   base name: {base}\n{'─'*65}")
+    name = BASE_NAMES[mod]
+    ACTUAL_NAMES[mod] = name
+    print(f"\n{'─'*65}\n  {BLD}{mod}{RST}   name: {name}\n{'─'*65}")
 
     # 1. CREATE
     t, _ = step(session, url, mod, "1. Create (preview)",
-                CREATE_PROMPTS[mod].format(name=base),
+                CREATE_PROMPTS[mod].format(name=name),
                 must_contain="---", timeout=90)
-    name = extract_name(t, base)
-    ACTUAL_NAMES[mod] = name
-    print(f"         {YEL}→ actual name: {name}{RST}")
     if not t.strip(): return
 
     # 2. SAVE
@@ -469,7 +462,7 @@ def test_mlh(session, base_url):
                 must_contain=["Balance", "pts"], timeout=60)
     if d.strip() and REFUSED not in d:
         step(session, url, mod, "3. Deploy (confirm proceed)",
-             "proceed",
+             "yes deploy it",
              must_contain=["deployed", "Deploy", "successfully"], timeout=60)
 
     # 4. MODIFY
@@ -518,22 +511,22 @@ def test_delete_two(session, base_url):
         print(f"  {YEL}⚠ Cannot proceed — list failed{RST}")
         return
 
-    # Pick the 2 flow-test strategies to delete
-    # Use renamed names if rename succeeded, otherwise original
-    del1 = ACTUAL_NAMES.get("USB", BASE_NAMES["USB"])
-    del2 = ACTUAL_NAMES.get("MLH", BASE_NAMES["MLH"])
+    # Pick 2 strategies that were never deployed (safe to delete directly).
+    # Use renamed names if rename succeeded, otherwise original.
+    del1 = ACTUAL_NAMES.get("ISE", BASE_NAMES["ISE"])
+    del2 = ACTUAL_NAMES.get("ISB", BASE_NAMES["ISB"])
 
     for label, dname in [("A", del1), ("B", del2)]:
         # turn 1: ask to delete
         ask, _ = step(session, url, "USB", f"Delete {label} (ask): {dname}",
                       f"delete strategy {dname}",
-                      must_contain=["delete", "sure", "confirm", "permanently"],
+                      must_contain=["delete", "sure", "permanently"],
                       timeout=60)
         # turn 2: confirm
         if ask.strip() and REFUSED not in ask:
             step(session, url, "USB", f"Delete {label} (confirm)",
                  "yes delete it confirmed",
-                 must_contain=["delet", "success", "removed"],
+                 must_contain=["delet", "success"],
                  timeout=60)
 
 
@@ -549,12 +542,13 @@ def main():
     print("═" * 65)
     print(f"  {BLD}FULL CHATBOT FLOW TEST — ALL 5 MODULES{RST}")
     print(f"  server : {base}")
-    print(f"  run tag: {RUN_TAG}")
     print(f"  backtest window: {BT_START} → {BT_END}")
     print("═" * 65)
     print()
 
     session = login(base)
+
+    BASE_NAMES.update(build_names(session, base))
 
     test_usb(session, base)
     test_ise(session, base)

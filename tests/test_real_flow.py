@@ -21,7 +21,7 @@ import os, sys, json, time, statistics, threading
 from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mm_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
 import warnings; warnings.filterwarnings("ignore")
 
@@ -34,7 +34,7 @@ def section(t): print(); print(hr()); print(f"  {t}"); print(hr())
 
 # ── STEP 0 — Show Runware config ─────────────────────────────────────────────
 section("STEP 0  Runware config check")
-from config import Config
+from marketmaya.config import Config
 api_set   = bool(Config.RUNWARE_API_KEY)
 model_set = bool(Config.RUNWARE_MODEL_ID)
 print(f"  RUNWARE_API_KEY   = {'✓ SET (real API calls)' if api_set   else '(empty) — will fail!'}")

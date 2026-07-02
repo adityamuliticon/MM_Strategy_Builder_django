@@ -1,0 +1,985 @@
+openapi: 3.0.3
+
+info:
+  title: Market Maya Strategy Builder
+  description: |
+    AI-powered trading strategy builder backend. Five strategy modules accept
+    plain-English instructions via REST/SSE and translate them into Market Maya
+    API calls. Market Maya's own UI consumes these endpoints directly.
+
+    **Authentication** — call `POST /auth/login/` to obtain a session cookie.
+    All endpoints except auth and admin require this cookie.
+    Unauthenticated requests receive `401 {"error": "Not authenticated"}`.
+
+    **Streaming** — `/api/chat/stream` endpoints return `text/event-stream`.
+    Each line is `data: <json>` where the JSON has a `t` field:
+    - `chunk` — incremental text token (field `v`)
+    - `done` — stream complete (fields `in_tok`, `out_tok`, `task_id`)
+    - `error` — stream failed (field `v` with error message)
+  version: "1.0.0"
+  contact:
+    name: Aditya & Antigravity AI
+
+servers:
+  - url: http://localhost:8000
+    description: Development
+  - url: https://your-production-domain.com
+    description: Production
+
+security:
+  - cookieAuth: []
+
+tags:
+  - name: Auth
+    description: Login and logout
+  - name: Chat — USB
+    description: "Unified Strategy Builder — straddles, strangles, iron condors, covered calls, range breakouts, BTST/STBT"
+  - name: Chat — ISE
+    description: "Indicator Signal Engine — SuperTrend, MA CrossOver, RSI, MACD, Bollinger Bands + Backtest"
+  - name: Chat — ISB
+    description: "Inbound Signal Bridge — webhook/TradingView signal execution"
+  - name: Chat — RES
+    description: "Rapid Execution Scalper — step-based averaging and jobbing strategies"
+  - name: Chat — MLH
+    description: "Multi-Leg Hedger — Normal, Range Breakout, BTST/STBT modes (up to 10 legs)"
+  - name: Strategy Data
+    description: Strategy counts, point balance, chat history
+  - name: System
+    description: Internal server metrics
+  - name: Logs
+    description: Chat logs and Market Maya API call logs
+  - name: Admin
+    description: Admin authentication
+
+components:
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+      description: Django session cookie. Obtained from `POST /auth/login/`.
+
+  schemas:
+
+    # ── Requests ──────────────────────────────────────────────────────────────
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          example: yourpassword
+
+    ChatRequest:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          description: Plain-English strategy instruction or follow-up message
+          example: "BankNifty ATM straddle, 1 lot each leg, MIS, combined SL 5000"
+
+    AdminLoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          example: aditya
+        password:
+          type: string
+          example: "12345"
+
+    # ── Responses ─────────────────────────────────────────────────────────────
+
+    LoginResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        display_name:
+          type: string
+          example: John
+
+    ChatResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          description: Full AI response in Markdown format
+          example: "Here is your strategy preview:\n\n| Leg | Symbol | Strike | Type |..."
+
+    StrategyCountsResponse:
+      type: object
+      properties:
+        usb:
+          type: integer
+          nullable: true
+          example: 5
+        ise:
+          type: integer
+          nullable: true
+          example: 2
+        isb:
+          type: integer
+          nullable: true
+          example: 1
+        res:
+          type: integer
+          nullable: true
+          example: 0
+        mlh:
+          type: integer
+          nullable: true
+          example: 3
+
+    BalanceResponse:
+      type: object
+      properties:
+        point_balance:
+          type: number
+          nullable: true
+          example: 247.5
+
+    HistoryMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+          example: user
+        content:
+          type: string
+          example: "BankNifty straddle..."
+        ts:
+          type: string
+          format: date-time
+          example: "2026-06-30T10:00:00+05:30"
+
+    HistoryResponse:
+      type: object
+      properties:
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryMessage'
+
+    QueueStatsResponse:
+      type: object
+      properties:
+        waiting:
+          type: integer
+          description: Requests queued waiting for a slot
+          example: 0
+        active:
+          type: integer
+          description: Requests currently being processed
+          example: 1
+        total_processed:
+          type: integer
+          description: Total requests processed since server start
+          example: 142
+
+    ChatLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        timestamp:
+          type: string
+          format: date-time
+        module:
+          type: string
+          enum: [USB, ISE, ISB, RES, MLH]
+        session_id:
+          type: string
+          example: abc123_USB
+        user_message:
+          type: string
+        ai_response:
+          type: string
+        input_tokens:
+          type: integer
+          example: 120
+        output_tokens:
+          type: integer
+          example: 340
+        total_tokens:
+          type: integer
+          example: 460
+        cost_usd:
+          type: number
+          format: float
+          example: 0.00054
+        cost_inr:
+          type: number
+          format: float
+          example: 0.0517
+        model_used:
+          type: string
+          example: "google:gemini@3.1-flash-lite"
+
+    LogTotals:
+      type: object
+      properties:
+        total_requests:
+          type: number
+        total_input_tokens:
+          type: number
+        total_output_tokens:
+          type: number
+        total_tokens:
+          type: number
+        total_cost_inr:
+          type: number
+        total_cost_usd:
+          type: number
+
+    LogsResponse:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatLog'
+        totals:
+          $ref: '#/components/schemas/LogTotals'
+
+    APICallLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        module:
+          type: string
+          enum: [USB, ISE, ISB, RES, MLH]
+        call_type:
+          type: string
+          description: Type of Market Maya API call
+          example: create_strategy
+        endpoint:
+          type: string
+          example: "https://webapi.marketmaya.com/api/mainStrategy/CreateUnifiedStrategy"
+        method:
+          type: string
+          enum: [GET, POST, PUT, DELETE, PATCH]
+        response_status:
+          type: integer
+          example: 200
+        duration_ms:
+          type: integer
+          example: 340
+        status:
+          type: string
+          enum: [success, error, connection_error]
+        session_id:
+          type: string
+        request_payload:
+          type: string
+          nullable: true
+        response_body:
+          type: string
+          nullable: true
+
+    APICallLogsResponse:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/APICallLog'
+        total:
+          type: integer
+
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Not authenticated
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+
+paths:
+
+  # ── Auth ────────────────────────────────────────────────────────────────────
+
+  /auth/login/:
+    post:
+      tags: [Auth]
+      summary: Log in with Market Maya credentials
+      description: |
+        Authenticates via the Market Maya login API, creates a Django session,
+        and stores the bearer token encrypted in the database.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: "Login successful — Set-Cookie: sessionid=... header returned"
+          headers:
+            Set-Cookie:
+              description: Django session cookie (HttpOnly)
+              schema:
+                type: string
+                example: sessionid=abc123; HttpOnly; Path=/
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Market Maya API unreachable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/logout/:
+    post:
+      tags: [Auth]
+      summary: Log out and clear session
+      security: []
+      responses:
+        '200':
+          description: Session cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  # ── Chat — USB ──────────────────────────────────────────────────────────────
+
+  /api/chat:
+    post:
+      tags: [Chat — USB]
+      summary: Blocking chat
+      description: |
+        Send a plain-English message to the **Unified Strategy Builder**.
+        Returns the complete AI response once generation finishes.
+
+        The AI follows a **confirm-before-act** pattern — it will show a strategy
+        preview first, then create/deploy only after the user confirms.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              create:
+                summary: Create a strategy
+                value:
+                  message: "BankNifty ATM straddle, 1 lot each leg, MIS, combined SL 5000"
+              confirm:
+                summary: Confirm and save
+                value:
+                  message: "confirm"
+              list:
+                summary: List strategies
+                value:
+                  message: "show my strategies"
+              deploy:
+                summary: Deploy a strategy
+                value:
+                  message: "deploy strategy BankNifty Straddle"
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Invalid JSON or empty message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/chat/stream:
+    post:
+      tags: [Chat — USB]
+      summary: SSE streaming chat
+      description: |
+        Same as `/api/chat` but streams the response token-by-token using
+        **Server-Sent Events** (`Content-Type: text/event-stream`).
+
+        Each event line: `data: <json>\n\n`
+
+        | `t` value | Fields | Meaning |
+        |-----------|--------|---------|
+        | `chunk` | `v: string` | Incremental text token |
+        | `done` | `in_tok`, `out_tok`, `task_id` | Stream complete |
+        | `error` | `v: string` | Stream failed |
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                example: |
+                  data: {"t": "chunk", "v": "Here is your strategy"}
+
+                  data: {"t": "chunk", "v": " preview..."}
+
+                  data: {"t": "done", "in_tok": 120, "out_tok": 340, "task_id": ""}
+
+        '400':
+          description: Invalid JSON or empty message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Chat — ISE ──────────────────────────────────────────────────────────────
+
+  /indicator/api/chat:
+    post:
+      tags: [Chat — ISE]
+      summary: Blocking chat
+      description: |
+        Send a plain-English message to the **Indicator Signal Engine**.
+
+        Supports indicator-driven strategies (SuperTrend, MA CrossOver, RSI, MACD,
+        Bollinger Bands, candlestick patterns) and **Backtest** capability.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              create:
+                summary: Create indicator strategy
+                value:
+                  message: "Nifty SuperTrend strategy, 1 lot, 15 min timeframe, ATR period 7"
+              backtest:
+                summary: Run backtest
+                value:
+                  message: "backtest my BankNifty SuperTrend strategy for 6 months"
+              backtest_result:
+                summary: View stored backtest result
+                value:
+                  message: "show backtest result for my strategy"
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /indicator/api/chat/stream:
+    post:
+      tags: [Chat — ISE]
+      summary: SSE streaming chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE stream (same format as `/api/chat/stream`)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Chat — ISB ──────────────────────────────────────────────────────────────
+
+  /bridge/api/chat:
+    post:
+      tags: [Chat — ISB]
+      summary: Blocking chat
+      description: |
+        Send a plain-English message to the **Inbound Signal Bridge**.
+
+        Configure webhook/TradingView signal execution — define legs once,
+        all legs fire on every inbound signal.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              create:
+                summary: Create bridge strategy
+                value:
+                  message: "BankNifty ATM CE buy on signal, SL 50 points, target 100 points, NRML"
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /bridge/api/chat/stream:
+    post:
+      tags: [Chat — ISB]
+      summary: SSE streaming chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE stream (same format as `/api/chat/stream`)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Chat — RES ──────────────────────────────────────────────────────────────
+
+  /scalper/api/chat:
+    post:
+      tags: [Chat — RES]
+      summary: Blocking chat
+      description: |
+        Send a plain-English message to the **Rapid Execution Scalper**.
+
+        Supports **Scalper** and **Jobbing** sub-modes. Defines a main symbol
+        and configurable steps that add position size at regular price intervals.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              create:
+                summary: Create scalper strategy
+                value:
+                  message: "Nifty futures scalper, 1 lot main, 3 steps at 50 point intervals, MIS"
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /scalper/api/chat/stream:
+    post:
+      tags: [Chat — RES]
+      summary: SSE streaming chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE stream (same format as `/api/chat/stream`)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Chat — MLH ──────────────────────────────────────────────────────────────
+
+  /hedger/api/chat:
+    post:
+      tags: [Chat — MLH]
+      summary: Blocking chat
+      description: |
+        Send a plain-English message to the **Multi-Leg Hedger**.
+
+        Three modes: **Normal**, **Range Breakout**, **BTST/STBT**.
+        Supports up to 10 independent option legs per strategy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              normal:
+                summary: Normal hedger
+                value:
+                  message: "BankNifty normal hedger, buy ATM CE and PE, sell 500 OTM CE and PE, 1 lot each, MIS"
+              range_breakout:
+                summary: Range breakout
+                value:
+                  message: "Nifty range breakout hedger, entry range 100 points, 1 lot, NRML"
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /hedger/api/chat/stream:
+    post:
+      tags: [Chat — MLH]
+      summary: SSE streaming chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE stream (same format as `/api/chat/stream`)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Strategy Data ────────────────────────────────────────────────────────────
+
+  /api/strategy-counts/:
+    get:
+      tags: [Strategy Data]
+      summary: Strategy counts per module
+      description: |
+        Returns the number of saved strategies for each of the 5 modules.
+        Also updates the cached count in the user's `UserBearerToken` record.
+      responses:
+        '200':
+          description: Strategy counts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrategyCountsResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/balance/:
+    get:
+      tags: [Strategy Data]
+      summary: Market Maya point balance
+      description: |
+        Returns the authenticated user's current Market Maya point balance.
+        Also updates the cached balance in the user's `UserBearerToken` record.
+      responses:
+        '200':
+          description: Point balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/history/:
+    get:
+      tags: [Strategy Data]
+      summary: Chat history for a user and module
+      description: |
+        Returns the last 100 chat messages for the authenticated user and the
+        specified module. Served from **Redis** (TTL 24 h); falls back to
+        PostgreSQL on a cache miss and re-warms the cache automatically.
+      parameters:
+        - name: module
+          in: query
+          description: Module code to fetch history for
+          schema:
+            type: string
+            enum: [USB, ISE, ISB, RES, MLH]
+            default: USB
+          example: USB
+      responses:
+        '200':
+          description: Chat history (chronological order)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── System ───────────────────────────────────────────────────────────────────
+
+  /api/queue-stats/:
+    get:
+      tags: [System]
+      summary: LLM request queue status
+      description: |
+        Returns the current state of the global semaphore that limits concurrent
+        AI calls to prevent resource exhaustion.
+      responses:
+        '200':
+          description: Queue statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueStatsResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Logs ─────────────────────────────────────────────────────────────────────
+
+  /logs/api/:
+    get:
+      tags: [Logs]
+      summary: Chat logs
+      description: |
+        Returns up to **500** chat log records with optional module and date
+        filters, plus aggregated totals for the filtered set.
+      parameters:
+        - name: module
+          in: query
+          description: Filter by module
+          schema:
+            type: string
+            enum: [USB, ISE, ISB, RES, MLH]
+        - name: date_from
+          in: query
+          description: Start date inclusive (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+          example: "2026-06-01"
+        - name: date_to
+          in: query
+          description: End date inclusive (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+          example: "2026-06-30"
+      responses:
+        '200':
+          description: Chat logs and aggregated totals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogsResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /logs/api-calls/api/:
+    get:
+      tags: [Logs]
+      summary: Market Maya API call logs
+      description: |
+        Returns up to **500** Market Maya API call log records with optional
+        filters. Useful for debugging failed strategy creates/deploys.
+      parameters:
+        - name: module
+          in: query
+          schema:
+            type: string
+            enum: [USB, ISE, ISB, RES, MLH]
+          description: Filter by module
+        - name: call_type
+          in: query
+          schema:
+            type: string
+          description: "Filter by call type (e.g. create_strategy, deploy, backtest)"
+          example: create_strategy
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [success, error, connection_error]
+          description: Filter by status
+        - name: session_id
+          in: query
+          schema:
+            type: string
+          description: Filter by session ID (partial match)
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Start date inclusive (YYYY-MM-DD)
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+          description: End date inclusive (YYYY-MM-DD)
+      responses:
+        '200':
+          description: API call logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APICallLogsResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ── Admin ────────────────────────────────────────────────────────────────────
+
+  /admin-auth/:
+    post:
+      tags: [Admin]
+      summary: Admin login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginRequest'
+      responses:
+        '200':
+          description: Admin login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin-logout/:
+    post:
+      tags: [Admin]
+      summary: Admin logout
+      security: []
+      responses:
+        '200':
+          description: Admin session cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'

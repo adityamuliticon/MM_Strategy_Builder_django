@@ -1,20 +1,14 @@
 import json
 import base64
 import requests
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
-from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
-from django.db.models import Sum, Count
 
 from users.models import AppUser, UserBearerToken
-from config import Config
-
-
-_ADMIN_USERNAME = "aditya"
-_ADMIN_PASSWORD = "12345"
+from marketmaya.config import Config
 
 
 def _decode_jwt_exp(token: str):
@@ -30,13 +24,7 @@ def _decode_jwt_exp(token: str):
     return None
 
 
-# ── Login / Logout ────────────────────────────────────────────────────────────
-
-def login_page(request):
-    if request.session.get('user_id'):
-        return redirect('/')
-    return render(request, 'login.html')
-
+# ── Auth ──────────────────────────────────────────────────────────────────────
 
 @csrf_exempt
 def auth_login(request):
@@ -116,7 +104,7 @@ def auth_login(request):
 
 def auth_logout(request):
     request.session.flush()
-    return redirect('/login/')
+    return JsonResponse({'status': 'logged_out'})
 
 
 # ── Chat history API ──────────────────────────────────────────────────────────
@@ -140,106 +128,3 @@ def history_api(request):
     ]
     return JsonResponse({'history': history})
 
-
-# ── Admin Panel ───────────────────────────────────────────────────────────────
-
-def admin_login_page(request):
-    if request.session.get('admin_logged_in'):
-        return redirect('/admin-panel/')
-    return render(request, 'admin_login.html')
-
-
-@csrf_exempt
-def admin_auth_login(request):
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
-    try:
-        data = json.loads(request.body)
-    except (json.JSONDecodeError, ValueError):
-        return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-    if data.get('username') == _ADMIN_USERNAME and data.get('password') == _ADMIN_PASSWORD:
-        request.session['admin_logged_in'] = True
-        return JsonResponse({'status': 'ok'})
-    return JsonResponse({'error': 'Invalid credentials'}, status=401)
-
-
-def admin_logout(request):
-    request.session.pop('admin_logged_in', None)
-    return redirect('/admin-login/')
-
-
-def admin_panel(request):
-    if not request.session.get('admin_logged_in'):
-        return redirect('/admin-login/')
-
-    from chat_logs.models import ChatLog, APICallLog, ChatMessage
-
-    users = list(AppUser.objects.all().order_by('-last_login'))
-
-    msg_counts = {
-        r['user_id']: r['cnt']
-        for r in ChatMessage.objects.values('user_id').annotate(cnt=Count('id'))
-    }
-    api_counts = {
-        r['user_id']: r['cnt']
-        for r in APICallLog.objects.exclude(user_id=None).values('user_id').annotate(cnt=Count('id'))
-    }
-    token_totals = {
-        r['user_id']: r['tot']
-        for r in ChatLog.objects.exclude(user_id=None).values('user_id').annotate(tot=Sum('total_tokens'))
-    }
-    cost_usd_totals = {
-        r['user_id']: float(r['tot'])
-        for r in ChatLog.objects.exclude(user_id=None).values('user_id').annotate(tot=Sum('cost_usd'))
-    }
-    cost_inr_totals = {
-        r['user_id']: float(r['tot'])
-        for r in ChatLog.objects.exclude(user_id=None).values('user_id').annotate(tot=Sum('cost_inr'))
-    }
-
-    threshold = now() - timedelta(days=30)
-    active_count = 0
-    user_rows = []
-    for u in users:
-        is_active = bool(u.last_login and u.last_login >= threshold)
-        if is_active:
-            active_count += 1
-        token_record = UserBearerToken.objects.filter(user=u).first()
-        token_expires = token_record.expires_at if token_record else None
-        point_balance = token_record.cached_point_balance if token_record else None
-        strategy_counts = token_record.cached_strategy_counts if token_record else None
-        data_cached_at = token_record.data_cached_at if token_record else None
-        user_rows.append({
-            'id': str(u.id),
-            'email': u.email,
-            'display_name': u.display_name or u.email.split('@')[0],
-            'last_login': u.last_login,
-            'is_active': is_active,
-            'token_expires': token_expires,
-            'messages': msg_counts.get(u.id, 0),
-            'api_calls': api_counts.get(u.id, 0),
-            'tokens': token_totals.get(u.id, 0) or 0,
-            'cost_usd': round(cost_usd_totals.get(u.id, 0.0), 6),
-            'cost_inr': round(cost_inr_totals.get(u.id, 0.0), 4),
-            'point_balance': point_balance,
-            'strategy_counts': strategy_counts,
-            'data_cached_at': data_cached_at,
-        })
-
-    total_tokens = ChatLog.objects.aggregate(t=Sum('total_tokens'))['t'] or 0
-    total_cost_usd = float(ChatLog.objects.aggregate(t=Sum('cost_usd'))['t'] or 0)
-    total_cost_inr = float(ChatLog.objects.aggregate(t=Sum('cost_inr'))['t'] or 0)
-
-    context = {
-        'users': user_rows,
-        'total_users': len(user_rows),
-        'active_users': active_count,
-        'inactive_users': len(user_rows) - active_count,
-        'total_messages': ChatMessage.objects.count(),
-        'total_api_calls': APICallLog.objects.count(),
-        'total_tokens': total_tokens,
-        'total_cost_usd': round(total_cost_usd, 6),
-        'total_cost_inr': round(total_cost_inr, 4),
-    }
-    return render(request, 'admin_panel.html', context)

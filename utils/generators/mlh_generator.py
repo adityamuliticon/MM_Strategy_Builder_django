@@ -1,11 +1,10 @@
 """MLH payload generator — converts LLM-structured multi-leg hedger JSON into the Market Maya CreateMultiLegCallPutStrategy schema."""
 
-import random
-import string
+from marketmaya.config import Config
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
 from utils.generators.base_generator import BaseGenerator
 
-STRATEGY_TYPE_ID = "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$"
+STRATEGY_TYPE_ID = Config.STRATEGY_TYPE_IDS["mlh"]
 
 LOT_SIZES = {
     "BANKNIFTY": 30, "NIFTY": 65, "FINNIFTY": 40, "MIDCPNIFTY": 75,
@@ -106,7 +105,7 @@ class MLHPayloadGenerator(BaseGenerator):
         sqroff_all_legs = bool(s.get("sqroff_all_legs", False))
         return {
             "id": "",
-            "strategyName": s.get("strategy_name", f"MLH_{''.join(random.choices(string.digits, k=4))}"),
+            "strategyName": s.get("strategy_name", "MLH_Strategy"),
             "shortDescription": s.get("short_description", ""),
             "longDescription": s.get("long_description", ""),
             "exchange": ul_exchange,

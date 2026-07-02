@@ -1,6 +1,6 @@
 from datetime import datetime
 from marketmaya import MarketMaya
-from config import Config
+from marketmaya.config import Config
 from services.base_market_maya import BaseMarketMayaService
 
 # ── USB ───────────────────────────────────────────────────────────────────────

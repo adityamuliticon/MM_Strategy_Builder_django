@@ -62,6 +62,15 @@ class Config:
     # USD → INR conversion rate
     USD_TO_INR_RATE = float(os.getenv("USD_TO_INR_RATE", "95.71"))
 
+    # Strategy master IDs (Market Maya API identifiers for each module)
+    STRATEGY_TYPE_IDS = {
+        "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
+        "ise": "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$",
+        "isb": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
+        "res": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
+        "mlh": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
+    }
+
     # Redis
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
@@ -70,7 +79,7 @@ class Config:
     # PostgreSQL
     DB_NAME     = os.getenv("DB_NAME", "mm_strategy_builder")
     DB_USER     = os.getenv("DB_USER", "postgres")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
     DB_HOST     = os.getenv("DB_HOST", "localhost")
     DB_PORT     = os.getenv("DB_PORT", "5432")
 

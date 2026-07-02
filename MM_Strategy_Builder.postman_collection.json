@@ -1,0 +1,323 @@
+{
+  "info": {
+    "name": "MM Strategy Builder",
+    "_postman_id": "mm-strategy-builder-v1",
+    "description": "All API endpoints for MM Strategy Builder Django backend.\n\n**How to use:**\n1. Set the `baseUrl` variable (default: http://127.0.0.1:8000)\n2. Run **Auth → Login** first — Postman saves the session cookie automatically\n3. All other requests will use that cookie for authentication",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"your@email.com\",\n  \"password\": \"yourpassword\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login/", "host": ["{{baseUrl}}"], "path": ["auth", "login", ""] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/auth/logout/", "host": ["{{baseUrl}}"], "path": ["auth", "logout", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "USB — Unified Strategy Builder",
+      "item": [
+        {
+          "name": "Chat (single response)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create a NIFTY options strategy: BUY CE ATM, 1 lot, target ₹500, SL ₹300\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/chat", "host": ["{{baseUrl}}"], "path": ["api", "chat"] }
+          }
+        },
+        {
+          "name": "Chat Stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create a NIFTY options strategy: BUY CE ATM, 1 lot, target ₹500, SL ₹300\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["api", "chat", "stream"] }
+          }
+        },
+        {
+          "name": "Strategy Counts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/strategy-counts/", "host": ["{{baseUrl}}"], "path": ["api", "strategy-counts", ""] }
+          }
+        },
+        {
+          "name": "Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/balance/", "host": ["{{baseUrl}}"], "path": ["api", "balance", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ISE — Indicator Signal Engine",
+      "item": [
+        {
+          "name": "Chat (single response)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create an indicator strategy for NIFTY: buy when RSI 14 crosses above 30, sell when it crosses below 70\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/indicator/api/chat", "host": ["{{baseUrl}}"], "path": ["indicator", "api", "chat"] }
+          }
+        },
+        {
+          "name": "Chat Stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create an indicator strategy for NIFTY: buy when RSI 14 crosses above 30, sell when it crosses below 70\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/indicator/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["indicator", "api", "chat", "stream"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ISB — Inbound Signal Bridge",
+      "item": [
+        {
+          "name": "Chat (single response)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create an inbound signal bridge strategy for NIFTY NSE Options, BUY 1 lot CE ATM on signal\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/bridge/api/chat", "host": ["{{baseUrl}}"], "path": ["bridge", "api", "chat"] }
+          }
+        },
+        {
+          "name": "Chat Stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create an inbound signal bridge strategy for NIFTY NSE Options, BUY 1 lot CE ATM on signal\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/bridge/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["bridge", "api", "chat", "stream"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "RES — Rapid Execution Scalper",
+      "item": [
+        {
+          "name": "Chat (single response)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create a BANKNIFTY FUT jobbing strategy: BUY side, average every 100 pts, target 50 pts, max 5 steps\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/scalper/api/chat", "host": ["{{baseUrl}}"], "path": ["scalper", "api", "chat"] }
+          }
+        },
+        {
+          "name": "Chat Stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create a BANKNIFTY FUT jobbing strategy: BUY side, average every 100 pts, target 50 pts, max 5 steps\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/scalper/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["scalper", "api", "chat", "stream"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MLH — Multi-Leg Hedger",
+      "item": [
+        {
+          "name": "Chat (single response)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create an iron condor on NIFTY: SELL CE ATM+100, BUY CE ATM+200, SELL PE ATM-100, BUY PE ATM-200, 1 lot each\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/hedger/api/chat", "host": ["{{baseUrl}}"], "path": ["hedger", "api", "chat"] }
+          }
+        },
+        {
+          "name": "Chat Stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Create an iron condor on NIFTY: SELL CE ATM+100, BUY CE ATM+200, SELL PE ATM-100, BUY PE ATM-200, 1 lot each\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/hedger/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["hedger", "api", "chat", "stream"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat History",
+      "item": [
+        {
+          "name": "Get History — USB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/history/?module=USB",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history", ""],
+              "query": [{ "key": "module", "value": "USB" }]
+            }
+          }
+        },
+        {
+          "name": "Get History — ISE",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/history/?module=ISE",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history", ""],
+              "query": [{ "key": "module", "value": "ISE" }]
+            }
+          }
+        },
+        {
+          "name": "Get History — ISB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/history/?module=ISB",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history", ""],
+              "query": [{ "key": "module", "value": "ISB" }]
+            }
+          }
+        },
+        {
+          "name": "Get History — RES",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/history/?module=RES",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history", ""],
+              "query": [{ "key": "module", "value": "RES" }]
+            }
+          }
+        },
+        {
+          "name": "Get History — MLH",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/history/?module=MLH",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "history", ""],
+              "query": [{ "key": "module", "value": "MLH" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "item": [
+        {
+          "name": "Chat Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/logs/api/", "host": ["{{baseUrl}}"], "path": ["logs", "api", ""] }
+          }
+        },
+        {
+          "name": "API Call Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/logs/api-calls/api/", "host": ["{{baseUrl}}"], "path": ["logs", "api-calls", "api", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Queue Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/queue-stats/", "host": ["{{baseUrl}}"], "path": ["api", "queue-stats", ""] }
+          }
+        },
+        {
+          "name": "OpenAPI Spec (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/openapi.json", "host": ["{{baseUrl}}"], "path": ["openapi.json"] }
+          }
+        },
+        {
+          "name": "ReDoc Docs (browser)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/docs/", "host": ["{{baseUrl}}"], "path": ["docs", ""] }
+          }
+        }
+      ]
+    }
+  ]
+}

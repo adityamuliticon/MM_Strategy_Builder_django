@@ -14,7 +14,7 @@ import time
 
 import requests
 
-from config import Config
+from marketmaya.config import Config
 from services.session_context import log_api_call
 from marketmaya.auth import Auth
 

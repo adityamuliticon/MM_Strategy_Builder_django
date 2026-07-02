@@ -1,5 +1,5 @@
 import redis
-from config import Config
+from marketmaya.config import Config
 
 _client = None
 

@@ -2,37 +2,27 @@
 Shared view factory for all 5 strategy module chat interfaces.
 
 All chat/stream logic lives here once.
-Each strategy's views file calls make_chat_views() with its 3 config values
-and gets back ready-to-use (index, chat, chat_stream) view functions.
+Each strategy's views file calls make_chat_views() with its module + orchestrator
+and gets back ready-to-use (chat, chat_stream) view functions.
 """
 
 import json
-from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from chat_logs.models import ChatLog
-from config import Config
+from marketmaya.config import Config
 from services.view_helpers import setup_user_context, get_history, save_messages, _AuthError
 from services.request_queue import request_queue
 
 
-def make_chat_views(module, orchestrator, template, pass_user_id=False):
+def make_chat_views(module, orchestrator):
     """
-    Returns (index, chat, chat_stream) views configured for the given module.
+    Returns (chat, chat_stream) views configured for the given module.
 
     module       — module code string: 'USB', 'MLH', 'RES', 'ISB', 'ISE'
     orchestrator — the singleton orchestrator instance for this module
-    template     — Django template name rendered by index()
-    pass_user_id — True for USB only: adds user_id to the index template context
     """
-
-    def index(request):
-        display_name = request.session.get('display_name', '')
-        ctx = {'display_name': display_name}
-        if pass_user_id:
-            ctx['user_id'] = request.session.get('user_id', '')
-        return render(request, template, ctx)
 
     @csrf_exempt
     def chat(request):
@@ -139,4 +129,4 @@ def make_chat_views(module, orchestrator, template, pass_user_id=False):
         response['X-Accel-Buffering'] = 'no'
         return response
 
-    return index, chat, chat_stream
+    return chat, chat_stream

@@ -7,7 +7,7 @@ import os
 import json
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mm_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
 import django
 django.setup()
@@ -18,7 +18,7 @@ from services.deploy import (
     _auth_headers,
 )
 from services.token_service import get_valid_token
-from config import Config
+from marketmaya.config import Config
 import requests
 import websocket
 import threading

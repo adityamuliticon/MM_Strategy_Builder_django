@@ -16,7 +16,7 @@ import requests
 import base64
 import websocket
 from datetime import datetime
-from config import Config
+from marketmaya.config import Config
 from marketmaya.operations import Operations
 get_strategies = Operations.get_strategies
 

@@ -2,8 +2,7 @@
 
 import json
 import os
-import re
-import time
+from marketmaya.config import Config
 from services.exchange_resolver import resolve_leg_exchange
 from utils.generators.base_generator import BaseGenerator
 
@@ -29,15 +28,13 @@ for _entry in _MASTER_LIST:
         short = code.replace("candlestick-", "", 1)
         INDICATOR_MASTER[short] = _entry
 
-STRATEGY_TYPE_ID = "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$"
+STRATEGY_TYPE_ID = Config.STRATEGY_TYPE_IDS["ise"]
 
 
 class ISEPayloadGenerator(BaseGenerator):
 
     def generate_payload(self, strategy_json):
-        # ── Strategy name — append fresh 4-digit suffix ──────────────────────
-        raw_name = strategy_json.get("strategyName", "ISE_Strategy")
-        strategy_name = re.sub(r'_\d{4}$', '', raw_name) + f"_{int(time.time()) % 10000}"
+        strategy_name = strategy_json.get("strategyName", "ISE_Strategy")
 
         # ── Trading type ─────────────────────────────────────────────────────
         is_intraday = bool(strategy_json.get("isIntraday", True))

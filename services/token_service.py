@@ -24,7 +24,7 @@ import time
 import requests
 from datetime import datetime, timezone, timedelta
 
-from config import Config
+from marketmaya.config import Config
 
 _refresh_lock = threading.Lock()
 

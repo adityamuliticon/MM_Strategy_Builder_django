@@ -1,13 +1,13 @@
 # Market Maya Strategy Builder
 
-An AI-powered trading strategy builder for the **Market Maya API**. Five strategy plugins — each with its own AI orchestrator, RAG pipeline, and MCP tool layer — let traders describe strategies in plain English and deploy them directly to Market Maya with a single confirmation.
+A pure **API backend** that powers AI-driven trading strategy creation on the **Market Maya** platform. Five strategy modules — each with its own AI orchestrator, RAG pipeline, and MCP tool layer — accept plain-English instructions via REST/SSE and translate them into Market Maya API calls. Market Maya's own UI consumes these endpoints directly.
 
 ---
 
-## Plugins
+## Modules
 
-| Plugin | URL | Description |
-|--------|-----|-------------|
+| Module | Base URL | Description |
+|--------|----------|-------------|
 | **Unified Strategy Builder (USB)** | `/` | Multi-leg options/futures strategies — straddles, strangles, iron condors, covered calls, range breakouts, BTST/STBT |
 | **Indicator Signal Engine (ISE)** | `/indicator/` | Indicator-driven strategies — SuperTrend, MA CrossOver, RSI, MACD, Bollinger Bands, candlestick patterns — plus **Backtest** |
 | **Inbound Signal Bridge (ISB)** | `/bridge/` | Webhook/TradingView signal execution — configure legs once, fire all on every inbound signal |
@@ -25,7 +25,6 @@ An AI-powered trading strategy builder for the **Market Maya API**. Five strateg
 - **Database**: PostgreSQL (Django ORM via `psycopg2-binary`)
 - **Cache**: Redis — chat history cache-aside (TTL 24 h, max 20 messages per user/module)
 - **Production Server**: Gunicorn + gevent workers
-- **Frontend**: HTML5, Vanilla CSS (Glassmorphism, dark/light mode), JavaScript (SSE streaming)
 
 ---
 
@@ -35,21 +34,18 @@ An AI-powered trading strategy builder for the **Market Maya API**. Five strateg
 MM_Strategy_Builder_django/
 ├── manage.py
 ├── requirements.txt
-├── config.py                          # API keys, URLs, cost rates, lot sizes
+├── settings.py                        # Django settings
+├── urls.py                            # Root URL dispatcher — all routes defined here
+├── wsgi.py / asgi.py                  # WSGI / ASGI entry points
+├── api_docs.py                        # ReDoc UI + OpenAPI spec views (/docs/ /openapi.json)
+├── gunicorn.conf.py                   # Production server config (gevent, timeout, workers)
 │
-├── mm_project/                        # Django project configuration
-│   ├── settings.py
-│   ├── urls.py                        # Root URL dispatcher — all routes defined here
-│   ├── views.py
-│   ├── wsgi.py / asgi.py
-│   └── gunicorn.conf.py               # Production server config (gevent, timeout, workers)
-│
-├── strategys/                         # All 5 strategy plugins consolidated
+├── strategys/                         # All 5 strategy modules consolidated
 │   ├── views/
 │   │   ├── common.py                  # make_chat_views() factory — shared chat/stream logic
-│   │   └── views.py                   # All 5 plugin views (usb_index, mlh_index, etc.)
+│   │   └── views.py                   # All 5 module views + strategy_counts + balance
 │   ├── urls/
-│   │   └── urls.py                    # All 17 URL patterns for all 5 plugins
+│   │   └── urls.py                    # All API URL patterns for all 5 modules
 │   └── market_maya/
 │       └── market_maya.py             # All 5 Market Maya API clients (USB, MLH, RES, ISB, ISE)
 │
@@ -74,7 +70,7 @@ MM_Strategy_Builder_django/
 │   │   ├── isb_validator.py
 │   │   └── ise_validator.py
 │   ├── mcp/
-│   │   ├── tools.py                   # All MCP tool functions for all 5 plugins
+│   │   ├── tools.py                   # All MCP tool functions for all 5 modules
 │   │   └── handlers.py                # MCP tool dispatch handlers
 │   └── rag/
 │       ├── ingest.py                  # Build FAISS index from docs
@@ -93,7 +89,7 @@ MM_Strategy_Builder_django/
 │   ├── token_service.py               # Bearer token refresh + caching
 │   └── crypto.py                      # Credential encryption
 │
-├── prompts/                           # System prompts (one per plugin)
+├── prompts/                           # System prompts (one per module)
 │   ├── usb_prompt.py
 │   ├── mlh_prompt.py
 │   ├── res_prompt.py
@@ -101,40 +97,27 @@ MM_Strategy_Builder_django/
 │   └── ise_prompt.py
 │
 ├── marketmaya/                        # Market Maya API client library
+│   ├── config.py                      # All API keys, URLs, cost rates, lot sizes
 │   ├── auth.py                        # Login + bearer token management
 │   ├── operations.py                  # get_strategies, delete, modify, rename, balance
 │   └── main.py
 │
 ├── users/                             # Auth Django app
-│   ├── models.py                      # UserBearerToken — encrypted credentials + cached data
-│   ├── middleware.py                  # AuthMiddleware — protects all routes
-│   ├── views.py                       # Login / logout
+│   ├── models.py                      # AppUser + UserBearerToken (encrypted credentials)
+│   ├── middleware.py                  # AuthMiddleware — returns 401 JSON for all unauth requests
+│   ├── views.py                       # auth_login, auth_logout, history_api, admin_auth_login
 │   └── urls.py
 │
 ├── chat_logs/                         # Chat log tracking
-│   ├── models.py                      # ChatLog: tokens, cost (USD + INR), module, session
-│   ├── views.py                       # Analytics dashboard + JSON API
-│   └── urls.py                        # /logs/  /logs/api/
-│
-├── static/
-│   ├── css/style.css                  # Dark/light theme variables and component styles
-│   └── js/
-│       ├── chat.js                    # SSE streaming client, message rendering
-│       └── theme.js                   # Dark/light mode toggle with localStorage persistence
-│
-├── templates/                         # HTML templates (one per plugin + shared pages)
-│   ├── index.html                     # USB
-│   ├── indicator_engine.html          # ISE
-│   ├── inbound_signal_bridge.html     # ISB
-│   ├── rapid_execution_scalper.html   # RES
-│   ├── multi_leg_hedger.html          # MLH
-│   ├── chat_logs.html                 # Analytics dashboard
-│   └── login.html / admin_panel.html
+│   ├── models.py                      # ChatLog, ChatMessage, APICallLog
+│   ├── views.py                       # logs_api, api_logs_api (JSON only)
+│   └── urls.py                        # /logs/api/  /logs/api-calls/api/
 │
 ├── docs/                              # Reference documentation + API payloads
+│   ├── openapi.yaml                   # OpenAPI 3.0 spec — served at /openapi.json
 │   └── api/                           # Captured Market Maya API payload examples
 │
-├── tests/                             # Automated test scripts per plugin
+├── tests/                             # Automated test scripts per module
 │   ├── run_usb_tests.py
 │   ├── run_ise_tests.py
 │   ├── run_isb_tests.py
@@ -231,10 +214,7 @@ python -c "from utils.rag.ingest import ingest_docs; ingest_docs()"
 ### 7. Start Redis
 
 ```bash
-# Ubuntu/Debian
 sudo systemctl start redis-server
-
-# Verify
 redis-cli ping   # should print PONG
 ```
 
@@ -247,50 +227,358 @@ python manage.py runserver 0.0.0.0:8000
 
 **Production:**
 ```bash
-gunicorn mm_project.wsgi:application -c mm_project/gunicorn.conf.py
+gunicorn wsgi:application -c gunicorn.conf.py
 ```
 
-Open `http://localhost:8000` — navigate between plugins from the sidebar.
+Once running, open `http://localhost:8000/docs/` to browse the full interactive API documentation (ReDoc).
 
 ---
 
 ## How It Works
 
-1. **Input** — User describes a strategy in natural language (e.g., *"BankNifty ATM straddle, 1 lot each leg, MIS, combined SL ₹5000"*)
+1. **Input** — Client sends a plain-English message via `POST /api/chat` or `/api/chat/stream`
 2. **RAG** — Retriever queries the shared FAISS index for relevant parameter rules
 3. **Preview** — AI generates structured Markdown tables matching the Market Maya UI tabs
-4. **Confirmation** — User reviews and approves (confirm / yes / proceed / save)
-5. **Deployment** — `generator.py` builds the production payload, `market_maya.py` POSTs to the API
+4. **Confirmation** — Client sends a confirmation message (e.g., `"confirm"`)
+5. **Deployment** — Generator builds the production payload, Market Maya client POSTs to the API
 6. **Logging** — Every interaction is saved to PostgreSQL with token counts and INR cost
 
 ---
 
-## Strategy Management
+## API Reference
 
-All plugins expose these conversational commands — no UI navigation needed:
-
-| Command | What to say | Description |
-|---------|-------------|-------------|
-| **List strategies** | "show my strategies" | Fetches all strategies with name/type search support |
-| **Delete strategy** | "delete strategy X" | Resolves name → hash ID, confirms, then deletes |
-| **Modify strategy** | "change SL of X to 3000" | Fetches current record → shows diff → saves on approval |
-| **Rename strategy** | "rename X to Y" | Confirms first, then calls rename API |
-| **Check balance** | "what is my balance" | Shows Balance, Hold Balance, Point Balance |
-| **Deploy strategy** | "deploy strategy X" | Deploys a saved strategy to live trading |
-
-The AI follows a **confirm-before-act** pattern for all destructive or modifying operations.
+All endpoints return JSON. All endpoints except `/auth/login/` and `/auth/logout/` require a valid session (obtained via `/auth/login/`). Unauthenticated requests receive `401 {"error": "Not authenticated"}`.
 
 ---
 
-## API Endpoints
+### Authentication
 
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/strategy-counts/` | Strategy counts for all 5 plugins |
-| `GET /api/balance/` | Current Market Maya point balance |
-| `GET /api/queue-stats/` | Global LLM request queue status |
-| `POST /api/chat` | Blocking chat (per plugin prefix) |
-| `POST /api/chat/stream` | SSE streaming chat (per plugin prefix) |
+#### `POST /auth/login/`
+Log in with Market Maya credentials. Creates a session and stores the bearer token.
+
+**Request body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+```
+
+**Response `200`:**
+```json
+{
+  "status": "ok",
+  "display_name": "John"
+}
+```
+
+**Response `401`:**
+```json
+{ "error": "Invalid email or password" }
+```
+
+---
+
+#### `POST /auth/logout/`
+Clears the session.
+
+**Response `200`:**
+```json
+{ "status": "logged_out" }
+```
+
+---
+
+### Chat — Unified Strategy Builder (USB)
+
+#### `POST /api/chat`
+Blocking chat. Waits for the full AI response before returning.
+
+**Request body:**
+```json
+{ "message": "BankNifty ATM straddle, 1 lot each leg, MIS, combined SL 5000" }
+```
+
+**Response `200`:**
+```json
+{
+  "status": "success",
+  "message": "Here is the strategy preview:\n\n| Leg | Symbol | ..."
+}
+```
+
+---
+
+#### `POST /api/chat/stream`
+Server-Sent Events streaming. Returns a stream of `data: {...}` events.
+
+**Request body:**
+```json
+{ "message": "BankNifty ATM straddle, 1 lot each leg, MIS, combined SL 5000" }
+```
+
+**Response** — `Content-Type: text/event-stream`
+
+Each event is one of:
+
+| Event `t` | Payload | Meaning |
+|-----------|---------|---------|
+| `chunk` | `{"t": "chunk", "v": "Here is..."}` | Incremental text token |
+| `done` | `{"t": "done", "in_tok": 120, "out_tok": 340, "task_id": "..."}` | Stream complete |
+| `error` | `{"t": "error", "v": "⚠️ Connection error..."}` | Stream failed |
+
+---
+
+### Chat — Indicator Signal Engine (ISE)
+
+#### `POST /indicator/api/chat`
+Same request/response as USB chat.
+
+#### `POST /indicator/api/chat/stream`
+Same SSE stream as USB stream.
+
+---
+
+### Chat — Inbound Signal Bridge (ISB)
+
+#### `POST /bridge/api/chat`
+Same request/response as USB chat.
+
+#### `POST /bridge/api/chat/stream`
+Same SSE stream as USB stream.
+
+---
+
+### Chat — Rapid Execution Scalper (RES)
+
+#### `POST /scalper/api/chat`
+Same request/response as USB chat.
+
+#### `POST /scalper/api/chat/stream`
+Same SSE stream as USB stream.
+
+---
+
+### Chat — Multi-Leg Hedger (MLH)
+
+#### `POST /hedger/api/chat`
+Same request/response as USB chat.
+
+#### `POST /hedger/api/chat/stream`
+Same SSE stream as USB stream.
+
+---
+
+### Strategy Data
+
+#### `GET /api/strategy-counts/`
+Returns the number of saved strategies per module for the authenticated user.
+
+**Response `200`:**
+```json
+{
+  "usb": 5,
+  "ise": 2,
+  "isb": 1,
+  "res": 0,
+  "mlh": 3
+}
+```
+
+---
+
+#### `GET /api/balance/`
+Returns the authenticated user's current Market Maya point balance.
+
+**Response `200`:**
+```json
+{ "point_balance": 247.5 }
+```
+
+**Response `200` (on API error):**
+```json
+{ "point_balance": null }
+```
+
+---
+
+#### `GET /api/history/`
+Returns the last 100 chat messages for a given user and module.
+
+**Query params:**
+
+| Param | Default | Example |
+|-------|---------|---------|
+| `module` | `USB` | `?module=ISE` |
+
+**Response `200`:**
+```json
+{
+  "history": [
+    { "role": "user",      "content": "BankNifty straddle...", "ts": "2026-06-30T10:00:00+05:30" },
+    { "role": "assistant", "content": "Here is the preview...", "ts": "2026-06-30T10:00:02+05:30" }
+  ]
+}
+```
+
+---
+
+### System
+
+#### `GET /api/queue-stats/`
+Returns the current state of the global LLM request queue (semaphore that limits concurrent AI calls).
+
+**Response `200`:**
+```json
+{
+  "waiting": 0,
+  "active": 1,
+  "total_processed": 142
+}
+```
+
+---
+
+### Logs
+
+#### `GET /logs/api/`
+Returns chat logs with optional filtering. Max 500 records per call.
+
+**Query params:**
+
+| Param | Description | Example |
+|-------|-------------|---------|
+| `module` | Filter by module | `?module=USB` |
+| `date_from` | Start date (inclusive) | `?date_from=2026-06-01` |
+| `date_to` | End date (inclusive) | `?date_to=2026-06-30` |
+
+**Response `200`:**
+```json
+{
+  "logs": [
+    {
+      "id": 1,
+      "timestamp": "2026-06-30T10:00:00+05:30",
+      "module": "USB",
+      "session_id": "abc123_USB",
+      "user_message": "BankNifty straddle...",
+      "ai_response": "Here is the preview...",
+      "input_tokens": 120,
+      "output_tokens": 340,
+      "total_tokens": 460,
+      "cost_usd": 0.00054,
+      "cost_inr": 0.0517,
+      "model_used": "google:gemini@3.1-flash-lite"
+    }
+  ],
+  "totals": {
+    "total_requests": 1,
+    "total_input_tokens": 120,
+    "total_output_tokens": 340,
+    "total_tokens": 460,
+    "total_cost_inr": 0.0517,
+    "total_cost_usd": 0.00054
+  }
+}
+```
+
+---
+
+#### `GET /logs/api-calls/api/`
+Returns Market Maya API call logs with optional filtering. Max 500 records per call.
+
+**Query params:**
+
+| Param | Description | Example |
+|-------|-------------|---------|
+| `module` | Filter by module | `?module=ISE` |
+| `call_type` | Filter by call type | `?call_type=create_strategy` |
+| `status` | Filter by status | `?status=success` |
+| `session_id` | Filter by session (partial match) | `?session_id=abc123` |
+| `date_from` | Start date | `?date_from=2026-06-01` |
+| `date_to` | End date | `?date_to=2026-06-30` |
+
+**Response `200`:**
+```json
+{
+  "logs": [
+    {
+      "id": 1,
+      "timestamp": "2026-06-30T10:00:00+05:30",
+      "module": "USB",
+      "call_type": "create_strategy",
+      "endpoint": "https://webapi.marketmaya.com/api/mainStrategy/CreateUnifiedStrategy",
+      "method": "POST",
+      "response_status": 200,
+      "duration_ms": 340,
+      "status": "success",
+      "session_id": "abc123_USB",
+      "request_payload": "...",
+      "response_body": "..."
+    }
+  ],
+  "total": 1
+}
+```
+
+---
+
+### Admin
+
+#### `POST /admin-auth/`
+Admin login with username + password.
+
+**Request body:**
+```json
+{ "username": "aditya", "password": "12345" }
+```
+
+**Response `200`:**
+```json
+{ "status": "ok" }
+```
+
+**Response `401`:**
+```json
+{ "error": "Invalid credentials" }
+```
+
+---
+
+#### `POST /admin-logout/`
+Clears the admin session.
+
+**Response `200`:**
+```json
+{ "status": "logged_out" }
+```
+
+---
+
+### All Endpoints at a Glance
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/auth/login/` | No | Log in, get session |
+| `POST` | `/auth/logout/` | No | Clear session |
+| `POST` | `/api/chat` | Yes | USB — blocking chat |
+| `POST` | `/api/chat/stream` | Yes | USB — SSE streaming chat |
+| `POST` | `/indicator/api/chat` | Yes | ISE — blocking chat |
+| `POST` | `/indicator/api/chat/stream` | Yes | ISE — SSE streaming chat |
+| `POST` | `/bridge/api/chat` | Yes | ISB — blocking chat |
+| `POST` | `/bridge/api/chat/stream` | Yes | ISB — SSE streaming chat |
+| `POST` | `/scalper/api/chat` | Yes | RES — blocking chat |
+| `POST` | `/scalper/api/chat/stream` | Yes | RES — SSE streaming chat |
+| `POST` | `/hedger/api/chat` | Yes | MLH — blocking chat |
+| `POST` | `/hedger/api/chat/stream` | Yes | MLH — SSE streaming chat |
+| `GET` | `/api/strategy-counts/` | Yes | Strategy counts per module |
+| `GET` | `/api/balance/` | Yes | Market Maya point balance |
+| `GET` | `/api/history/` | Yes | Chat history for user/module |
+| `GET` | `/api/queue-stats/` | Yes | LLM request queue status |
+| `GET` | `/logs/api/` | Yes | Chat logs (filterable JSON) |
+| `GET` | `/logs/api-calls/api/` | Yes | API call logs (filterable JSON) |
+| `POST` | `/admin-auth/` | No | Admin login |
+| `POST` | `/admin-logout/` | No | Admin logout |
 
 ---
 
@@ -318,14 +606,14 @@ The exchange resolver (`services/exchange_resolver.py`) encodes all Market Maya 
 ### Conversational Flow
 
 **Run a new backtest (charges points):**
-1. User: *"backtest my BankNifty SuperTrend strategy"*
-2. AI calls `get_backtest_options` → displays period selection table with point costs
-3. User: *"run 6 months"*
-4. AI calls `run_backtest` → deducts points, polls until complete (~10–15s), displays results
+1. Client: `"backtest my BankNifty SuperTrend strategy"`
+2. AI calls `get_backtest_options` → returns period selection table with point costs
+3. Client: `"run 6 months"`
+4. AI calls `run_backtest` → deducts points, polls until complete (~10–15s), returns results
 
 **View stored results (free):**
-1. User: *"show backtest result for my strategy"*
-2. AI calls `get_backtest_result` → reads stored analysis, displays 7 Markdown tables
+1. Client: `"show backtest result for my strategy"`
+2. AI calls `get_backtest_result` → returns stored analysis with 7 Markdown tables
 
 ### Point Costs
 
@@ -340,7 +628,7 @@ The exchange resolver (`services/exchange_resolver.py`) encodes all Market Maya 
 
 ---
 
-## Plugin-Specific Notes
+## Module-Specific Notes
 
 ### ISB — Inbound Signal Bridge
 - **Trail SL requires SL > 0** — if `sl = 0`, trail SL is automatically disabled at the generator level
@@ -353,25 +641,6 @@ The exchange resolver (`services/exchange_resolver.py`) encodes all Market Maya 
 ### MLH — Multi-Leg Hedger
 - Three modes: **Normal**, **Range Breakout**, **BTST/STBT**
 - Supports up to 10 independent option legs per strategy
-
----
-
-## Chat Log
-
-Every message across all plugins is stored in PostgreSQL (`chat_logs` Django app):
-
-| Field | Description |
-|-------|-------------|
-| `module` | USB / ISE / ISB / RES / MLH |
-| `session_id` | Browser session identifier |
-| `user_message` | Full user input |
-| `ai_response` | Complete AI response |
-| `input_tokens` | Prompt token count |
-| `output_tokens` | Completion token count |
-| `cost_inr` | Calculated cost in Indian Rupees |
-| `model_used` | Runware model ID |
-
-Accessible at `/logs/` (dashboard) or `/logs/api/` (JSON API).
 
 ---
 
@@ -424,4 +693,4 @@ Internal Use Only. Confidential and Proprietary.
 
 ---
 
-*Built for Traders by Aditya & Antigravity AI.*
+*Built for Traders by Aditya.*

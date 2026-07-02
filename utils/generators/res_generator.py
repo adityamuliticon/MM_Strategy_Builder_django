@@ -1,7 +1,6 @@
 """RES payload generator — converts LLM-structured scalping strategy JSON into the Market Maya createScalpingStrategy schema."""
 
-import re
-import time
+from marketmaya.config import Config
 from services.exchange_resolver import resolve_exchange_segment, resolve_leg_exchange
 from utils.generators.base_generator import BaseGenerator
 
@@ -10,14 +9,13 @@ LOT_SIZES = {
     "MIDCPNIFTY": 75, "SENSEX": 20, "BANKEX": 15,
 }
 
-STRATEGY_TYPE_ID = "YioJhK5IqBULe8fPLMnXaAaC0$aC0$"
+STRATEGY_TYPE_ID = Config.STRATEGY_TYPE_IDS["res"]
 
 
 class RESPayloadGenerator(BaseGenerator):
 
     def generate_payload(self, strategy_json):
-        raw_name = strategy_json.get("strategy_name", "RES_Strategy")
-        strategy_name = re.sub(r'_\d{4}$', '', raw_name) + f"_{int(time.time()) % 10000}"
+        strategy_name = strategy_json.get("strategy_name", "RES_Strategy")
 
         symbol = str(strategy_json.get("main_symbol", "BANKNIFTY")).upper()
         if symbol == "NIFTY50":

@@ -29,7 +29,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 # ── Django setup ──────────────────────────────────────────────────────────────
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mm_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
 
 import warnings

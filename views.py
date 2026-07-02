@@ -2,16 +2,11 @@
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.http import JsonResponse
+from marketmaya.config import Config
 from marketmaya.operations import Operations
-get_strategies = Operations.get_strategies
 
-STRATEGY_TYPE_IDS = {
-    "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
-    "ise": "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$",
-    "isb": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
-    "res": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
-    "mlh": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
-}
+get_strategies = Operations.get_strategies
+STRATEGY_TYPE_IDS = Config.STRATEGY_TYPE_IDS
 
 
 def _fetch_count(key, type_id):

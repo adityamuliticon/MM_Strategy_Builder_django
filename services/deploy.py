@@ -25,7 +25,7 @@ import time
 import requests
 import websocket
 
-from config import Config
+from marketmaya.config import Config
 from marketmaya.operations import Operations
 get_strategies = Operations.get_strategies
 from services.session_context import log_api_call

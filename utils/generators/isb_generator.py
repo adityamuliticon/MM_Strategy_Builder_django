@@ -1,7 +1,6 @@
 """ISB payload generator — converts LLM-structured inbound signal strategy JSON into the Market Maya createCustomTradeStrategy schema."""
 
-import re
-import time
+from marketmaya.config import Config
 from services.exchange_resolver import resolve_leg_exchange
 from utils.generators.base_generator import BaseGenerator
 
@@ -10,7 +9,7 @@ LOT_SIZES = {
     "MIDCPNIFTY": 75, "SENSEX": 20, "BANKEX": 15,
 }
 
-STRATEGY_TYPE_ID = "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$"
+STRATEGY_TYPE_ID = Config.STRATEGY_TYPE_IDS["isb"]
 
 QTY_DISTRIBUTIONS = {"Fix", "Capital(%)", "Capital Risk(%)", "Allocation Method 1"}
 
@@ -18,8 +17,7 @@ QTY_DISTRIBUTIONS = {"Fix", "Capital(%)", "Capital Risk(%)", "Allocation Method 
 class ISBPayloadGenerator(BaseGenerator):
 
     def generate_payload(self, strategy_json):
-        raw_name = strategy_json.get("strategyName", "ISB_Strategy")
-        strategy_name = re.sub(r'_\d{4}$', '', raw_name) + f"_{int(time.time()) % 10000}"
+        strategy_name = strategy_json.get("strategyName", "ISB_Strategy")
 
         is_intraday = bool(strategy_json.get("isIntraday", False))
         default_product = "MIS" if is_intraday else "NRML"

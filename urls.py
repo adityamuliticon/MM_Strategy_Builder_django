@@ -1,6 +1,4 @@
-from django.urls import path, re_path, include
-from django.conf import settings
-from django.views.static import serve
+from django.urls import path, include
 from django.http import JsonResponse
 from services.request_queue import request_queue
 from strategys.urls.urls import (
@@ -10,6 +8,7 @@ from strategys.urls.urls import (
     res_urlpatterns,
     mlh_urlpatterns,
 )
+from api_docs import openapi_spec, redoc_view
 
 
 def queue_stats(request):
@@ -17,6 +16,10 @@ def queue_stats(request):
 
 
 urlpatterns = [
+    # Docs (public — excluded from auth)
+    path('docs/', redoc_view, name='redoc'),
+    path('openapi.json', openapi_spec, name='openapi_spec'),
+
     path('api/queue-stats/', queue_stats, name='queue_stats'),
     path('', include('users.urls')),
     path('', include(usb_urlpatterns)),
@@ -25,5 +28,4 @@ urlpatterns = [
     path('scalper/', include(res_urlpatterns)),
     path('hedger/', include(mlh_urlpatterns)),
     path('logs/', include('chat_logs.urls')),
-    re_path(r'^static/(?P<path>.+)$', serve, {'document_root': settings.BASE_DIR / 'static'}),
 ]

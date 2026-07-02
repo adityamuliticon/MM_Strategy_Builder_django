@@ -1,7 +1,7 @@
 """Gunicorn production config — gevent workers for high-concurrency queue system.
 
 Start command:
-    gunicorn mm_project.wsgi:application -c gunicorn.conf.py
+    gunicorn wsgi:application -c gunicorn.conf.py
 
 How it handles 10k–100k users:
 - worker_class=gevent: each connection is a greenlet (not an OS thread).

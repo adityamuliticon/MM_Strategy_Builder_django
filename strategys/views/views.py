@@ -9,27 +9,17 @@ from utils.orchestrator.orchestrators import (
     ise_orchestrator,
 )
 from strategys.views.common import make_chat_views
+from marketmaya.config import Config
 from marketmaya.operations import Operations
 
 get_strategies = Operations.get_strategies
 get_balance    = Operations.get_balance
 
-_STRATEGY_TYPE_IDS = {
-    "usb": "7D0enBHWMRaf4ebeKaB0$OOMQaC0$aC0$",
-    "ise": "QFwz7gYjmmabUT8SBvZQGgaC0$aC0$",
-    "isb": "XBZs7OE0aMivKaB0$aA0$Wej3PcwaC0$aC0$",
-    "res": "YioJhK5IqBULe8fPLMnXaAaC0$aC0$",
-    "mlh": "RF8IGNzSfYMaB0$ENiAa4FpGwaC0$aC0$",
-}
+_STRATEGY_TYPE_IDS = Config.STRATEGY_TYPE_IDS
 _ID_TO_KEY = {v: k for k, v in _STRATEGY_TYPE_IDS.items()}
 
 # ── USB ───────────────────────────────────────────────────────────────────────
-usb_index, usb_chat, usb_chat_stream = make_chat_views(
-    module='USB',
-    orchestrator=orchestrator,
-    template='index.html',
-    pass_user_id=True,
-)
+usb_chat, usb_chat_stream = make_chat_views(module='USB', orchestrator=orchestrator)
 
 
 def strategy_counts_view(request):
@@ -77,29 +67,13 @@ def balance_view(request):
     return JsonResponse({"point_balance": None})
 
 # ── MLH ───────────────────────────────────────────────────────────────────────
-mlh_index, mlh_chat, mlh_chat_stream = make_chat_views(
-    module='MLH',
-    orchestrator=mlh_orchestrator,
-    template='multi_leg_hedger.html',
-)
+mlh_chat, mlh_chat_stream = make_chat_views(module='MLH', orchestrator=mlh_orchestrator)
 
 # ── RES ───────────────────────────────────────────────────────────────────────
-res_index, res_chat, res_chat_stream = make_chat_views(
-    module='RES',
-    orchestrator=res_orchestrator,
-    template='rapid_execution_scalper.html',
-)
+res_chat, res_chat_stream = make_chat_views(module='RES', orchestrator=res_orchestrator)
 
 # ── ISB ───────────────────────────────────────────────────────────────────────
-isb_index, isb_chat, isb_chat_stream = make_chat_views(
-    module='ISB',
-    orchestrator=isb_orchestrator,
-    template='inbound_signal_bridge.html',
-)
+isb_chat, isb_chat_stream = make_chat_views(module='ISB', orchestrator=isb_orchestrator)
 
 # ── ISE ───────────────────────────────────────────────────────────────────────
-ise_index, ise_chat, ise_chat_stream = make_chat_views(
-    module='ISE',
-    orchestrator=ise_orchestrator,
-    template='indicator_engine.html',
-)
+ise_chat, ise_chat_stream = make_chat_views(module='ISE', orchestrator=ise_orchestrator)

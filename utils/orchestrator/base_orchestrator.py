@@ -3,7 +3,7 @@
 import json
 import re
 from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError
-from config import Config
+from marketmaya.config import Config
 
 _CONFIRM_WORDS = frozenset({
     'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok',
