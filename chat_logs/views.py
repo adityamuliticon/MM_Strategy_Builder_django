@@ -37,35 +37,59 @@ def _aggregate(qs):
     )
 
 
+_PAGE_SIZE = 100
+
+
 def logs_api(request):
     module_filter = request.GET.get('module', '')
     date_from     = request.GET.get('date_from', '')
     date_to       = request.GET.get('date_to', '')
+    try:
+        page = max(1, int(request.GET.get('page', 1)))
+    except (ValueError, TypeError):
+        page = 1
 
-    qs = _apply_filters(ChatLog.objects.all(), module_filter, date_from, date_to)
+    qs = _apply_filters(
+        ChatLog.objects.all().order_by('-timestamp'),
+        module_filter, date_from, date_to,
+    )
+
+    paginator = Paginator(qs, _PAGE_SIZE)
+    page_obj  = paginator.get_page(page)
 
     data = [
         {
-            'id': log.id,
-            'timestamp': log.timestamp.isoformat(),
-            'module': log.module,
-            'session_id': log.session_id,
-            'user_message': log.user_message,
-            'ai_response': log.ai_response,
-            'input_tokens': log.input_tokens,
+            'id':            log.id,
+            'timestamp':     log.timestamp.isoformat(),
+            'module':        log.module,
+            'session_id':    log.session_id,
+            'user_message':  log.user_message,
+            'ai_response':   log.ai_response,
+            'input_tokens':  log.input_tokens,
             'output_tokens': log.output_tokens,
-            'total_tokens': log.total_tokens,
-            'cost_usd': float(log.cost_usd),
-            'cost_inr': float(log.cost_inr),
-            'model_used': log.model_used,
+            'total_tokens':  log.total_tokens,
+            'cost_usd':      float(log.cost_usd),
+            'cost_inr':      float(log.cost_inr),
+            'model_used':    log.model_used,
         }
-        for log in qs[:500]
+        for log in page_obj
     ]
 
     totals = _aggregate(qs)
     totals = {k: float(v) if v else 0 for k, v in totals.items()}
 
-    return JsonResponse({'logs': data, 'totals': totals})
+    return JsonResponse({
+        'logs':   data,
+        'totals': totals,
+        'pagination': {
+            'page':        page_obj.number,
+            'total_pages': paginator.num_pages,
+            'total_count': paginator.count,
+            'per_page':    _PAGE_SIZE,
+            'has_next':    page_obj.has_next(),
+            'has_prev':    page_obj.has_previous(),
+        },
+    })
 
 
 def _apply_api_filters(qs, module, call_type, status, session_id, date_from, date_to):
@@ -99,25 +123,45 @@ def api_logs_api(request):
     session_id = request.GET.get('session_id', '')
     date_from  = request.GET.get('date_from', '')
     date_to    = request.GET.get('date_to', '')
+    try:
+        page = max(1, int(request.GET.get('page', 1)))
+    except (ValueError, TypeError):
+        page = 1
 
-    qs = _apply_api_filters(APICallLog.objects.all(), module, call_type, status, session_id, date_from, date_to)
+    qs = _apply_api_filters(
+        APICallLog.objects.all().order_by('-timestamp'),
+        module, call_type, status, session_id, date_from, date_to,
+    )
+
+    paginator = Paginator(qs, _PAGE_SIZE)
+    page_obj  = paginator.get_page(page)
 
     data = [
         {
-            'id':               log.id,
-            'timestamp':        log.timestamp.isoformat(),
-            'module':           log.module,
-            'call_type':        log.call_type,
-            'endpoint':         log.endpoint,
-            'method':           log.method,
-            'response_status':  log.response_status,
-            'duration_ms':      log.duration_ms,
-            'status':           log.status,
-            'session_id':       log.session_id,
-            'request_payload':  log.request_payload,
-            'response_body':    log.response_body,
+            'id':              log.id,
+            'timestamp':       log.timestamp.isoformat(),
+            'module':          log.module,
+            'call_type':       log.call_type,
+            'endpoint':        log.endpoint,
+            'method':          log.method,
+            'response_status': log.response_status,
+            'duration_ms':     log.duration_ms,
+            'status':          log.status,
+            'session_id':      log.session_id,
+            'request_payload': log.request_payload,
+            'response_body':   log.response_body,
         }
-        for log in qs[:500]
+        for log in page_obj
     ]
 
-    return JsonResponse({'logs': data, 'total': qs.count()})
+    return JsonResponse({
+        'logs': data,
+        'pagination': {
+            'page':        page_obj.number,
+            'total_pages': paginator.num_pages,
+            'total_count': paginator.count,
+            'per_page':    _PAGE_SIZE,
+            'has_next':    page_obj.has_next(),
+            'has_prev':    page_obj.has_previous(),
+        },
+    })

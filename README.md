@@ -554,12 +554,13 @@ Returns the current state of the global LLM request queue (semaphore that limits
 ### Logs
 
 #### `GET /logs/api/`
-Returns chat logs with optional filtering. Max 500 records per call.
+Returns chat logs with optional filtering. **100 records per page**, newest first.
 
 **Query params:**
 
 | Param | Description | Example |
 |-------|-------------|---------|
+| `page` | Page number (default `1`) | `?page=2` |
 | `module` | Filter by module | `?module=USB` |
 | `date_from` | Start date (inclusive) | `?date_from=2026-06-01` |
 | `date_to` | End date (inclusive) | `?date_to=2026-06-30` |
@@ -590,6 +591,14 @@ Returns chat logs with optional filtering. Max 500 records per call.
     "total_tokens": 460,
     "total_cost_inr": 0.0517,
     "total_cost_usd": 0.00054
+  },
+  "pagination": {
+    "page": 1,
+    "total_pages": 5,
+    "total_count": 487,
+    "per_page": 100,
+    "has_next": true,
+    "has_prev": false
   }
 }
 ```
@@ -597,12 +606,13 @@ Returns chat logs with optional filtering. Max 500 records per call.
 ---
 
 #### `GET /logs/api-calls/api/`
-Returns Market Maya API call logs with optional filtering. Max 500 records per call.
+Returns Market Maya API call logs with optional filtering. **100 records per page**, newest first.
 
 **Query params:**
 
 | Param | Description | Example |
 |-------|-------------|---------|
+| `page` | Page number (default `1`) | `?page=2` |
 | `module` | Filter by module | `?module=ISE` |
 | `call_type` | Filter by call type | `?call_type=create_strategy` |
 | `status` | Filter by status | `?status=success` |
@@ -629,7 +639,14 @@ Returns Market Maya API call logs with optional filtering. Max 500 records per c
       "response_body": "..."
     }
   ],
-  "total": 1
+  "pagination": {
+    "page": 1,
+    "total_pages": 12,
+    "total_count": 1183,
+    "per_page": 100,
+    "has_next": true,
+    "has_prev": false
+  }
 }
 ```
 
