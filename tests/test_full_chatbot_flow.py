@@ -228,31 +228,14 @@ def login(base_url: str) -> requests.Session:
     return s
 
 
-# ─── Build strategy names from live MM counts ─────────────────────────────────
-def build_names(session: requests.Session, base_url: str) -> dict[str, str]:
-    """
-    Query /api/strategy-counts/ to get current counts per module,
-    then return names like usb_042, mlh_018 (count + 1, zero-padded to 3 digits).
-    Falls back to timestamp-based names if the endpoint is unreachable.
-    """
-    try:
-        r = session.get(f"{base_url}/api/strategy-counts/", timeout=30)
-        if r.status_code == 200:
-            counts = r.json()
-            names = {
-                mod: f"{mod.lower()}_{(counts.get(mod.lower()) or 0) + 1:03d}"
-                for mod in ("USB", "ISE", "ISB", "RES", "MLH")
-            }
-            print(f"{GRN}✓{RST} Strategy names for this run:")
-            for mod, name in names.items():
-                print(f"    {mod}: {YEL}{name}{RST}")
-            return names
-    except Exception as e:
-        print(f"{YEL}⚠ Could not fetch strategy counts ({e}), using fallback names{RST}")
-
-    # Fallback: use last-5-digits of timestamp
+# ─── Build strategy names ────────────────────────────────────────────────────
+def build_names() -> dict[str, str]:
     tag = str(int(time.time()))[-5:]
-    return {mod: f"{mod.lower()}_{tag}" for mod in ("USB", "ISE", "ISB", "RES", "MLH")}
+    names = {mod: f"{mod.lower()}_{tag}" for mod in ("USB", "ISE", "ISB", "RES", "MLH")}
+    print(f"{GRN}✓{RST} Strategy names for this run:")
+    for mod, name in names.items():
+        print(f"    {mod}: {YEL}{name}{RST}")
+    return names
 
 
 # ─── Per-module flows ─────────────────────────────────────────────────────────
@@ -548,7 +531,7 @@ def main():
 
     session = login(base)
 
-    BASE_NAMES.update(build_names(session, base))
+    BASE_NAMES.update(build_names())
 
     test_usb(session, base)
     test_ise(session, base)

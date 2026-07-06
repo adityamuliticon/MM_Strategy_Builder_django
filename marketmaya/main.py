@@ -1,23 +1,8 @@
-"""Market Maya Facade — one stable entry point per module.
-
-Pattern: Facade (structural) + Singleton (creational).
-
-Each strategy module instantiates MarketMaya once with its own config:
-    market_maya = MarketMaya(module="USB", save_url=Config.CREATE_STRATEGY_URL)
-
-All shared operations (list, delete, modify, rename, balance, record) are
-inherited for free — only save_url and module label differ per module.
-
-Future migration path:
-    USB  → done (Unified_Strategy_Builder/services/market_maya.py)
-    ISE  → from marketmaya import MarketMaya; market_maya = MarketMaya(module="ISE", save_url=Config.ISE_SAVE_URL)
-    ISB  → same pattern
-    RES  → same pattern
-    MLH  → same pattern
-"""
-
+from datetime import datetime
 from marketmaya.auth import Auth
 from marketmaya.operations import Operations
+from marketmaya.config import Config
+from services.base_market_maya import BaseMarketMayaService
 
 
 class MarketMaya:
@@ -57,3 +42,82 @@ class MarketMaya:
 
     def get_balance(self) -> dict:
         return Operations.get_balance()
+
+
+class GenericMarketMayaService(BaseMarketMayaService):
+    """Single reusable service for MLH, RES, ISB, ISE — only constructor args differ."""
+
+    def __init__(self, module_name: str, log_prefix: str, url: str,
+                 strategy_type: str, name_key: str, use_utc: bool = False):
+        self._module_name = module_name
+        self._log_prefix = log_prefix
+        self._url = url
+        self._strategy_type = strategy_type
+        self._name_key = name_key
+        self._use_utc = use_utc
+
+    def _get_url(self):
+        return self._url
+
+    def _build_log_entry(self, payload, api_status, api_code, api_response):
+        ts = datetime.utcnow().isoformat() if self._use_utc else datetime.now().isoformat()
+        return {
+            "timestamp": ts,
+            "strategy_type": self._strategy_type,
+            "strategy_name": payload.get(self._name_key, "Unknown"),
+            "api_status": api_status,
+            "api_code": api_code,
+            "api_response": api_response,
+            "payload": payload,
+        }
+
+    def deploy(self, payload):
+        result = self.save_strategy(payload)
+        if result.get("status") == "success":
+            return {"status": "success", "code": 200, "response": result.get("data")}
+        return {
+            "status": result.get("status", "error"),
+            "code": result.get("code", 0),
+            "response": result.get("message", ""),
+        }
+
+
+# ── Module instances (imported by utils/mcp/tools.py) ────────────────────────
+
+market_maya = MarketMaya(
+    module="USB",
+    save_url=Config.CREATE_STRATEGY_URL,
+)
+
+mlh_market_maya = GenericMarketMayaService(
+    module_name="MLH",
+    log_prefix="MLH MarketMaya",
+    url=Config.CREATE_MULTI_LEG_HEDGER_URL,
+    strategy_type="multi_leg_hedger",
+    name_key="strategyName",
+    use_utc=True,
+)
+
+res_market_maya = GenericMarketMayaService(
+    module_name="RES",
+    log_prefix="RES MarketMaya",
+    url=Config.CREATE_SCALPING_STRATEGY_URL,
+    strategy_type="rapid_execution_scalper",
+    name_key="strategy_name",
+)
+
+isb_market_maya = GenericMarketMayaService(
+    module_name="ISB",
+    log_prefix="ISB MarketMaya",
+    url=Config.MODIFY_STRATEGY_URL,
+    strategy_type="inbound_signal_bridge",
+    name_key="strategy_name",
+)
+
+ise_market_maya = GenericMarketMayaService(
+    module_name="ISE",
+    log_prefix="ISE MarketMaya",
+    url=f"{Config.MARKET_MAYA_BASE_URL}/mainStrategy/createIndicatorStrategy",
+    strategy_type="indicator_signal_engine",
+    name_key="strategyName",
+)

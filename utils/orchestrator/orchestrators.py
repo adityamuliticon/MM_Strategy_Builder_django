@@ -6,11 +6,11 @@ from utils.orchestrator.base_orchestrator import BaseOrchestrator
 from utils.orchestrator.strategies_orchestrator import StrategiesOrchestrator
 from utils.rag.retriever import common_retriever
 from utils.mcp.handlers import dispatch_usb_tool, mlh_handler, res_handler, isb_handler, ise_handler
-from prompts.usb_prompt import USB_SYSTEM_PROMPT
-from prompts.mlh_prompt import MLH_SYSTEM_PROMPT
-from prompts.res_prompt import RES_SYSTEM_PROMPT
-from prompts.isb_prompt import ISB_SYSTEM_PROMPT
-from prompts.ise_prompt import ISE_SYSTEM_PROMPT
+from utils.prompts.usb_prompt import USB_SYSTEM_PROMPT
+from utils.prompts.mlh_prompt import MLH_SYSTEM_PROMPT
+from utils.prompts.res_prompt import RES_SYSTEM_PROMPT
+from utils.prompts.isb_prompt import ISB_SYSTEM_PROMPT
+from utils.prompts.ise_prompt import ISE_SYSTEM_PROMPT
 
 
 # ── USB ────────────────────────────────────────────────────────────────────────

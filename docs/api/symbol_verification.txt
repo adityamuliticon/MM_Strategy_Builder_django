@@ -1,0 +1,924 @@
+to check that is this combination is possible or not
+api-1"
+header:"Request URL
+https://api.marketmaya.com/api/symbol/getSymbolProperty
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a16bcad08aa034ca-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Mon, 06 Jul 2026 04:16:07 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=rB7HoqswI2GNx1rZ9Zp2c00PyrS%2Fzo%2FhIPjlUC7FR%2Bq1LgQiL95s5dFPnDLS6uLtdzwOEEVFaDYBzXQ%2FeBBbF6OSScy0AKqRiLRNcxT5%2B5FvS9CKrebKvmegbapEsOMx6ezOqQ%3D%3D"}]}
+server
+cloudflare
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/symbol/getSymbolProperty
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODMzNjI1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDMuODYuMTYuMzQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjdhNTMzYTZhLTNhNTYtNDdiZS1hY2M0LTE0NmRiY2NiY2I0NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3ODMzMDkxOTMsIm5iZiI6MTc4MzMwOTE5M30.GP1SoK49gkdoqozzy2YDD_B--ejH09_zxmKpfvvSFql5PNTNOTcJ-QDcnt7hApTdNWbVibcRZpfYfdxlRtuUNA
+content-length
+55
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+paylode:"{"exchange":"NFO","segment":"FUT","symbol":"BANKNIFTY"}"
+response:"{exist: true,…}
+exist
+: 
+true
+property
+: 
+{all_time_high: 0, all_time_low: 0, backtest_data_start_date: "2017-02-01T00:00:00", company_name: "",…}
+all_time_high
+: 
+0
+all_time_low
+: 
+0
+backtest_data_start_date
+: 
+"2017-02-01T00:00:00"
+company_name
+: 
+""
+contract
+: 
+"JUL26"
+contract_type
+: 
+"NEAR"
+current_price
+: 
+0
+decimal_digits
+: 
+1
+entry_date_time
+: 
+"2026-07-04T07:53:46.53"
+exchange
+: 
+"NFO"
+exchange_code
+: 
+2
+expiry_date_time
+: 
+"2026-07-28T20:00:00"
+expiry_type
+: 
+"MONTHLY"
+high_price
+: 
+0
+id
+: 
+"GD6QyE1I0vQHufztIwQ6sQaC0$aC0$"
+id_int
+: 
+26503969
+img_url
+: 
+""
+instrument_tocken
+: 
+"61088"
+intraday_sqroff_time
+: 
+"2023-01-01T15:20:00"
+is_contract_symbol
+: 
+true
+is_index_symbol
+: 
+false
+is_stock_symbol
+: 
+false
+is_tradable
+: 
+true
+is_weekly_contract
+: 
+false
+lot_size
+: 
+1
+low_price
+: 
+0
+market_capital
+: 
+0
+market_end_time
+: 
+"2023-01-01T15:30:00"
+market_start_time
+: 
+"2023-01-01T09:15:00"
+min_qty
+: 
+30
+multiplier
+: 
+1
+open_price
+: 
+0
+option_type
+: 
+""
+previous_day_close
+: 
+0
+required_intraday_margin
+: 
+0
+required_positional_margin
+: 
+0
+segment
+: 
+"FUT"
+segment_type
+: 
+"FUT"
+strike_price
+: 
+0
+strike_price_gap
+: 
+100
+symbol
+: 
+"BANKNIFTY JUL FUT"
+symbol_short_name
+: 
+"BANKNIFTY"
+tick_size
+: 
+0.2
+trading_symbol
+: 
+"BANKNIFTY26JULFUT"
+update_date_time
+: 
+"2026-07-04T07:53:46.53"
+week_52_high
+: 
+0
+week_52_low
+: 
+0"
+preview:"{
+    "exist": true,
+    "property": {
+        "all_time_high": 0.0,
+        "all_time_low": 0.0,
+        "backtest_data_start_date": "2017-02-01T00:00:00",
+        "company_name": "",
+        "contract": "JUL26",
+        "contract_type": "NEAR",
+        "current_price": 0.0,
+        "decimal_digits": 1,
+        "entry_date_time": "2026-07-04T07:53:46.53",
+        "exchange": "NFO",
+        "exchange_code": 2,
+        "expiry_date_time": "2026-07-28T20:00:00",
+        "expiry_type": "MONTHLY",
+        "high_price": 0.0,
+        "id": "GD6QyE1I0vQHufztIwQ6sQaC0$aC0$",
+        "id_int": 26503969,
+        "img_url": "",
+        "instrument_tocken": "61088",
+        "intraday_sqroff_time": "2023-01-01T15:20:00",
+        "is_contract_symbol": true,
+        "is_index_symbol": false,
+        "is_stock_symbol": false,
+        "is_tradable": true,
+        "is_weekly_contract": false,
+        "lot_size": 1.0,
+        "low_price": 0.0,
+        "market_capital": 0.0,
+        "market_end_time": "2023-01-01T15:30:00",
+        "market_start_time": "2023-01-01T09:15:00",
+        "min_qty": 30.0,
+        "multiplier": 1.0,
+        "open_price": 0.0,
+        "option_type": "",
+        "previous_day_close": 0.0,
+        "required_intraday_margin": 0.0,
+        "required_positional_margin": 0.0,
+        "segment": "FUT",
+        "segment_type": "FUT",
+        "strike_price": 0.0,
+        "strike_price_gap": 100.0,
+        "symbol": "BANKNIFTY JUL FUT",
+        "symbol_short_name": "BANKNIFTY",
+        "tick_size": 0.2,
+        "trading_symbol": "BANKNIFTY26JULFUT",
+        "update_date_time": "2026-07-04T07:53:46.53",
+        "week_52_high": 0.0,
+        "week_52_low": 0.0
+    }
+}"
+"
+
+
+
+to get symbol of this exchange and segment combination:
+api-2"
+header:"Request URL
+https://api.marketmaya.com/api/symbol/getSPSymbolCombo
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.7.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a16bcacf5fdd34ca-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Mon, 06 Jul 2026 04:16:07 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=WQyk26QRLxeoPx%2B24JNyuVSKdtDBLI6OgYtUl7mUiK%2BS2aixd7YdLRuq9shp14a6PeCzhARiR%2Fyw0RyF%2B78lA8BHFOeUL34XtVtOhyqG8TWE6KAjunzv7A3Szu488jyQtan8kw%3D%3D"}]}
+server
+cloudflare
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/symbol/getSPSymbolCombo
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODMzNjI1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDMuODYuMTYuMzQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjdhNTMzYTZhLTNhNTYtNDdiZS1hY2M0LTE0NmRiY2NiY2I0NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3ODMzMDkxOTMsIm5iZiI6MTc4MzMwOTE5M30.GP1SoK49gkdoqozzy2YDD_B--ejH09_zxmKpfvvSFql5PNTNOTcJ-QDcnt7hApTdNWbVibcRZpfYfdxlRtuUNA
+content-length
+34
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+paylode:"{"exchange":"NFO","segment":"FUT"}"
+response:"
+["011NSETEST", "021NSETEST", "031NSETEST", "041NSETEST", "051NSETEST", "061NSETEST", "071NSETEST",…]
+[0 … 99]
+[100 … 199]
+[200 … 232]"
+preview:"[
+    "011NSETEST",
+    "021NSETEST",
+    "031NSETEST",
+    "041NSETEST",
+    "051NSETEST",
+    "061NSETEST",
+    "071NSETEST",
+    "081NSETEST",
+    "091NSETEST",
+    "101NSETEST",
+    "111NSETEST",
+    "121NSETEST",
+    "131NSETEST",
+    "141NSETEST",
+    "151NSETEST",
+    "161NSETEST",
+    "171NSETEST",
+    "181NSETEST",
+    "360ONE",
+    "ABB",
+    "ABCAPITAL",
+    "ADANIENSOL",
+    "ADANIENT",
+    "ADANIGREEN",
+    "ADANIPORTS",
+    "ADANIPOWER",
+    "ALKEM",
+    "AMBER",
+    "AMBUJACEM",
+    "ANGELONE",
+    "APLAPOLLO",
+    "APOLLOHOSP",
+    "ASHOKLEY",
+    "ASIANPAINT",
+    "ASTRAL",
+    "AUBANK",
+    "AUROPHARMA",
+    "AXISBANK",
+    "BAJAJ-AUTO",
+    "BAJAJFINSV",
+    "BAJAJHLDNG",
+    "BAJFINANCE",
+    "BANDHANBNK",
+    "BANKBARODA",
+    "BANKINDIA",
+    "BANKNIFTY",
+    "BDL",
+    "BEL",
+    "BHARATFORG",
+    "BHARTIARTL",
+    "BHEL",
+    "BIOCON",
+    "BLUESTARCO",
+    "BOSCHLTD",
+    "BPCL",
+    "BRITANNIA",
+    "BSE",
+    "CAMS",
+    "CANBK",
+    "CDSL",
+    "CGPOWER",
+    "CHOLAFIN",
+    "CIPLA",
+    "COALINDIA",
+    "COCHINSHIP",
+    "COFORGE",
+    "COLPAL",
+    "CONCOR",
+    "CROMPTON",
+    "CUMMINSIND",
+    "DABUR",
+    "DALBHARAT",
+    "DELHIVERY",
+    "DIVISLAB",
+    "DIXON",
+    "DLF",
+    "DMART",
+    "DRREDDY",
+    "EICHERMOT",
+    "ETERNAL",
+    "EXIDEIND",
+    "FEDERALBNK",
+    "FINNIFTY",
+    "FORCEMOT",
+    "FORTIS",
+    "GAIL",
+    "GLENMARK",
+    "GMRAIRPORT",
+    "GODFRYPHLP",
+    "GODREJCP",
+    "GODREJPROP",
+    "GRASIM",
+    "GVT&D",
+    "HAL",
+    "HAVELLS",
+    "HCLTECH",
+    "HDFCAMC",
+    "HDFCBANK",
+    "HDFCLIFE",
+    "HEROMOTOCO",
+    "HINDALCO",
+    "HINDPETRO",
+    "HINDUNILVR",
+    "HINDZINC",
+    "HYUNDAI",
+    "ICICIBANK",
+    "ICICIGI",
+    "ICICIPRULI",
+    "IDEA",
+    "IDFCFIRSTB",
+    "IEX",
+    "INDHOTEL",
+    "INDIANB",
+    "INDIGO",
+    "INDUSINDBK",
+    "INDUSTOWER",
+    "INFY",
+    "INOXWIND",
+    "IOC",
+    "IREDA",
+    "IRFC",
+    "ITC",
+    "JINDALSTEL",
+    "JIOFIN",
+    "JSWENERGY",
+    "JSWSTEEL",
+    "JUBLFOOD",
+    "KALYANKJIL",
+    "KAYNES",
+    "KEI",
+    "KFINTECH",
+    "KOTAKBANK",
+    "KPITTECH",
+    "LAURUSLABS",
+    "LICHSGFIN",
+    "LICI",
+    "LODHA",
+    "LT",
+    "LTF",
+    "LTM",
+    "LUPIN",
+    "M&M",
+    "MANAPPURAM",
+    "MANKIND",
+    "MARICO",
+    "MARUTI",
+    "MAXHEALTH",
+    "MAZDOCK",
+    "MCX",
+    "MFSL",
+    "MIDCPNIFTY",
+    "MOTHERSON",
+    "MOTILALOFS",
+    "MPHASIS",
+    "MUTHOOTFIN",
+    "NAM-INDIA",
+    "NATIONALUM",
+    "NAUKRI",
+    "NBCC",
+    "NESTLEIND",
+    "NHPC",
+    "NIFTY",
+    "NIFTYNXT50",
+    "NMDC",
+    "NTPC",
+    "NUVAMA",
+    "NYKAA",
+    "OBEROIRLTY",
+    "OFSS",
+    "OIL",
+    "ONGC",
+    "PAGEIND",
+    "PATANJALI",
+    "PAYTM",
+    "PERSISTENT",
+    "PETRONET",
+    "PFC",
+    "PGEL",
+    "PHOENIXLTD",
+    "PIDILITIND",
+    "PIIND",
+    "PNB",
+    "PNBHOUSING",
+    "POLICYBZR",
+    "POLYCAB",
+    "POWERGRID",
+    "POWERINDIA",
+    "PREMIERENE",
+    "PRESTIGE",
+    "RADICO",
+    "RBLBANK",
+    "RECLTD",
+    "RELIANCE",
+    "RVNL",
+    "SAIL",
+    "SBICARD",
+    "SBILIFE",
+    "SBIN",
+    "SHREECEM",
+    "SHRIRAMFIN",
+    "SIEMENS",
+    "SOLARINDS",
+    "SONACOMS",
+    "SRF",
+    "SUNPHARMA",
+    "SUPREMEIND",
+    "SUZLON",
+    "SWIGGY",
+    "TATACONSUM",
+    "TATAELXSI",
+    "TATAPOWER",
+    "TATASTEEL",
+    "TCS",
+    "TECHM",
+    "TIINDIA",
+    "TITAN",
+    "TMPV",
+    "TORNTPHARM",
+    "TRENT",
+    "TVSMOTOR",
+    "ULTRACEMCO",
+    "UNIONBANK",
+    "UNITDSPR",
+    "UNOMINDA",
+    "UPL",
+    "VBL",
+    "VEDL",
+    "VMM",
+    "VOLTAS",
+    "WAAREEENER",
+    "WIPRO",
+    "YESBANK",
+    "ZYDUSLIFE"
+]"
+"
+
+
+to check atm price for the symbol: 
+api-3:"
+header:"Request URL
+https://api.marketmaya.com/api/symbol/getDynamicATM
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+104.26.6.63:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-origin
+https://terminal.marketmaya.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a16bf57e0f498827-BOM
+content-encoding
+gzip
+content-type
+application/json; charset=utf-8
+date
+Mon, 06 Jul 2026 04:45:16 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=1,i
+referrer-policy
+strict-origin-when-cross-origin
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=U08Wt3nKuC4AA9BdOqMshx7%2BvdIU%2B1%2BycKMCDncuV3I0IZb8CaXAsZf6oSxvb7S%2FYP4uNPkTWzjTNTLsBSRDCNw7r%2Fg%2FMW%2BDcYveDGvCmjpBq7LBw8z2EXvJWuzAzrNDfC3AaA%3D%3D"}]}
+server
+cloudflare
+server-timing
+cfExtPri
+strict-transport-security
+max-age=31536000; includeSubDomains
+vary
+Accept-Encoding,Origin
+x-content-type-options
+nosniff
+x-frame-options
+DENY
+x-powered-by
+ASP.NET
+:authority
+api.marketmaya.com
+:method
+POST
+:path
+/api/symbol/getDynamicATM
+:scheme
+https
+accept
+application/json, text/plain, */*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-GB,en-US;q=0.9,en;q=0.8
+authorization
+Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODMzNjI1OTksImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDg1MTkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJDbGllbnQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9sb2NhbGl0eSI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA5LzA5L2lkZW50aXR5L2NsYWltcy9hY3RvciI6ImZhbHNlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiIxMDMuODYuMTYuMzQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRGV2ZWxvcGVyIEJvbnRvbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjdhNTMzYTZhLTNhNTYtNDdiZS1hY2M0LTE0NmRiY2NiY2I0NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZ3JvdXBzaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvYW5vbnltb3VzIjoiRmFsc2UiLCJpYXQiOjE3ODMzMDkxOTMsIm5iZiI6MTc4MzMwOTE5M30.GP1SoK49gkdoqozzy2YDD_B--ejH09_zxmKpfvvSFql5PNTNOTcJ-QDcnt7hApTdNWbVibcRZpfYfdxlRtuUNA
+content-length
+51
+content-type
+application/json
+origin
+https://terminal.marketmaya.com
+priority
+u=1, i
+referer
+https://terminal.marketmaya.com/
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Linux"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+
+payload:"{"exchange":"BFO","segment":"OPT","symbol":"FOCIT"}"
+response:"[6500, 6250, 6000, 5750, 5500, 5250, 5000, 4750, 4500, 4250, 4000, 3750, 3500, 3250, 3000, 2750, 2500,…]
+0
+: 
+6500
+1
+: 
+6250
+2
+: 
+6000
+3
+: 
+5750
+4
+: 
+5500
+5
+: 
+5250
+6
+: 
+5000
+7
+: 
+4750
+8
+: 
+4500
+9
+: 
+4250
+10
+: 
+4000
+11
+: 
+3750
+12
+: 
+3500
+13
+: 
+3250
+14
+: 
+3000
+15
+: 
+2750
+16
+: 
+2500
+17
+: 
+2250
+18
+: 
+2000
+19
+: 
+1750
+20
+: 
+1500
+21
+: 
+1250
+22
+: 
+1000
+23
+: 
+750
+24
+: 
+500
+25
+: 
+250
+26
+: 
+0
+27
+: 
+-250
+28
+: 
+-500
+29
+: 
+-750
+30
+: 
+-1000
+31
+: 
+-1250
+32
+: 
+-1500
+33
+: 
+-1750
+34
+: 
+-2000
+35
+: 
+-2250
+36
+: 
+-2500
+37
+: 
+-2750
+38
+: 
+-3000
+39
+: 
+-3250
+40
+: 
+-3500
+41
+: 
+-3750
+42
+: 
+-4000
+43
+: 
+-4250
+44
+: 
+-4500
+45
+: 
+-4750
+46
+: 
+-5000
+47
+: 
+-5250
+48
+: 
+-5500
+49
+: 
+-5750
+50
+: 
+-6000
+51
+: 
+-6250
+52
+: 
+-6500"
+preview:"[
+    6500.0,
+    6250.0,
+    6000.0,
+    5750.0,
+    5500.0,
+    5250.0,
+    5000.0,
+    4750.0,
+    4500.0,
+    4250.0,
+    4000.0,
+    3750.0,
+    3500.0,
+    3250.0,
+    3000.0,
+    2750.0,
+    2500.0,
+    2250.0,
+    2000.0,
+    1750.0,
+    1500.0,
+    1250.0,
+    1000.0,
+    750.0,
+    500.0,
+    250.0,
+    0.0,
+    -250.0,
+    -500.0,
+    -750.0,
+    -1000.0,
+    -1250.0,
+    -1500.0,
+    -1750.0,
+    -2000.0,
+    -2250.0,
+    -2500.0,
+    -2750.0,
+    -3000.0,
+    -3250.0,
+    -3500.0,
+    -3750.0,
+    -4000.0,
+    -4250.0,
+    -4500.0,
+    -4750.0,
+    -5000.0,
+    -5250.0,
+    -5500.0,
+    -5750.0,
+    -6000.0,
+    -6250.0,
+    -6500.0
+]"
+"

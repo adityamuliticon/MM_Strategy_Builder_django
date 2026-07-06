@@ -1,6 +1,6 @@
 from django.urls import path
 from strategys.views.views import (
-    usb_chat, usb_chat_stream, strategy_counts_view, balance_view,
+    usb_chat, usb_chat_stream,
     mlh_chat, mlh_chat_stream,
     res_chat, res_chat_stream,
     isb_chat, isb_chat_stream,
@@ -11,8 +11,6 @@ from strategys.views.views import (
 usb_urlpatterns = [
     path('api/chat', usb_chat, name='chat'),
     path('api/chat/stream', usb_chat_stream, name='chat_stream'),
-    path('api/strategy-counts/', strategy_counts_view, name='strategy_counts'),
-    path('api/balance/', balance_view, name='balance'),
 ]
 
 # MLH — /hedger/

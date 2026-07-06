@@ -65,22 +65,6 @@
             "url": { "raw": "{{baseUrl}}/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["api", "chat", "stream"] }
           }
         },
-        {
-          "name": "Strategy Counts",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": { "raw": "{{baseUrl}}/api/strategy-counts/", "host": ["{{baseUrl}}"], "path": ["api", "strategy-counts", ""] }
-          }
-        },
-        {
-          "name": "Balance",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": { "raw": "{{baseUrl}}/api/balance/", "host": ["{{baseUrl}}"], "path": ["api", "balance", ""] }
-          }
-        }
       ]
     },
     {
