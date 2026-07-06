@@ -42,6 +42,11 @@ class Config:
     CHECK_PENDING_PAYMENTS_URL = "https://api.marketmaya.com/api/mainStrategy/checkPendingPayments"
     UNDEPLOY_STRATEGY_URL = "https://webapi.marketmaya.com/api/mainStrategy/undeploy"
 
+    # Symbol verification (existence check, combo list, ATM prices)
+    SYMBOL_PROPERTY_URL = "https://api.marketmaya.com/api/symbol/getSymbolProperty"
+    SYMBOL_COMBO_URL    = "https://api.marketmaya.com/api/symbol/getSPSymbolCombo"
+    SYMBOL_ATM_URL      = "https://api.marketmaya.com/api/symbol/getDynamicATM"
+
     # Backtest (ISE and MIH and RES)
     BACKTEST_OPTIONS_URL = "https://api.marketmaya.com/api/subscription/getBacktestOptions"
     DEDUCT_BACKTEST_POINTS_URL = "https://api.marketmaya.com/api/subscription/deductBacktestPoints"

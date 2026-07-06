@@ -32,29 +32,41 @@ A pure **API backend** that powers AI-driven trading strategy creation on the **
 
 ```
 MM_Strategy_Builder_django/
-├── manage.py
-├── requirements.txt
-├── settings.py                        # Django settings
+├── manage.py                          # Django management entry point
+├── settings.py                        # Django settings (DB, Redis, installed apps)
 ├── urls.py                            # Root URL dispatcher — all routes defined here
-├── wsgi.py / asgi.py                  # WSGI / ASGI entry points
+├── wsgi.py                            # WSGI entry point (production)
+├── asgi.py                            # ASGI entry point
 ├── api_docs.py                        # ReDoc UI + OpenAPI spec views (/docs/ /openapi.json)
 ├── gunicorn.conf.py                   # Production server config (gevent, timeout, workers)
+├── requirements.txt
+├── README.md
+├── CLAUDE.md                          # GitNexus AI coding instructions
+├── AGENTS.md                          # Agent instructions
+├── MM_Strategy_Builder.postman_collection.json
+├── __init__.py
+├── .gitignore
+├── .gitattributes
 │
 ├── strategys/                         # All 5 strategy modules consolidated
+│   ├── __init__.py
 │   ├── views/
+│   │   ├── __init__.py
 │   │   ├── common.py                  # make_chat_views() factory — shared chat/stream logic
 │   │   └── views.py                   # All 5 module views + strategy_counts + balance
-│   ├── urls/
-│   │   └── urls.py                    # All API URL patterns for all 5 modules
-│   └── market_maya/
-│       └── market_maya.py             # All 5 Market Maya API clients (USB, MLH, RES, ISB, ISE)
+│   └── urls/
+│       ├── __init__.py
+│       └── urls.py                    # All API URL patterns for all 5 modules
 │
 ├── utils/                             # Shared infrastructure
+│   ├── __init__.py
 │   ├── orchestrator/
+│   │   ├── __init__.py
 │   │   ├── base_orchestrator.py       # Template method: process_message + stream_message
-│   │   ├── strategies_orchestrator.py # Concrete orchestrator with Runware AI + MCP routing
-│   │   └── orchestrators.py           # 5 singleton orchestrator instances
+│   │   ├── strategies_orchestrator.py # Concrete orchestrator — Runware AI + MCP routing
+│   │   └── orchestrators.py           # 5 singleton orchestrator instances (USB/MLH/RES/ISB/ISE)
 │   ├── generators/
+│   │   ├── __init__.py
 │   │   ├── base_generator.py
 │   │   ├── usb_generator.py           # V3 payload builder for USB
 │   │   ├── mlh_generator.py
@@ -63,6 +75,7 @@ MM_Strategy_Builder_django/
 │   │   ├── ise_generator.py
 │   │   └── indicator_master.json      # Indicator names → MM API IDs + parameter definitions
 │   ├── validation/
+│   │   ├── __init__.py
 │   │   ├── base_validator.py
 │   │   ├── usb_validator.py
 │   │   ├── mlh_validator.py
@@ -70,52 +83,109 @@ MM_Strategy_Builder_django/
 │   │   ├── isb_validator.py
 │   │   └── ise_validator.py
 │   ├── mcp/
+│   │   ├── __init__.py
 │   │   ├── tools.py                   # All MCP tool functions for all 5 modules
 │   │   └── handlers.py                # MCP tool dispatch handlers
+│   ├── prompts/
+│   │   ├── __init__.py
+│   │   ├── usb_prompt.py              # USB system prompt
+│   │   ├── mlh_prompt.py              # MLH system prompt
+│   │   ├── res_prompt.py              # RES system prompt
+│   │   ├── isb_prompt.py              # ISB system prompt
+│   │   └── ise_prompt.py              # ISE system prompt
 │   └── rag/
-│       ├── ingest.py                  # Build FAISS index from docs
+│       ├── __init__.py
+│       ├── ingest.py                  # Build FAISS index from docs/
 │       ├── retriever.py               # Query FAISS at inference time
-│       └── store/faiss_index/         # Persisted vector index
+│       └── store/
+│           └── faiss_index/
+│               ├── index.faiss        # Persisted FAISS vector index
+│               └── index.pkl          # Document metadata + embeddings
 │
 ├── services/                          # Shared Django-layer services
+│   ├── __init__.py
 │   ├── base_market_maya.py            # BaseMarketMayaService — base class for all MM clients
 │   ├── deploy.py                      # Strategy deployment / undeploy
 │   ├── backtest.py                    # get_backtest_options, run_backtest, get_backtest_result
 │   ├── exchange_resolver.py           # Exchange/segment rules engine
+│   ├── symbol_verifier.py             # Pre-save symbol + ATM offset validation (3 MM APIs)
 │   ├── request_queue.py               # Global semaphore — limits concurrent LLM API calls
-│   ├── session_context.py             # Per-user session memory
+│   ├── session_context.py             # Per-user session memory (thread-local)
 │   ├── view_helpers.py                # setup_user_context, get_history, save_messages
 │   ├── redis_client.py                # Singleton Redis client (lazy init from Config)
 │   ├── token_service.py               # Bearer token refresh + caching
-│   └── crypto.py                      # Credential encryption
-│
-├── prompts/                           # System prompts (one per module)
-│   ├── usb_prompt.py
-│   ├── mlh_prompt.py
-│   ├── res_prompt.py
-│   ├── isb_prompt.py
-│   └── ise_prompt.py
+│   └── crypto.py                      # Credential encryption (Fernet)
 │
 ├── marketmaya/                        # Market Maya API client library
-│   ├── config.py                      # All API keys, URLs, cost rates, lot sizes
+│   ├── __init__.py
+│   ├── config.py                      # All API keys, endpoint URLs, cost rates
 │   ├── auth.py                        # Login + bearer token management
 │   ├── operations.py                  # get_strategies, delete, modify, rename, balance
-│   └── main.py
+│   └── main.py                        # Module-specific MM service instances
 │
 ├── users/                             # Auth Django app
+│   ├── __init__.py
+│   ├── apps.py
 │   ├── models.py                      # AppUser + UserBearerToken (encrypted credentials)
-│   ├── middleware.py                  # AuthMiddleware — returns 401 JSON for all unauth requests
+│   ├── middleware.py                  # AuthMiddleware — 401 JSON for unauthenticated requests
 │   ├── views.py                       # auth_login, auth_logout, history_api, admin_auth_login
-│   └── urls.py
+│   ├── urls.py
+│   └── migrations/
+│       ├── __init__.py
+│       ├── 0001_initial.py
+│       ├── 0002_userbearertoken_encrypted_password.py
+│       ├── 0003_userbearertoken_cached_fields.py
+│       └── 0004_remove_cached_fields.py
 │
-├── chat_logs/                         # Chat log tracking
+├── chat_logs/                         # Chat log tracking Django app
+│   ├── __init__.py
+│   ├── apps.py
 │   ├── models.py                      # ChatLog, ChatMessage, APICallLog
-│   ├── views.py                       # logs_api, api_logs_api (JSON only)
-│   └── urls.py                        # /logs/api/  /logs/api-calls/api/
+│   ├── views.py                       # logs_api, api_logs_api (JSON)
+│   ├── urls.py                        # /logs/api/  /logs/api-calls/api/
+│   └── migrations/
+│       ├── __init__.py
+│       ├── 0001_initial.py
+│       ├── 0002_bearer_token.py
+│       ├── 0003_apicalllog.py
+│       ├── 0004_chatlog_runware_task_id.py
+│       └── 0005_multi_user.py
 │
 ├── docs/                              # Reference documentation + API payloads
 │   ├── openapi.yaml                   # OpenAPI 3.0 spec — served at /openapi.json
-│   └── api/                           # Captured Market Maya API payload examples
+│   ├── swagger.json
+│   ├── MM_Strategy_Builder_Technical_Report.pdf
+│   ├── MM - Unified Strategy Builder Plugin.md
+│   ├── MM - Indicator Signal Engine.md
+│   ├── MM - Inbound Signal Bridge.md
+│   ├── MM - Multi-Leg Hedger.md
+│   ├── MM - Rapid Execution Scalper.md
+│   ├── api/                           # Captured Market Maya API specs + payload examples
+│   │   ├── usb_payload.txt
+│   │   ├── isb_payload.txt            # ISB API info + payload
+│   │   ├── isb_api_info.txt
+│   │   ├── ise_payload.txt            # ISE API info + payload
+│   │   ├── ise_api_info.txt
+│   │   ├── Multi-Leg_Hedger_api.txt
+│   │   ├── Multi-Leg_Hedger_paylode.txt
+│   │   ├── Rapid_Execution_Scalper_api.txt
+│   │   ├── Rapid_Execution_Scalper_Paylode.txt
+│   │   ├── symbol_verification.txt    # getSymbolProperty / getSPSymbolCombo / getDynamicATM
+│   │   ├── backtest.txt
+│   │   ├── backtest_result.txt
+│   │   ├── balance.txt
+│   │   ├── deploy.txt
+│   │   ├── undeploy.txt
+│   │   ├── delete.txt
+│   │   ├── modify.txt
+│   │   ├── rename.txt
+│   │   ├── getstrategy.txt
+│   │   ├── indicators.txt
+│   │   └── socket.txt
+│   └── code_patterns/
+│       ├── python_part1_creational.md
+│       ├── python_part2_structural.md
+│       └── python_part3_behavioral.md
 │
 ├── tests/                             # Automated test scripts per module
 │   ├── run_usb_tests.py
@@ -123,9 +193,46 @@ MM_Strategy_Builder_django/
 │   ├── run_isb_tests.py
 │   ├── run_res_tests.py
 │   ├── run_mlh_tests.py
-│   └── reports/                       # Saved test run outputs
+│   ├── test_backtest_flow.py
+│   ├── test_direct.py
+│   ├── test_full_chatbot_flow.py
+│   ├── test_mlh_direct.py
+│   ├── test_queue_load.py
+│   ├── test_real_flow.py
+│   ├── test_undeploy.py
+│   ├── cases/
+│   │   ├── usb_test_case.md
+│   │   ├── ise_test_case.md
+│   │   └── isb_test_case.md
+│   └── reports/                       # Saved test run outputs (timestamped .txt)
+│       ├── test_report_20260518_093215.txt
+│       ├── test_report_20260518_094521.txt
+│       ├── test_report_20260518_095607.txt
+│       ├── test_report_20260519_101343.txt
+│       ├── test_report_20260519_102431.txt
+│       ├── test_report_20260519_103748.txt
+│       ├── test_report_20260519_112502.txt
+│       ├── test_report_20260519_120126.txt
+│       ├── test_report_20260519_122104.txt
+│       ├── ise_test_report_20260525_151034.txt
+│       ├── isb_test_report_20260525_175022.txt
+│       ├── isb_test_report_20260525_181353.txt
+│       ├── res_test_report_20260602_112736.txt
+│       ├── res_test_report_20260602_113959.txt
+│       ├── res_test_report_20260602_174105.txt
+│       ├── res_test_20260603_155557.txt
+│       ├── mlh_e2e_report_20260602_150738.txt
+│       └── mlh_e2e_report_20260602_151946.txt
 │
-└── logs/                              # Application logs (runtime output)
+└── .claude/                           # Claude Code AI assistant config
+    └── skills/
+        └── gitnexus/
+            ├── gitnexus-cli/SKILL.md
+            ├── gitnexus-debugging/SKILL.md
+            ├── gitnexus-exploring/SKILL.md
+            ├── gitnexus-guide/SKILL.md
+            ├── gitnexus-impact-analysis/SKILL.md
+            └── gitnexus-refactoring/SKILL.md
 ```
 
 ---
@@ -239,9 +346,14 @@ Once running, open `http://localhost:8000/docs/` to browse the full interactive 
 1. **Input** — Client sends a plain-English message via `POST /api/chat` or `/api/chat/stream`
 2. **RAG** — Retriever queries the shared FAISS index for relevant parameter rules
 3. **Preview** — AI generates structured Markdown tables matching the Market Maya UI tabs
-4. **Confirmation** — Client sends a confirmation message (e.g., `"confirm"`)
-5. **Deployment** — Generator builds the production payload, Market Maya client POSTs to the API
-6. **Logging** — Every interaction is saved to PostgreSQL with token counts and INR cost
+4. **Confirmation** — Client sends a confirmation message (e.g., `"save it"`, `"confirm"`)
+5. **Symbol Verification** — Before saving, `symbol_verifier.py` calls three Market Maya APIs:
+   - `getSymbolProperty` — verifies the exact exchange + segment + symbol combo exists
+   - `getSPSymbolCombo` — if the symbol is invalid, fetches all valid symbols for that pair and fuzzy-matches to suggest corrections
+   - `getDynamicATM` — fetches the list of valid ATM offset values for the symbol; any leg using an offset not in this list is rejected with the nearest valid values shown
+   - Results are cached per unique `(exchange, segment, symbol)` combo so N legs on the same symbol only hit the API once
+6. **Save** — Generator builds the production payload, Market Maya client POSTs to the API
+7. **Logging** — Every interaction is saved to PostgreSQL with token counts and INR cost
 
 ---
 
@@ -644,6 +756,26 @@ The exchange resolver (`services/exchange_resolver.py`) encodes all Market Maya 
 
 ---
 
+## Symbol Verification
+
+Every save call runs pre-flight validation before touching the Market Maya API:
+
+| Check | API | Behaviour on failure |
+|-------|-----|---------------------|
+| Symbol exists | `getSymbolProperty` | Blocked. Fuzzy-matched alternatives shown (e.g. `"TATAMOTER"` → `"Did you mean TATAMOTORS?"`) |
+| ATM offset valid | `getDynamicATM` | Blocked. Nearest valid offsets shown (e.g. `"131 not valid — nearest: 100, 150"`) |
+
+**Fuzzy matching** uses three tiers in order:
+1. `difflib.get_close_matches` (similarity ≥ 0.6) — catches letter swaps and missing characters
+2. Substring match — user input appears inside a valid symbol
+3. Prefix match — first four characters match
+
+**Caching** — for strategies with multiple legs on the same symbol (e.g. 4 RELIANCE legs in an iron condor), the symbol property and ATM list are fetched once and reused across all legs.
+
+**Fail-open** — if the Market Maya API is unreachable (network error, timeout), verification is skipped and the save proceeds. The error is logged but never blocks the user.
+
+---
+
 ## Redis Cache
 
 Chat history is served from Redis on every request — PostgreSQL is only hit on a cache miss.
@@ -666,6 +798,15 @@ Chat history is served from Redis on every request — PostgreSQL is only hit on
 - **Empty stream** — if Runware returns zero chunks, the orchestrator retries with a non-streaming request
 - **Mid-stream drop** — wrapped in `try/except`; partial content is preserved
 - **Any exception** — `try/finally` guarantees chat log is always saved and session memory always updated
+
+---
+
+## Conversation History Safety
+
+The orchestrator automatically cleans stored history before every LLM call:
+
+- **Scope-refusal stripping** — if a prior assistant message contains the scope-refusal phrase, the refusal suffix is removed before the message is sent to the model. When the entire message was a refusal, it is dropped entirely. This prevents a single bad turn from cascading into a refusal loop across future messages.
+- **Save-confirmation gating** — the save instruction is only injected when the last assistant message was explicitly asking `"Shall I proceed to save?"`. Messages like `"ok take this TVSMOTOR"` or `"yes but change the name"` are passed through as normal chat, not treated as save confirmations.
 
 ---
 

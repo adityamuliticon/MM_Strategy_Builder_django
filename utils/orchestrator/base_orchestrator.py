@@ -9,6 +9,13 @@ _CONFIRM_WORDS = frozenset({
     'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok',
     'sure', 'approve', 'approved', 'continue', 'do it', 'submit',
 })
+# Phrases the last assistant message must contain for _is_confirm to trigger.
+# Prevents "ok take this SYMBOL" / "yes but change X" from being treated as save-confirms.
+_SAVE_PREVIEW_SIGNALS = frozenset({
+    "shall i proceed", "shall i save", "proceed to save",
+    "want me to save", "save this strategy", "do you want to save",
+    "would you like to save", "ready to save", "confirm to save",
+})
 # Phrases that indicate the last assistant message was about deployment (not strategy creation).
 # Used to suppress _confirm_save_instruction injection in that context.
 _DEPLOY_CONTEXT_SIGNALS = frozenset({
@@ -201,12 +208,49 @@ class BaseOrchestrator:
     def _confirm_retry_msg_stream(self):   return None  # MLH overrides
     def _stream_empty_confirm_msg(self):   return None  # RES overrides
 
+    def _clean_history(self, history):
+        """
+        Strip scope-refusal text from assistant messages so it doesn't cascade.
+
+        When the LLM appended the scope-refusal phrase to an otherwise valid response
+        (e.g. "I can't find 'tatamoder'... I'm built exclusively..."), we keep the
+        real part and drop the refusal suffix.  When the ENTIRE message was a refusal
+        (starts with the phrase), we drop the message outright.
+
+        This prevents the model from pattern-matching its own prior refusal on the
+        next turn and repeating it.
+        """
+        _REFUSAL = "I'm built exclusively"
+        result = []
+        for m in history:
+            if m.get("role") == "assistant" and _REFUSAL in m.get("content", ""):
+                before = m["content"][:m["content"].index(_REFUSAL)].strip()
+                if before:
+                    result.append({"role": "assistant", "content": before})
+                # else: pure refusal — drop entirely
+            else:
+                result.append(m)
+        return result
+
+    def _is_save_preview_context(self, history):
+        """True when the last assistant message was asking the user to confirm a save."""
+        for msg in reversed(history or []):
+            if msg.get("role") == "assistant" and msg.get("content"):
+                content = msg["content"].lower()
+                return any(sig in content for sig in _SAVE_PREVIEW_SIGNALS)
+        return False
+
     # ── Template method: process_message ──────────────────────────────────
     def process_message(self, user_message, history=None):
         if history is None:
             history = []
 
-        _is_confirm = bool(history) and any(w in user_message.lower() for w in _CONFIRM_WORDS)
+        history = self._clean_history(history)
+        _is_confirm = (
+            bool(history)
+            and any(w in user_message.lower() for w in _CONFIRM_WORDS)
+            and self._is_save_preview_context(history)
+        )
         _in_deploy_ctx = self._is_deploy_confirm_context(history)
         context = self._retriever().get_context(user_message)
         messages = [
@@ -215,10 +259,11 @@ class BaseOrchestrator:
         ] + history + [{"role": "user", "content": user_message}]
 
         if _is_confirm and not _in_deploy_ctx and not self._is_tool_confirm_context(history):
-            messages[-1] = {
-                "role": "user",
-                "content": user_message + "\n\n" + self._confirm_save_instruction(),
-            }
+            instr = self._confirm_save_instruction()
+            if instr:
+                # Replace the user message entirely — if "save it" reaches the LLM as the
+                # lead text, the scope-refusal rule fires before the instruction is read.
+                messages[-1] = {"role": "user", "content": instr}
 
         max_turns = 10
         executed_tools = set()
@@ -314,8 +359,12 @@ class BaseOrchestrator:
                             messages.append({"role": "assistant", "content": content})
                             messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
                             tool_called = True
-                            if tool_name == _save_tool and tool_result.get("status") == "success":
-                                return {"message": self._save_success_process(content, json_str, args, tool_result), "input_tokens": _in_tok, "output_tokens": _out_tok}
+                            if tool_name == _save_tool:
+                                if tool_result.get("status") == "success":
+                                    msg = self._save_success_process(content, json_str, args, tool_result)
+                                else:
+                                    msg = tool_result.get("message", "Failed to save strategy. Please try again.")
+                                return {"message": msg, "input_tokens": _in_tok, "output_tokens": _out_tok}
                             break
                     except Exception as e:
                         print(f"[{_prefix}] JSON parsing error: {e}")
@@ -356,6 +405,8 @@ class BaseOrchestrator:
     def stream_message(self, user_message, history=None):
         if history is None:
             history = []
+
+        history = self._clean_history(history)
 
         # ── Shortcut: digit selection in a backtest-options context ────────
         # The LLM returns empty content when the user says "1"/"2"/... after
@@ -455,7 +506,11 @@ class BaseOrchestrator:
                     break
         # ─────────────────────────────────────────────────────────────────────────────
 
-        _is_confirm = bool(history) and any(w in user_message.lower() for w in _CONFIRM_WORDS)
+        _is_confirm = (
+            bool(history)
+            and any(w in user_message.lower() for w in _CONFIRM_WORDS)
+            and self._is_save_preview_context(history)
+        )
         _in_deploy_ctx = self._is_deploy_confirm_context(history)
         context = self._retriever().get_context(user_message)
         messages = [
@@ -464,10 +519,11 @@ class BaseOrchestrator:
         ] + history + [{"role": "user", "content": user_message}]
 
         if _is_confirm and not _in_deploy_ctx and not self._is_tool_confirm_context(history) and self._confirm_in_stream():
-            messages[-1] = {
-                "role": "user",
-                "content": user_message + "\n\n" + self._confirm_save_instruction(),
-            }
+            instr = self._confirm_save_instruction()
+            if instr:
+                # Replace the user message entirely — if "save it" reaches the LLM as the
+                # lead text, the scope-refusal rule fires before the instruction is read.
+                messages[-1] = {"role": "user", "content": instr}
 
         max_turns = 10
         executed_tools = set()
@@ -607,8 +663,11 @@ class BaseOrchestrator:
                             messages.append({"role": "assistant", "content": full_content})
                             messages.append({"role": "user", "content": f"SYSTEM TOOL RESULT: {json.dumps(tool_result)}"})
                             tool_called = True
-                            if tool_name == _save_tool and tool_result.get("status") == "success":
-                                yield {"t": "chunk", "v": self._save_success_stream(args, tool_result)}
+                            if tool_name == _save_tool:
+                                if tool_result.get("status") == "success":
+                                    yield {"t": "chunk", "v": self._save_success_stream(args, tool_result)}
+                                else:
+                                    yield {"t": "chunk", "v": tool_result.get("message", "Failed to save strategy. Please try again.")}
                                 yield {"t": "done", "in_tok": _in_tok, "out_tok": _out_tok}
                                 return
                             if tool_name == "get_deploy_options" and tool_result.get("status") == "success":

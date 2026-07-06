@@ -59,9 +59,11 @@ class Orchestrator(StrategiesOrchestrator):
 
     def _confirm_save_instruction(self):
         return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+            "The user confirmed they want to save this strategy. "
+            "Output ONLY a valid JSON tool call for create_and_save_strategy — "
+            "no other text, no refusals. "
+            "Use ALL actual field values from the strategy preview shown above. "
+            "Respond with valid JSON only."
         )
 
     def _credits_check(self, msg):
@@ -133,23 +135,26 @@ class MLHOrchestrator(BaseOrchestrator):
 
     def _confirm_save_instruction(self):
         return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_mlh_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_mlh_strategy\", \"arguments\": {\"strategy_json\": {...all fields including legs array...}}}]"
+            "The user confirmed they want to save this strategy. "
+            "You MUST output ONLY a valid JSON tool call for create_and_save_mlh_strategy. "
+            "Do NOT refuse. Do NOT add any other text before or after the JSON. "
+            "Use ALL actual field values from the strategy preview shown above: "
+            "strategy_name, exchange, segment, symbol, trading_mode, lots, "
+            "and the complete legs array with direction, option_type, atm, and lots for every leg. "
+            "Respond with valid JSON only."
         )
 
     def _confirm_retry_msg_process(self):
         return (
-            "You must output the JSON tool call block now. No explanations. Just this:\n"
-            "{\"tool\": \"create_and_save_mlh_strategy\", \"arguments\": {\"strategy_json\": "
-            "{\"strategy_name\": \"...\", \"trading_mode\": \"...\", \"exchange\": \"...\", "
-            "\"legs\": [...all legs...], ... all other fields ...}}}"
+            "Output ONLY the complete JSON tool call for create_and_save_mlh_strategy. "
+            "Fill every field with the actual values from the strategy preview in this conversation. "
+            "Valid JSON only — no explanations, no refusals."
         )
 
     def _confirm_retry_msg_stream(self):
         return (
-            "Generate the JSON tool call block now. Output only:\n"
-            "{\"tool\": \"create_and_save_mlh_strategy\", \"arguments\": {\"strategy_json\": {...}}}"
+            "Output ONLY the complete JSON tool call for create_and_save_mlh_strategy. "
+            "Use the actual field values shown in the preview. Valid JSON only."
         )
 
     def _save_success_process(self, content, json_str, args, tool_result):
@@ -217,9 +222,11 @@ class RESOrchestrator(BaseOrchestrator):
 
     def _confirm_save_instruction(self):
         return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_res_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+            "The user confirmed they want to save this strategy. "
+            "Output ONLY a valid JSON tool call for create_and_save_res_strategy — "
+            "no other text, no refusals. "
+            "Use ALL actual field values from the strategy preview shown above. "
+            "Respond with valid JSON only."
         )
 
     def _process_error_msgs(self):
@@ -240,10 +247,9 @@ class RESOrchestrator(BaseOrchestrator):
 
     def _confirm_retry_msg_process(self):
         return (
-            "You must output the JSON tool call block now. No explanations. Just this:\n"
-            "{\"tool\": \"create_and_save_res_strategy\", \"arguments\": {\"strategy_json\": "
-            "{\"strategy_name\": \"...\", \"main_exchange\": \"...\", \"main_segment\": \"...\", "
-            "\"main_symbol\": \"...\", ... all other fields from the preview ...}}}"
+            "Output ONLY the complete JSON tool call for create_and_save_res_strategy. "
+            "Fill every field with the actual values from the strategy preview in this conversation. "
+            "Valid JSON only — no explanations, no refusals."
         )
 
     def _stream_empty_confirm_msg(self):
@@ -331,9 +337,11 @@ class ISBOrchestrator(BaseOrchestrator):
 
     def _confirm_save_instruction(self):
         return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_isb_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_isb_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+            "The user confirmed they want to save this strategy. "
+            "Output ONLY a valid JSON tool call for create_and_save_isb_strategy — "
+            "no other text, no refusals. "
+            "Use ALL actual field values from the strategy preview shown above. "
+            "Respond with valid JSON only."
         )
 
     def _process_error_msgs(self):
@@ -398,9 +406,11 @@ class ISEOrchestrator(BaseOrchestrator):
 
     def _confirm_save_instruction(self):
         return (
-            "[SAVE NOW: Output ONLY a JSON block calling create_and_save_ise_strategy. "
-            "Use ALL field values from the preview tables above. "
-            "Format exactly: {\"tool\": \"create_and_save_ise_strategy\", \"arguments\": {\"strategy_json\": {...all fields...}}}]"
+            "The user confirmed they want to save this strategy. "
+            "Output ONLY a valid JSON tool call for create_and_save_ise_strategy — "
+            "no other text, no refusals. "
+            "Use ALL actual field values from the strategy preview shown above. "
+            "Respond with valid JSON only."
         )
 
     def _process_error_msgs(self):

@@ -20,6 +20,7 @@ handler classes map the unqualified LLM tool_name to the right function.
 
 # ── Shared service imports ─────────────────────────────────────────────────────
 from utils.rag.retriever import common_retriever
+from services.symbol_verifier import verify_strategy_symbols as _verify_symbols
 from marketmaya.operations import Operations as _Ops
 _get_strategies      = _Ops.get_strategies
 _delete_strategy     = _Ops.delete_strategy
@@ -68,6 +69,43 @@ from services.backtest import (
     run_backtest         as _ise_run_backtest,
     get_backtest_result  as _ise_get_backtest_result,
 )
+
+
+# ── Symbol-spec helpers ───────────────────────────────────────────────────────
+
+def _specs_from_legs(strategy_json: dict) -> list:
+    """Extract (exchange, segment, symbol, atm, leg_index) from a legs-based strategy."""
+    return [
+        {
+            "exchange":  leg.get("exchange", ""),
+            "segment":   leg.get("segment", ""),
+            "symbol":    leg.get("symbol", ""),
+            "atm":       leg.get("atm"),   # None if not present — skips ATM check
+            "leg_index": i,
+        }
+        for i, leg in enumerate(strategy_json.get("legs", []), 1)
+    ]
+
+
+def _specs_from_top(strategy_json: dict) -> list:
+    """Extract a single (exchange, segment, symbol) from a top-level strategy (RES)."""
+    return [{
+        "exchange": strategy_json.get("exchange", ""),
+        "segment":  strategy_json.get("segment", ""),
+        "symbol":   strategy_json.get("symbol", ""),
+    }]
+
+
+def _check_symbols(specs: list) -> dict | None:
+    """Run symbol verification. Returns an error dict if any symbol is invalid, else None."""
+    result = _verify_symbols(specs)
+    if not result["valid"]:
+        return {
+            "status":  "error",
+            "message": result["error"],
+            "details": result.get("details", []),
+        }
+    return None
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -188,6 +226,9 @@ def create_and_save_strategy(strategy_json):
     validation = validate_strategy(strategy_json)
     if validation.get("status") == "error":
         return validation
+    sym_err = _check_symbols(_specs_from_legs(strategy_json))
+    if sym_err:
+        return sym_err
     payload = generate_payload(strategy_json)
     return deploy(payload)
 
@@ -217,6 +258,9 @@ def create_and_save_mlh_strategy(strategy_json):
     errors = mlh_validator.validate(strategy_json)
     if errors:
         return {"status": "error", "message": "Validation failed", "errors": errors}
+    sym_err = _check_symbols(_specs_from_legs(strategy_json))
+    if sym_err:
+        return sym_err
     payload = mlh_generator.generate_payload(strategy_json)
     result = mlh_market_maya.deploy(payload)
     if result["status"] == "success":
@@ -264,6 +308,9 @@ def create_and_save_res_strategy(strategy_json):
     errors = res_validator.validate_strategy(strategy_json)
     if errors:
         return {"status": "error", "message": "Validation failed", "errors": errors}
+    sym_err = _check_symbols(_specs_from_top(strategy_json))
+    if sym_err:
+        return sym_err
     payload = res_generate_payload(strategy_json)
     return res_deploy(payload)
 
@@ -309,6 +356,9 @@ def create_and_save_isb_strategy(strategy_json):
     validation = isb_validate_strategy(strategy_json)
     if validation.get("status") == "error":
         return validation
+    sym_err = _check_symbols(_specs_from_legs(strategy_json))
+    if sym_err:
+        return sym_err
     payload = isb_generate_payload(strategy_json)
     return isb_save(payload)
 
@@ -341,6 +391,9 @@ def create_and_save_ise_strategy(strategy_json):
     validation = ise_validate_strategy(strategy_json)
     if validation.get("status") == "error":
         return validation
+    sym_err = _check_symbols(_specs_from_legs(strategy_json))
+    if sym_err:
+        return sym_err
     payload = ise_generate_payload(strategy_json)
     return ise_save(payload)
 
