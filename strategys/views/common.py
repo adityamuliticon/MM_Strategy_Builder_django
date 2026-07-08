@@ -8,7 +8,6 @@ and gets back ready-to-use (chat, chat_stream) view functions.
 
 import json
 from django.http import JsonResponse, StreamingHttpResponse
-from django.views.decorators.csrf import csrf_exempt
 
 from chat_logs.models import ChatLog
 from marketmaya.config import Config
@@ -24,7 +23,6 @@ def make_chat_views(module, orchestrator):
     orchestrator — the singleton orchestrator instance for this module
     """
 
-    @csrf_exempt
     def chat(request):
         if request.method != 'POST':
             return JsonResponse({'error': 'Method not allowed'}, status=405)
@@ -65,7 +63,6 @@ def make_chat_views(module, orchestrator):
         )
         return JsonResponse({"status": "success", "message": response_text})
 
-    @csrf_exempt
     def chat_stream(request):
         if request.method != 'POST':
             return JsonResponse({'error': 'Method not allowed'}, status=405)

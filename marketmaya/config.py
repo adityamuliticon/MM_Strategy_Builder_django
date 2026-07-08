@@ -84,7 +84,11 @@ class Config:
     # PostgreSQL
     DB_NAME     = os.getenv("DB_NAME", "mm_strategy_builder")
     DB_USER     = os.getenv("DB_USER", "postgres")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    if not DB_PASSWORD:
+        raise RuntimeError(
+            "DB_PASSWORD is not set. Add DB_PASSWORD=<your-postgres-password> to your .env file."
+        )
     DB_HOST     = os.getenv("DB_HOST", "localhost")
     DB_PORT     = os.getenv("DB_PORT", "5432")
 

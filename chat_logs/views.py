@@ -50,7 +50,7 @@ def logs_api(request):
         page = 1
 
     qs = _apply_filters(
-        ChatLog.objects.all().order_by('-timestamp'),
+        ChatLog.objects.filter(user_id=request.app_user_id).order_by('-timestamp'),
         module_filter, date_from, date_to,
     )
 
@@ -129,7 +129,7 @@ def api_logs_api(request):
         page = 1
 
     qs = _apply_api_filters(
-        APICallLog.objects.all().order_by('-timestamp'),
+        APICallLog.objects.filter(user_id=request.app_user_id).order_by('-timestamp'),
         module, call_type, status, session_id, date_from, date_to,
     )
 

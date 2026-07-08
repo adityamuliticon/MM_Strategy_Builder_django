@@ -2,10 +2,6 @@
 
 from utils.validation.base_validator import BaseValidator
 
-VALID_SEGMENTS = {"FUT", "OPT", "EQ"}
-VALID_EXCHANGES = {"NSE", "NFO", "BFO", "BSE", "MCX", "CDS"}
-VALID_CONTRACTS = {"NEAR", "NEXT", "FAR"}
-VALID_EXPIRIES = {"MONTHLY", "WEEKLY"}
 VALID_QTY_DIST = {"Fix", "Capital(%)", "Capital Risk(%)", "Allocation Method 1"}
 VALID_PRODUCTS = {"MIS", "NRML", "CNC"}
 
@@ -45,22 +41,22 @@ class ISBValidator(BaseValidator):
             prefix = f"Leg {i}"
 
             exchange = str(leg.get("exchange", "NFO")).upper()
-            if exchange not in VALID_EXCHANGES:
-                errors.append(f"{prefix}: exchange must be one of {VALID_EXCHANGES}.")
+            if exchange not in self.VALID_EXCHANGES:
+                errors.append(f"{prefix}: exchange must be one of {self.VALID_EXCHANGES}.")
 
             segment = str(leg.get("segment", "FUT"))
             seg_norm = segment.upper()
             if seg_norm in ("STOCK", "EQ"):
                 seg_norm = "EQ"
-            if seg_norm not in VALID_SEGMENTS:
+            if seg_norm not in self.VALID_SEGMENTS:
                 errors.append(f"{prefix}: segment must be FUT, OPT, or EQ.")
 
             contract = str(leg.get("contract", "NEAR")).upper()
-            if contract not in VALID_CONTRACTS:
+            if contract not in self.VALID_CONTRACTS:
                 errors.append(f"{prefix}: contract must be NEAR, NEXT, or FAR.")
 
             expiry = str(leg.get("expiry", "MONTHLY")).upper()
-            if expiry not in VALID_EXPIRIES:
+            if expiry not in self.VALID_EXPIRIES:
                 errors.append(f"{prefix}: expiry must be MONTHLY or WEEKLY.")
 
             if seg_norm == "OPT":

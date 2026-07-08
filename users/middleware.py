@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from services.session_context import set_user_token, set_user_id
 
 _EXCLUDED_PATHS = frozenset({
     '/auth/login/',
@@ -13,6 +14,11 @@ class AuthMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # Reset thread-locals at the start of every request so a worker thread
+        # that previously handled User A cannot leak A's token into User B's request.
+        set_user_id(None)
+        set_user_token('')
+
         path = request.path
 
         if path in _EXCLUDED_PATHS:
@@ -26,7 +32,6 @@ class AuthMiddleware:
         # API calls use this user's JWT without signature changes.
         try:
             from users.models import UserBearerToken
-            from services.session_context import set_user_token, set_user_id
             set_user_id(user_id)
             token_record = UserBearerToken.objects.filter(user_id=user_id).first()
             if token_record:
@@ -35,4 +40,9 @@ class AuthMiddleware:
             pass
 
         request.app_user_id = user_id
-        return self.get_response(request)
+        try:
+            return self.get_response(request)
+        finally:
+            # Clear thread-locals after the request completes (belt-and-suspenders).
+            set_user_id(None)
+            set_user_token('')

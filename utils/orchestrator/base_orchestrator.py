@@ -4,6 +4,7 @@ import json
 import re
 from openai import OpenAI, BadRequestError, AuthenticationError, RateLimitError, APIConnectionError
 from marketmaya.config import Config
+from utils.rag.retriever import common_retriever
 
 _CONFIRM_WORDS = frozenset({
     'yes', 'proceed', 'save', 'save it', 'confirm', 'go', 'ok',
@@ -128,22 +129,49 @@ def _parse_deploy_settings(msg):
     return o
 
 
+_COMMON_STATUS = {
+    "get_my_strategies":   "Fetching your strategies...",
+    "delete_strategy":     "Deleting strategy...",
+    "get_strategy_record": "Fetching strategy record...",
+    "modify_strategy":     "Saving changes...",
+    "rename_strategy":     "Renaming strategy...",
+    "get_balance":         "Fetching balance...",
+    "get_deploy_options":  "Fetching deploy options...",
+    "deploy_strategy":     "Deploying strategy to Market Maya...",
+    "undeploy_strategy":   "Undeploying strategy...",
+}
+
+_BACKTEST_STATUS = {
+    "get_backtest_options": "Fetching backtest options...",
+    "run_backtest":         "Running backtest (this may take 10–30 seconds)...",
+    "get_backtest_result":  "Fetching backtest results...",
+}
+
+
 class BaseOrchestrator:
     def __init__(self):
         self.client = OpenAI(api_key=Config.RUNWARE_API_KEY, base_url=Config.RUNWARE_BASE_URL)
         self.model = Config.RUNWARE_MODEL_ID
 
     # ── Abstract hooks — implement in every subclass ───────────────────────
-    def _retriever(self):                raise NotImplementedError
+    def _retriever(self):                return common_retriever
     def _handler(self):                  raise NotImplementedError
-    def _context_label(self):            raise NotImplementedError
+    def _context_label(self):            return "Relevant Documentation Context"
     def _save_tool_name(self):           raise NotImplementedError
     def _tool_whitelist(self):           raise NotImplementedError
     def _strategy_json_wrap_keys(self):  raise NotImplementedError
     def _module_prefix(self):            raise NotImplementedError
     def _status_messages(self):          raise NotImplementedError
     def _max_turns_msg(self):            raise NotImplementedError
-    def _confirm_save_instruction(self): raise NotImplementedError
+
+    def _confirm_save_instruction(self):
+        return (
+            "The user confirmed they want to save this strategy. "
+            f"Output ONLY a valid JSON tool call for {self._save_tool_name()} — "
+            "no other text, no refusals. "
+            "Use ALL actual field values from the strategy preview shown above. "
+            "Respond with valid JSON only."
+        )
 
     # ── Hooks with defaults — override per module as needed ────────────────
     def _temperature(self):          return None   # None → omit; 0.1 → pass
@@ -364,6 +392,33 @@ class BaseOrchestrator:
                                     msg = self._save_success_process(content, json_str, args, tool_result)
                                 else:
                                     msg = tool_result.get("message", "Failed to save strategy. Please try again.")
+                                return {"message": msg, "input_tokens": _in_tok, "output_tokens": _out_tok}
+                            if tool_name == "get_deploy_options":
+                                if tool_result.get("status") == "success":
+                                    _dn = tool_result.get("strategy_name") or args.get("strategy_name") or args.get("strategy_id", "")
+                                    _db = tool_result.get("point_balance")
+                                    _dc = tool_result.get("live_trade_charge_per_order", 1.0)
+                                    return {"message": f"**Deploy: {_dn}** · Balance: {_db} pts · Live charge: {_dc} pt/order\n\n{_SETTINGS_TABLE}", "input_tokens": _in_tok, "output_tokens": _out_tok}
+                                if self._has_direct_yield():
+                                    return {"message": tool_result.get("message", "Failed to fetch deploy options. Please try again."), "input_tokens": _in_tok, "output_tokens": _out_tok}
+                            if tool_name == "deploy_strategy":
+                                if tool_result.get("status") == "success" and not tool_result.get("requires_confirmation"):
+                                    return {"message": tool_result.get("message", "Strategy deployed successfully."), "input_tokens": _in_tok, "output_tokens": _out_tok}
+                                if self._has_direct_yield():
+                                    return {"message": tool_result.get("message", "Please confirm the deploy settings and try again."), "input_tokens": _in_tok, "output_tokens": _out_tok}
+                            if tool_name == "run_backtest":
+                                return {"message": tool_result.get("message", "Backtest triggered. Use get_backtest_result when ready."), "input_tokens": _in_tok, "output_tokens": _out_tok}
+                            if self._has_direct_yield() and tool_name in _DIRECT_YIELD_TOOLS:
+                                ok = tool_result.get("status") == "success"
+                                if ok and tool_result.get("formatted_list"):
+                                    msg = tool_result["formatted_list"]
+                                elif ok and tool_result.get("balance") is not None:
+                                    b = tool_result
+                                    msg = f"Balance: ₹{b['balance']} | Hold: ₹{b['hold_balance']} | Points: {b['point_balance']}"
+                                elif ok and tool_result.get("message"):
+                                    msg = tool_result["message"]
+                                else:
+                                    msg = f"⚠️ {tool_result.get('message', 'An error occurred.')}"
                                 return {"message": msg, "input_tokens": _in_tok, "output_tokens": _out_tok}
                             break
                     except Exception as e:

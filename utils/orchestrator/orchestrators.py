@@ -2,9 +2,8 @@
 
 import re
 
-from utils.orchestrator.base_orchestrator import BaseOrchestrator
+from utils.orchestrator.base_orchestrator import BaseOrchestrator, _COMMON_STATUS, _BACKTEST_STATUS
 from utils.orchestrator.strategies_orchestrator import StrategiesOrchestrator
-from utils.rag.retriever import common_retriever
 from utils.mcp.handlers import dispatch_usb_tool, mlh_handler, res_handler, isb_handler, ise_handler
 from utils.prompts.usb_prompt import USB_SYSTEM_PROMPT
 from utils.prompts.mlh_prompt import MLH_SYSTEM_PROMPT
@@ -20,9 +19,6 @@ class Orchestrator(StrategiesOrchestrator):
     def __init__(self):
         super().__init__()
         self.system_prompt = USB_SYSTEM_PROMPT
-
-    def _retriever(self):            return common_retriever
-    def _context_label(self):        return "Relevant Documentation Context"
 
     def _dispatch_module_tool(self, tool_name, arguments):
         return dispatch_usb_tool(tool_name, arguments)
@@ -41,30 +37,10 @@ class Orchestrator(StrategiesOrchestrator):
         return {"create_and_save_strategy", "validate_strategy"}
 
     def _status_messages(self):
-        return {
-            "create_and_save_strategy": "Saving strategy to Market Maya...",
-            "get_my_strategies":        "Fetching your strategies...",
-            "delete_strategy":          "Deleting strategy...",
-            "get_strategy_record":      "Fetching strategy record...",
-            "modify_strategy":          "Saving changes...",
-            "rename_strategy":          "Renaming strategy...",
-            "get_balance":              "Fetching balance...",
-            "get_deploy_options":       "Fetching deploy options...",
-            "deploy_strategy":          "Deploying strategy to Market Maya...",
-            "undeploy_strategy":        "Undeploying strategy...",
-        }
+        return {"create_and_save_strategy": "Saving strategy to Market Maya...", **_COMMON_STATUS}
 
     def _max_turns_msg(self):
         return "You have done enough research. Please provide the final strategy summary and ask for save confirmation now."
-
-    def _confirm_save_instruction(self):
-        return (
-            "The user confirmed they want to save this strategy. "
-            "Output ONLY a valid JSON tool call for create_and_save_strategy — "
-            "no other text, no refusals. "
-            "Use ALL actual field values from the strategy preview shown above. "
-            "Respond with valid JSON only."
-        )
 
     def _credits_check(self, msg):
         return "Insufficient credits" in msg or "credits" in msg.lower()
@@ -90,9 +66,7 @@ class MLHOrchestrator(BaseOrchestrator):
         super().__init__()
         self.system_prompt = MLH_SYSTEM_PROMPT
 
-    def _retriever(self):            return common_retriever
     def _handler(self):              return mlh_handler
-    def _context_label(self):        return "Relevant Documentation Context"
     def _save_tool_name(self):       return "create_and_save_mlh_strategy"
     def _module_prefix(self):        return "MLH"
 
@@ -116,18 +90,8 @@ class MLHOrchestrator(BaseOrchestrator):
     def _status_messages(self):
         return {
             "create_and_save_mlh_strategy": "Saving Multi-Leg Hedger strategy to Market Maya...",
-            "get_my_strategies":            "Fetching your strategies...",
-            "delete_strategy":              "Deleting strategy...",
-            "get_strategy_record":          "Fetching strategy record...",
-            "modify_strategy":              "Saving changes...",
-            "rename_strategy":              "Renaming strategy...",
-            "get_balance":                  "Fetching balance...",
-            "get_backtest_options":         "Fetching backtest options...",
-            "run_backtest":                 "Running backtest (this may take 10–30 seconds)...",
-            "get_backtest_result":          "Fetching backtest results...",
-            "get_deploy_options":           "Fetching deploy options...",
-            "deploy_strategy":              "Deploying strategy to Market Maya...",
-            "undeploy_strategy":            "Undeploying strategy...",
+            **_COMMON_STATUS,
+            **_BACKTEST_STATUS,
         }
 
     def _max_turns_msg(self):
@@ -176,9 +140,7 @@ class RESOrchestrator(BaseOrchestrator):
         super().__init__()
         self.system_prompt = RES_SYSTEM_PROMPT
 
-    def _retriever(self):            return common_retriever
     def _handler(self):              return res_handler
-    def _context_label(self):        return "Relevant Documentation Context"
     def _save_tool_name(self):       return "create_and_save_res_strategy"
     def _module_prefix(self):        return "RES"
 
@@ -203,31 +165,12 @@ class RESOrchestrator(BaseOrchestrator):
     def _status_messages(self):
         return {
             "create_and_save_res_strategy": "Deploying scalping strategy to Market Maya...",
-            "get_my_strategies":            "Fetching your strategies...",
-            "delete_strategy":              "Deleting strategy...",
-            "get_strategy_record":          "Fetching strategy record...",
-            "modify_strategy":              "Saving changes...",
-            "rename_strategy":              "Renaming strategy...",
-            "get_balance":                  "Fetching balance...",
-            "get_backtest_options":         "Fetching backtest options...",
-            "run_backtest":                 "Running backtest (this may take 10–30 seconds)...",
-            "get_backtest_result":          "Fetching backtest results...",
-            "get_deploy_options":           "Fetching deploy options...",
-            "deploy_strategy":              "Deploying strategy to Market Maya...",
-            "undeploy_strategy":            "Undeploying strategy...",
+            **_COMMON_STATUS,
+            **_BACKTEST_STATUS,
         }
 
     def _max_turns_msg(self):
         return "Please provide the final strategy summary and ask for save confirmation."
-
-    def _confirm_save_instruction(self):
-        return (
-            "The user confirmed they want to save this strategy. "
-            "Output ONLY a valid JSON tool call for create_and_save_res_strategy — "
-            "no other text, no refusals. "
-            "Use ALL actual field values from the strategy preview shown above. "
-            "Respond with valid JSON only."
-        )
 
     def _process_error_msgs(self):
         return {
@@ -301,7 +244,6 @@ class ISBOrchestrator(BaseOrchestrator):
         super().__init__()
         self.system_prompt = ISB_SYSTEM_PROMPT
 
-    def _retriever(self):            return common_retriever
     def _handler(self):              return isb_handler
     def _context_label(self):        return "Relevant ISB Documentation"
     def _save_tool_name(self):       return "create_and_save_isb_strategy"
@@ -319,30 +261,10 @@ class ISBOrchestrator(BaseOrchestrator):
         return {"create_and_save_isb_strategy", "isb_validate_strategy", "isb_generate_payload"}
 
     def _status_messages(self):
-        return {
-            "create_and_save_isb_strategy": "Saving strategy to Market Maya...",
-            "get_my_strategies":            "Fetching your strategies...",
-            "delete_strategy":              "Deleting strategy...",
-            "get_strategy_record":          "Fetching strategy record...",
-            "modify_strategy":              "Saving changes...",
-            "rename_strategy":              "Renaming strategy...",
-            "get_balance":                  "Fetching balance...",
-            "get_deploy_options":           "Fetching deploy options...",
-            "deploy_strategy":              "Deploying strategy to Market Maya...",
-            "undeploy_strategy":            "Undeploying strategy...",
-        }
+        return {"create_and_save_isb_strategy": "Saving strategy to Market Maya...", **_COMMON_STATUS}
 
     def _max_turns_msg(self):
         return "Summarise the strategy and ask for save confirmation now."
-
-    def _confirm_save_instruction(self):
-        return (
-            "The user confirmed they want to save this strategy. "
-            "Output ONLY a valid JSON tool call for create_and_save_isb_strategy — "
-            "no other text, no refusals. "
-            "Use ALL actual field values from the strategy preview shown above. "
-            "Respond with valid JSON only."
-        )
 
     def _process_error_msgs(self):
         return {
@@ -365,7 +287,6 @@ class ISEOrchestrator(BaseOrchestrator):
         super().__init__()
         self.system_prompt = ISE_SYSTEM_PROMPT
 
-    def _retriever(self):            return common_retriever
     def _handler(self):              return ise_handler
     def _context_label(self):        return "Relevant ISE Documentation"
     def _save_tool_name(self):       return "create_and_save_ise_strategy"
@@ -387,31 +308,12 @@ class ISEOrchestrator(BaseOrchestrator):
     def _status_messages(self):
         return {
             "create_and_save_ise_strategy": "Saving strategy to Market Maya...",
-            "get_my_strategies":            "Fetching your strategies...",
-            "delete_strategy":              "Deleting strategy...",
-            "get_strategy_record":          "Fetching strategy record...",
-            "modify_strategy":              "Saving changes...",
-            "rename_strategy":              "Renaming strategy...",
-            "get_balance":                  "Fetching balance...",
-            "get_backtest_options":         "Fetching backtest options...",
-            "run_backtest":                 "Running backtest (this may take 10–30 seconds)...",
-            "get_backtest_result":          "Fetching backtest results...",
-            "get_deploy_options":           "Fetching deploy options...",
-            "deploy_strategy":              "Deploying strategy to Market Maya...",
-            "undeploy_strategy":            "Undeploying strategy...",
+            **_COMMON_STATUS,
+            **_BACKTEST_STATUS,
         }
 
     def _max_turns_msg(self):
         return "Summarise the strategy and ask for save confirmation now."
-
-    def _confirm_save_instruction(self):
-        return (
-            "The user confirmed they want to save this strategy. "
-            "Output ONLY a valid JSON tool call for create_and_save_ise_strategy — "
-            "no other text, no refusals. "
-            "Use ALL actual field values from the strategy preview shown above. "
-            "Respond with valid JSON only."
-        )
 
     def _process_error_msgs(self):
         return {

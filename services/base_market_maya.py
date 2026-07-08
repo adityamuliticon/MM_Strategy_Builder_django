@@ -96,7 +96,10 @@ class BaseMarketMayaService(ABC):
 
         log_entry = self._build_log_entry(payload, api_status, api_code, api_response)
         try:
-            with open("logs/saved_strategies.log", "a") as f:
+            import os
+            from django.conf import settings
+            log_path = os.path.join(settings.BASE_DIR, "logs", "saved_strategies.log")
+            with open(log_path, "a") as f:
                 f.write(json.dumps(log_entry) + "\n")
         except Exception as e:
             print(f"Logging error: {e}")
