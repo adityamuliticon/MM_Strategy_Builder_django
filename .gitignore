@@ -19,6 +19,9 @@ rag/store/faiss_index/
 .vscode/
 .idea/
 
+# GitNexus skills
+.claude/skills/gitnexus/
+
 # Logs
 *.log
 
