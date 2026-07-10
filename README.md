@@ -302,6 +302,9 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 ```bash
 sudo -u postgres psql -c "CREATE DATABASE mm_strategy_builder;"
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'your_pg_password';"
+
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
 ```
 
 ### 5. Run Migrations
