@@ -28,6 +28,8 @@ rag/store/faiss_index/
 venv
 
 .png
+.SKILL.md
+
 
 # Database files
 **/*.db
