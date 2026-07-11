@@ -64,7 +64,7 @@
             },
             "url": { "raw": "{{baseUrl}}/api/chat/stream", "host": ["{{baseUrl}}"], "path": ["api", "chat", "stream"] }
           }
-        },
+        }
       ]
     },
     {
